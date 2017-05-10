@@ -1,0 +1,101 @@
+# messages.po : French translation file for CalcAl project.
+# Date : 10/3/2016
+# Copyleft (CL) 2016 - Thierry Maillard
+# This file is distributed under the same license as the CalcAl package.
+# Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
+#
+# Conversion in .mo format to be used by gettext : msgfmt messages.po
+# Installation of gettext package on Linux or Mac :
+# Download :http://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
+# tar -xvzf gettext-latest.tar.gz
+# cd gettext-0.19.7
+# ./configure
+# make
+# sudo make install
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CalcAl V1.0\n"
+"Report-Msgid-Bugs-To: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
+"POT-Creation-Date: 2016-03-10 17:46+0200\n"
+"PO-Revision-Date: 016-03-10 18:15+0100\n"
+"Last-Translator: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
+"Language-Team: Fr <Thierry.Maillard500@orange.fr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Welcome"
+msgstr "Bienvenue"
+
+msgid "Choose a database to use"
+msgstr "Choisissez une base de données à utiliser"
+
+msgid "New"
+msgstr "Nouvelle"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Start"
+msgstr "Démarrer"
+
+msgid "chosen"
+msgstr "choisie"
+
+msgid "New..."
+msgstr "Nouveau..."
+
+msgid "Tab"
+msgstr "Onglet"
+
+msgid "selected"
+msgstr "activé"
+
+msgid "Ready"
+msgstr "Prêt"
+
+msgid "New menu"
+msgstr "Nouveau menu"
+
+msgid "Enter its name :"
+msgstr "Entrez un nom :"
+
+msgid "Load..."
+msgstr "Charger..."
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "loaded"
+msgstr "chargé"
+
+msgid "saved"
+msgstr "sauvé"
+
+msgid "About"
+msgstr "A propos..."
+
+msgid "Help..."
+msgstr "Aide..."
+
+msgid "On"
+msgstr "Sur"
+
+msgid "description"
+msgstr "description"
+
+msgid "Debug logging mode : all messages in file and on console."
+msgstr "Logging dans fichier et sur console en mode DEBUG."
+
+msgid "Logging in file with mode INFO and on console in mode WARNING."
+msgstr "Logging dans fichier en mode INFO et sur console en mode WARNING."
+
+msgid "This software helps to evaluate food suplies."
+msgstr "Cette application aide à calculer les apports nutritionnels d'une série d'aliments."
+
+msgid "Please consult its documentation for more information."
+msgstr "Consultez sa documentation pour plus d'information."
+
+
+
