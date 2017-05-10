@@ -27,6 +27,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 ########################
+# Menues
+########################
+msgid "Selection"
+msgstr "Sélection"
+
+msgid "Modify"
+msgstr "Modifier"
+
+msgid "Group"
+msgstr "Grouper"
+
+msgid "Ungroup"
+msgstr "Dégrouper"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+########################
 # Start frame
 ########################
 msgid "Welcome"
@@ -37,9 +55,6 @@ msgstr "Choisissez une base de données à utiliser"
 
 msgid "New"
 msgstr "Nouvelle"
-
-msgid "Delete"
-msgstr "Supprimer"
 
 msgid "Start"
 msgstr "Démarrer"
@@ -137,6 +152,10 @@ msgstr "Fichier Ciqual : champ d'entête invalide"
 msgid "instead of"
 msgstr "au lieu de"
 
+# -- Tooltips --
+msgid "Select a database\nand click startbutton"
+msgstr "Selectionner une base de données\npuis cliquer sur le bouton Démarrer"
+
 ########################
 # Calculator frame
 ########################
@@ -145,6 +164,9 @@ msgstr "Calculateur"
 
 msgid "Menu definition"
 msgstr "Définition d'un menu"
+
+msgid "Actions on selection"
+msgstr "Commandes à appliquer à la sélection"
 
 msgid "Menu name"
 msgstr "Nom du menu"
@@ -155,14 +177,20 @@ msgstr "Pour qui ?"
 msgid "Interesting components"
 msgstr "Composants à suivre"
 
+msgid "Search food"
+msgstr "Recherche d'aliment"
+
+msgid "Search by components"
+msgstr "Recherche par composants"
+
+msgid "Name"
+msgstr "Nom"
+
 msgid "Foodstuff definition"
 msgstr "Définition d'un aliment"
 
 msgid "Family"
 msgstr "Famille"
-
-msgid "Name"
-msgstr "Nom"
 
 msgid "Total"
 msgstr "Total"
@@ -176,17 +204,29 @@ msgstr "Qté (g)"
 msgid "Too many components selected"
 msgstr "Trop de composants selectionnés"
 
+msgid "Please select one and only one line in list of food !"
+msgstr "Veuillez sélectionner une ligne et une seule dans la liste des aliments !"
+
+msgid "Please select at least one line in list of food !"
+msgstr "Veuillez sélectionner au moins une ligne dans la liste des aliments !"
+
+msgid "Please select more than one foodstuff in list of food !"
+msgstr "Veuillez sélectionner plus d'une ligne dans la liste des aliments !"
+
 msgid "maximum"
 msgstr "maximum"
 
-msgid "Add this foodstuff"
-msgstr "Ajouter cet aliment"
-
-msgid "Delete empty foodstuff"
-msgstr "Supprimer les aliments vides"
+msgid "Put in the list"
+msgstr "Mettre dans la liste"
 
 msgid "Foodstuff"
 msgstr "Aliment"
+
+msgid "foodstuff"
+msgstr "aliment"
+
+msgid "foodstuffs"
+msgstr "aliments"
 
 msgid "added"
 msgstr "ajouté"
@@ -199,4 +239,119 @@ msgstr "La quantité d'aliment doit être un entier"
 
 msgid "Qantity must be greater than zero"
 msgstr "La quantité doit être plus grande que zéro"
+
+msgid "Deleting selected food in table"
+msgstr "Suppression d'aliments dans le tableau"
+
+msgid "Do you want to delete selection ?"
+msgstr "Voulez-vous supprimer la selection ?"
+
+msgid "List of food"
+msgstr "Liste des aliments"
+
+msgid "Energy given by foods"
+msgstr "Energie apportée par les aliments"
+
+msgid "Components"
+msgstr "Composants"
+
+msgid "By ratio"
+msgstr "En pourcentage"
+
+msgid "By value"
+msgstr "En valeur"
+
+msgid "Water needed"
+msgstr "Besoins en eau"
+
+msgid "Water supplied by food"
+msgstr "Eau apportée par les aliments"
+
+msgid "selected and copied"
+msgstr "selectionné et copié"
+
+msgid "Save selected food group in database"
+msgstr "Sauvegarder ce groupe d'élément dans la base de données"
+
+msgid "Enter the name of new product"
+msgstr "Entrez le nom du nouveau produit"
+
+msgid "Enter the family name of new product"
+msgstr "Entrez le nom de la famille du nouveau produit"
+
+msgid "New product"
+msgstr "Nouveau produit"
+
+msgid "saved in database"
+msgstr "sauvegardé dans la base de données"
+
+# -- Tooltips --
+msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
+msgstr "Utiliser les jokers :\n* pour n caractère\n? pour un seul"
+msgid "\nEx.:fr*s -> fruits, frais,..."
+msgstr "\nEx.:fr*s -> fruits, frais,..."
+msgid "\nUse ? for character letters like é, â, ô..."
+msgstr "\nUtiliser ? à la place des caractères accentués : é,â,ô..."
+
+msgid "Use Ctrl and Shift keys\nfor multiple selection"
+msgstr "Utiliser les touches Ctrl et Maj\npour la sélection multiple"
+
+########################
+# SearchFoodFrame
+########################
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Filters definition"
+msgstr "Définition des filtres"
+
+msgid "Foodstufs matching filters"
+msgstr "Aliments correspondants à la sélection"
+
+msgid "Operator"
+msgstr "Opérateur"
+
+msgid "Levels"
+msgstr "Seuils"
+
+msgid "Search in database"
+msgstr "Rechercher dans la base de données"
+
+msgid "Reset filters"
+msgstr "Effacement des filtres"
+
+msgid "Please select a component for filter number"
+msgstr "Choisissez un composant pour le filtre numéro"
+
+msgid "Level must be a float number for filter number"
+msgstr "Le seuil doit être un nombre décimal pour le filtre numéro"
+
+msgid "Level must be greater than zero for filter number"
+msgstr "Le seuil doit être supérieur à zéro pour le filtre numéro"
+
+# -- Tooltips --
+msgid "Set logical expressions on filters lines"
+msgstr "Remplissez les expressions sur les lignes de filtres"
+msgid "\nFilter line are combined with logical AND"
+msgstr "\nLes lignes de filtres sont combinés par un ET logique"
+msgid "\nTo deselect a filter line, set its operator to empty value"
+msgstr "\nPour déselectionner une ligne de filtre, effacez son opérateur"
+
+########################
+# Database
+########################
+msgid "Problem with this new composition product (name already exist)"
+msgstr "Problème avec ce nouveau pdoduit de composition (son nom existe déjà)"
+
+msgid "Invalid food name : use more than one letter"
+msgstr "Nom d'aliment invalide : utilisez plus d'une lettre"
+
+msgid "Invalid family name : use more than one letter"
+msgstr "Nom de famille invalide : utilisez plus d'une lettre"
+
+msgid "Can't ungroup"
+msgstr "Impossible de dégrouper"
+
+msgid "not a group"
+msgstr "ce n'est pas un groupe"
 

@@ -12,8 +12,12 @@ from tkinter import *
 
 import os.path
 
+from gui import CallTypWindow
+
 from gui import FrameBaseCalcAl
 from database import Database
+from tkinter import simpledialog
+from tkinter import messagebox
 
 class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Welcome frame used to choose database to use """
@@ -29,6 +33,10 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseListbox = Listbox(databaseFrame)
         self.updateDatabaseListbox()
         self.databaseListbox.grid(row=1, column=1)
+        CallTypWindow.createToolTip(self.databaseListbox,
+                                    _("Select a database\nand click startbutton"),
+                                    self.delaymsTooltips)
+
         self.databaseListbox.bind('<ButtonRelease-1>', self.clicListBoxItem)
         self.startButton = Button(databaseFrame, text=_('Start'),
                                   command=self.start, state=DISABLED)
@@ -56,7 +64,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         if index:
             self.mainWindow.closeDatabase()
             dbName = self.databaseListbox.get(index)
-            self.logger.info(dbName + _('chosen'))
+            self.logger.info(dbName + " " + _('chosen'))
             extDB = self.configApp.get('Resources', 'DatabaseExt')
             dbName = dbName + extDB
             databasePath = os.path.join(self.databaseDirPath, dbName)

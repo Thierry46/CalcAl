@@ -37,6 +37,7 @@ from tkinter import ttk
 from gui import CalcAlGUIMenu
 from gui import StartFrame
 from gui import CalculatorFrame
+from gui import SearchFoodFrame
 
 class CalcAlGUI(Tk):
     """ Main GUI class """
@@ -60,15 +61,19 @@ class CalcAlGUI(Tk):
         self.database = None
         self.logger.info("Démarrage de l'IHM.")
 
+        # Adapt to screen size
+        heightBigScreenInPixel = int(self.configApp.get('Limits', 'heightBigScreenInPixel'))
+        screenheight = self.winfo_screenheight()
+        self.bigScreen = (screenheight > heightBigScreenInPixel)
+        self.logger.debug("heightBigScreenInPixel=" + str(heightBigScreenInPixel) +
+                         ", screenheight=" + str(screenheight) +
+                         ", bigScreen=" + str(self.bigScreen))
+
         # Set handler called when closing main window
         self.protocol("WM_DELETE_WINDOW", self.onClosing)
 
         # Set application title
         self.setTitle()
-
-        # Ajout barre des menus et ajout comme observateurs de la configuration
-        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self, dirProject)
-        self.config(menu=self.menuCalcAl)
 
         # Central panels notebook
         self.note = ttk.Notebook(self)
@@ -82,7 +87,15 @@ class CalcAlGUI(Tk):
         self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self,
                                                           dirProject, 'logoCalculator')
         self.note.add(self.calculatorFrame, text = _("Calculator"), state="disabled")
+
+        self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self,
+                                                       dirProject, 'logoSearchFood')
+        self.note.add(self.searchFoodFrame, text = _("Search"), state="disabled")
         self.note.pack(side=TOP)
+
+        # Add menu bar
+        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self, dirProject)
+        self.config(menu=self.menuCalcAl)
 
         # Create Status frame at the bottom of the sceen
         statusFrame = Frame(self)
@@ -90,6 +103,10 @@ class CalcAlGUI(Tk):
         self.statusLabel.pack(side=LEFT)
         self.statusLabel.pack(side=TOP)
         statusFrame.pack(side=TOP)
+
+    def getCalculatorFrame(self):
+        """Return calculator frame"""
+        return self.calculatorFrame
 
     def setStatusText(self, text, isError=False):
         """ Display a text in status bar and log it """
@@ -125,6 +142,7 @@ class CalcAlGUI(Tk):
         if newTab != self.currentTab:
             self.currentTab = newTab
             self.logger.info(_("Tab") + " " + self.currentTab + " " + _("selected") + ".")
+            self.menuCalcAl.enableSelectionMenu(event.widget.index("current") == 1)
 
     def setDatabase(self, database):
         """ Set database """
@@ -143,6 +161,8 @@ class CalcAlGUI(Tk):
         database = self.getDatabase()
         if database:
             database.close()
+            self.enableTabCalculator(False)
+            self.enableTabSearch(False)
             self.database = None
             self.setTitle(None)
 
@@ -153,7 +173,21 @@ class CalcAlGUI(Tk):
         else:
             stateTab='disabled'
         self.note.tab(1, state=stateTab)
+        self.menuCalcAl.enableSelectionMenu(isEnable)
         if isEnable:
             self.calculatorFrame.init()
             self.note.select(1)
 
+    def enableTabSearch(self, isEnable):
+        """ Activate or desactivate calculator tab """
+        if isEnable:
+            stateTab = 'normal'
+        else:
+            stateTab='disabled'
+        self.note.tab(2, state=stateTab)
+        if isEnable:
+            self.searchFoodFrame.init()
+            self.note.select(2)
+
+    def isBigScreen(self):
+        return self.bigScreen
