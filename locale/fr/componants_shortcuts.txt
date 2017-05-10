@@ -58,7 +58,7 @@
 42053 = AG EPA
 42263 = AG DHA
 51200 = Rétinol
-51330 =Beta-Carotène
+51330 = Beta-Carotène
 52100 = Vitamine D
 53100 = Vitamine E
 54101 = Vitamine K1
