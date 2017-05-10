@@ -82,9 +82,8 @@ def main(argv=None):
             isModeDebug = True
             print("Debug mode : verbose.")
 
-    # To avoid OS X invalid locale
-    if platform.system() == 'Darwin' and locale.getlocale()[0] is None:
-        locale.setlocale(locale.LC_ALL, os.getenv('LANG'))
+    # This sets the locale for all categories to the user’s default setting
+    locale.setlocale(locale.LC_ALL, '')
 
     # Read configuration properties
     fileConfigApp = os.path.join(dirProject, 'CalcAl.ini')
@@ -93,8 +92,9 @@ def main(argv=None):
 
     # i18n : Internationalization for GUI windows
     pathname = os.path.dirname(sys.argv[0])
-    localeDir = dirProject + '/locale'
-    gettext.install("messages", localeDir)
+    localeDir = configApp.get('Resources', 'LocaleDir')
+    localeDirPath = os.path.join(dirProject, localeDir)
+    gettext.install("messages", localeDirPath)
 
     # Détermination mode de fonctionnement
     if len(args) > 1:

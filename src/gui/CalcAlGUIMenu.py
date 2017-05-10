@@ -41,13 +41,16 @@ from tkinter import font
 class CalcAlGUIMenu(Menu):
     """ Menu definition class """
 
-    def __init__(self, master):
+    def __init__(self, master, dirProject):
         """ Constructor : Define menu bar GUIs widgets """
         Menu.__init__(self, master)
         self.master = master
         self.configApp = self.master.getConfigApp()
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
-        self.imagesPath = self.master.getImagesPath()
+        self.ressourcePath = os.path.join(dirProject,
+                                          self.configApp.get('Resources', 'ResourcesDir'))
+        self.imagesPath = os.path.join(self.ressourcePath,
+                                       self.configApp.get('Resources', 'ImagesDir'))
 
         self.MenuesMenu = Menu(self, tearoff=0)
         self.MenuesMenu.add_command(label=_("New..."),
@@ -78,7 +81,7 @@ class CalcAlGUIMenu(Menu):
                   self.configApp.get('Version', 'Date')
         Label(window, text=version).pack(side=TOP)
 
-        logoPath = os.path.join(self.imagesPath, self.configApp.get('Resources', 'logoApp'))
+        logoPath = os.path.join(self.imagesPath, self.configApp.get('Resources', 'logoCalculator'))
         imgobj = PhotoImage(file=logoPath)
         logoTxt = self.configApp.get('Version', 'Author')
         labelLogo = ttk.Label(window, compound='top', image=imgobj, text=logoTxt)

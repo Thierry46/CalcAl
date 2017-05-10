@@ -4,7 +4,7 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2015 - 22/5/2015
+Date : 7/5/2016 - 8/6/2016
 
 Role : GUI for CalcAl Food Calculator project.
 
@@ -36,6 +36,7 @@ from tkinter import ttk
 
 from gui import CalcAlGUIMenu
 from gui import StartFrame
+from gui import CalculatorFrame
 
 class CalcAlGUI(Tk):
     """ Main GUI class """
@@ -49,10 +50,14 @@ class CalcAlGUI(Tk):
         """
         Tk.__init__(self, None)
         self.configApp = configApp
-        self.ressourcePath = os.path.join(dirProject, self.configApp.get('Resources', 'ResourcesDir'))
-        self.imagesPath = os.path.join(self.ressourcePath,
+
+        ressourcePath = os.path.join(dirProject, self.configApp.get('Resources', 'ResourcesDir'))
+        self.imagesPath = os.path.join(ressourcePath,
                                        self.configApp.get('Resources', 'ImagesDir'))
+        self.databaseDirPath = os.path.join(ressourcePath,
+                          self.configApp.get('Resources', 'DatabaseDir'))
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
+        self.database = None
         self.logger.info("Démarrage de l'IHM.")
 
         # Set handler called when closing main window
@@ -62,7 +67,7 @@ class CalcAlGUI(Tk):
         self.setTitle()
 
         # Ajout barre des menus et ajout comme observateurs de la configuration
-        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self)
+        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self, dirProject)
         self.config(menu=self.menuCalcAl)
 
         # Central panels notebook
@@ -71,8 +76,12 @@ class CalcAlGUI(Tk):
         self.note.bind_all("<<NotebookTabChanged>>", self.tabChangedEvent)
 
         # Create panels contents
-        startFrame = StartFrame.StartFrame(self.note, self, 'logoApp')
+        startFrame = StartFrame.StartFrame(self.note, self,
+                                           dirProject, 'logoStartFrame')
         self.note.add(startFrame, text = _("Welcome"))
+        self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self,
+                                                          dirProject, 'logoCalculator')
+        self.note.add(self.calculatorFrame, text = _("Calculator"), state="disabled")
         self.note.pack(side=TOP)
 
         # Create Status frame at the bottom of the sceen
@@ -82,30 +91,33 @@ class CalcAlGUI(Tk):
         self.statusLabel.pack(side=TOP)
         statusFrame.pack(side=TOP)
 
-    def setStatusText(self, text):
-        """ Display a text in status bar """
+    def setStatusText(self, text, isError=False):
+        """ Display a text in status bar and log it """
         self.statusLabel['text'] = text
+        if (isError):
+            self.bell()
+            self.logger.error(text)
+        else:
+            self.logger.info(text)
 
     def onClosing(self):
         """ Handler called at the end of main window """
         stopAppli = True
-        # TODO
+        self.closeDatabase()
         self.destroy()
 
-    def setTitle(self):
+    def setTitle(self, dbName=None):
         """ Set title bar. """
         title = self.configApp.get('Version', 'AppName') + ' - Version ' + \
         self.configApp.get('Version', 'Number') + ' - ' + \
         self.configApp.get('Version', 'Date')
+        if dbName:
+            title = title + ' - ' + dbName
         self.title(title)
 
     def getConfigApp(self):
         """ Return configuration resources of the project """
         return self.configApp
-
-    def getImagesPath(self):
-        """ Return image directory path """
-        return self.imagesPath
 
     def tabChangedEvent(self, event):
         """ Callback called when user changes tab """
@@ -113,4 +125,35 @@ class CalcAlGUI(Tk):
         if newTab != self.currentTab:
             self.currentTab = newTab
             self.logger.info(_("Tab") + " " + self.currentTab + " " + _("selected") + ".")
+
+    def setDatabase(self, database):
+        """ Set database """
+        dbname = None
+        if database :
+            dbname = database.getDbname()
+        self.database = database
+        self.setTitle(dbname)
+
+    def getDatabase(self):
+        """ get database """
+        return self.database
+
+    def closeDatabase(self):
+        """ Close database """
+        database = self.getDatabase()
+        if database:
+            database.close()
+            self.database = None
+            self.setTitle(None)
+
+    def enableTabCalculator(self, isEnable):
+        """ Activate or desactivate calculator tab """
+        if isEnable:
+            stateTab = 'normal'
+        else:
+            stateTab='disabled'
+        self.note.tab(1, state=stateTab)
+        if isEnable:
+            self.calculatorFrame.init()
+            self.note.select(1)
 

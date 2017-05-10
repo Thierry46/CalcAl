@@ -1,10 +1,11 @@
 # messages.po : French translation file for CalcAl project.
-# Date : 10/3/2016
+# Date : 10/3/2016 - 16/4/2016
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
 # Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
 #
 # Conversion in .mo format to be used by gettext : msgfmt messages.po
+#
 # Installation of gettext package on Linux or Mac :
 # Download :http://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
 # tar -xvzf gettext-latest.tar.gz
@@ -15,7 +16,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: CalcAl V1.0\n"
+"Project-Id-Version: CalcAl\n"
 "Report-Msgid-Bugs-To: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
 "POT-Creation-Date: 2016-03-10 17:46+0200\n"
 "PO-Revision-Date: 016-03-10 18:15+0100\n"
@@ -25,6 +26,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+########################
+# Start frame
+########################
 msgid "Welcome"
 msgstr "Bienvenue"
 
@@ -73,6 +77,9 @@ msgstr "chargé"
 msgid "saved"
 msgstr "sauvé"
 
+msgid "Start calculator with database"
+msgstr "Démarrage du calculateur avec la base"
+
 msgid "About"
 msgstr "A propos..."
 
@@ -97,5 +104,99 @@ msgstr "Cette application aide à calculer les apports nutritionnels d'une séri
 msgid "Please consult its documentation for more information."
 msgstr "Consultez sa documentation pour plus d'information."
 
+msgid "New database"
+msgstr "Nouvelle base de données"
 
+msgid "this database already exists"
+msgstr "cette base de données existe déjà"
+
+msgid "Invalid database name"
+msgstr "Nom de base de données invalide"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Database initialised"
+msgstr "Base de données initialisée"
+
+msgid "Database"
+msgstr "Base de données"
+
+msgid "Do you realy want to delete this database ?"
+msgstr "Voulez-vous vraiment détruire cette base de données ?"
+
+msgid "deleted"
+msgstr "détruite"
+
+msgid "Please select a database !"
+msgstr "Veuillez sélectionner une base de données !"
+
+msgid "Ciqual file : invalid header field"
+msgstr "Fichier Ciqual : champ d'entête invalide"
+
+msgid "instead of"
+msgstr "au lieu de"
+
+########################
+# Calculator frame
+########################
+msgid "Calculator"
+msgstr "Calculateur"
+
+msgid "Menu definition"
+msgstr "Définition d'un menu"
+
+msgid "Menu name"
+msgstr "Nom du menu"
+
+msgid "For who ?"
+msgstr "Pour qui ?"
+
+msgid "Interesting components"
+msgstr "Composants à suivre"
+
+msgid "Foodstuff definition"
+msgstr "Définition d'un aliment"
+
+msgid "Family"
+msgstr "Famille"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Quantity (g)"
+msgstr "Quantité (g)"
+
+msgid "Qty (g)"
+msgstr "Qté (g)"
+
+msgid "Too many components selected"
+msgstr "Trop de composants selectionnés"
+
+msgid "maximum"
+msgstr "maximum"
+
+msgid "Add this foodstuff"
+msgstr "Ajouter cet aliment"
+
+msgid "Delete empty foodstuff"
+msgstr "Supprimer les aliments vides"
+
+msgid "Foodstuff"
+msgstr "Aliment"
+
+msgid "added"
+msgstr "ajouté"
+
+msgid "Food name must not be empty"
+msgstr "Le nom d'aliment ne doit pas être vide"
+
+msgid "Food quantity must be an integer"
+msgstr "La quantité d'aliment doit être un entier"
+
+msgid "Qantity must be greater than zero"
+msgstr "La quantité doit être plus grande que zéro"
 
