@@ -3,7 +3,7 @@
 ************************************************************************************
 Class : CalculatorFrameModel
 Author : Thierry Maillard (TMD)
-Date : 23/11/2015
+Date : 12/11/2016 - 24/11/2016
 
 Role : Define the model for calculator frame.
 
@@ -49,6 +49,8 @@ class CalculatorFrameModel(Observable.Observable):
         self.dictAllExistingComponents = dict()
         self.dictFoodStuff = dict()
         self.totalLine = TotalLine.TotalLine(configApp)
+        self.nbDays = 1
+        self.listComponents = []
 
         # Special component to follow for Energy and Water tables
         listComp = self.configApp.get('Energy', 'EnergeticComponentsCodes')
@@ -67,7 +69,8 @@ class CalculatorFrameModel(Observable.Observable):
         self.EnergySuppliedByComponents = [float(value) for value in listEnergy.split(";")]
         self.EnergySuppliedByComponents.append(1.0) # Coeff for energy total
 
-        self.specialComponentsCodes = set(self.energeticComponentsCodes) | set(self.waterEnergyCodes)
+        self.specialComponentsCodes = set(self.energeticComponentsCodes) |\
+                                      set(self.waterEnergyCodes)
         self.emptyEnergyComponents = ['-' for index in range(len(self.energeticComponentsCodes))]
 
         self.database = None
@@ -76,8 +79,13 @@ class CalculatorFrameModel(Observable.Observable):
         self.lastGroupedFamilyName = None
 
     def setDatabase(self, database):
+        """ Change database used """
         self.database = database
-        for code, shortcut, unit in database.getListComponents():
+        self.listComponents = database.getListComponents()
+        assert (len(self.listComponents) > 0), \
+                "CalculatorFrameModel/setDatabase() : no constituants in database !"
+
+        for code, shortcut, unit in self.listComponents:
             self.dictAllExistingComponents[code] = [shortcut, unit]
         self.currentComponentCodes = self.specialComponentsCodes
         self.askedByUserCodes = set()
@@ -86,19 +94,25 @@ class CalculatorFrameModel(Observable.Observable):
         self.setChanged()
         self.notifyObservers("INIT_DB")
 
+    def getListComponents(self):
+        """ Return list of all available components in database """
+        return self.listComponents
+
     def addFoodInTable(self, listFoodnameQuantity, notifObs=True, addQuantity=False):
         """ Add a list of foodstuff and quantity in the dictFoodStuff of this model
             notifObs (default True) can be false to avoid too many GUI uddating
-            while inserting a lot of food 
+            while inserting a lot of food
             addQuantity (Default False) if a food already exists add quantities instead replacing"""
 
         for foodname, quantityStr in listFoodnameQuantity:
             if foodname == "":
-                raise CalcalExceptions.CalcalValueError(self.configApp, _("Food name must not be empty"))
-            try :
+                raise CalcalExceptions.CalcalValueError(self.configApp,
+                                                        _("Food name must not be empty"))
+            try:
                 quantity = float(quantityStr.replace(',', '.'))
-            except ValueError as excName:
-                raise CalcalExceptions.CalcalValueError(self.configApp, _("Food quantity must be a number"))
+            except ValueError:
+                raise CalcalExceptions.CalcalValueError(self.configApp,
+                                                        _("Food quantity must be a number"))
 
             # Find if this foodstuff is already in listFoodStuff
             try:
@@ -106,21 +120,22 @@ class CalculatorFrameModel(Observable.Observable):
                     self.logger.debug("addFoodInTable : food " + foodname + "modified in model")
                     self.setChanged()
             except KeyError:
-                newFood = Foodstuff.Foodstuff(self.configApp, self.database, foodname,
-                                              quantity, self.currentComponentCodes)
+                newFood = Foodstuff.Foodstuff(self.configApp, self.database,
+                                              foodname, quantity,
+                                              listFollowedComponents=self.currentComponentCodes)
                 self.dictFoodStuff[foodname] = newFood
                 self.logger.debug("addFoodInTable : new food " + foodname + " appended in model")
                 self.setChanged()
 
-        if self.hasChanged() :
+        if self.hasChanged():
             self.listFoodModifiedInTable = [foodname for foodname, quantity in listFoodnameQuantity]
         if notifObs:
             self.totalLine.update(self.dictFoodStuff)
             self.notifyObservers("CHANGE_FOOD")
 
-    def updateFollowedComponents(self, askedByUserCodes):
+    def updateFollowedComponents(self, askedByUserCodes, notifyObservers=True):
         """ Update this model according components asked by user """
-        self. askedByUserCodes = askedByUserCodes
+        self.askedByUserCodes = askedByUserCodes
         askedByUserCodesAndOther = askedByUserCodes | self.specialComponentsCodes
         componentCodes2delete = self.currentComponentCodes - askedByUserCodesAndOther
         componentCodes2Add = askedByUserCodesAndOther - self.currentComponentCodes
@@ -132,8 +147,9 @@ class CalculatorFrameModel(Observable.Observable):
 
         # Notify Observers
         self.logger.debug("updateFollowedComponents : components " + str(self.currentComponentCodes))
-        self.setChanged()
-        self.notifyObservers("CHANGE_COMPONENTS")
+        if notifyObservers:
+            self.setChanged()
+            self.notifyObservers("CHANGE_COMPONENTS")
 
     def getListFoodModifiedInTable(self):
         """ Return a list of last name, quantity and dict(codeComponents, qty formated) for
@@ -143,7 +159,7 @@ class CalculatorFrameModel(Observable.Observable):
         self.logger.debug("getListFoodModifiedInTable() : self.listFoodModifiedInTable = " +
                           str(self.listFoodModifiedInTable))
         foodnameModif = ""
-        try :
+        try:
             for foodnameModif in self.listFoodModifiedInTable:
                 returnValue.append(self.dictFoodStuff[foodnameModif].getFormattedValue())
         except KeyError:
@@ -153,10 +169,10 @@ class CalculatorFrameModel(Observable.Observable):
         self.logger.debug("getListFoodModifiedInTable() : returnValue = " + str(returnValue))
         return returnValue
 
-    def getTotalLineStr(self):
+    def getTotalLineStr(self, nbDays=1):
         """ Return name, quantity and dict[codeComponents] = qty formated)
             for all components of total line  """
-        return self.totalLine.getFormattedValue()
+        return self.totalLine.getFormattedValue(nbDays)
 
     def getTotalLineValues(self):
         """ Return name, quantity and dict[codeComponents] = qty)
@@ -190,8 +206,8 @@ class CalculatorFrameModel(Observable.Observable):
             group = self.waterEnergyCodes
         else:
             raise CalcalExceptions.CalcalInternalError("getTotalComponents() : askedGroup " +
-                                                askedGroup +
-                                                " out of {ENERGY, WATER")
+                                                       askedGroup +
+                                                       " out of {ENERGY, WATER")
         dictTotalComponents = dict()
         if len(self.dictAllExistingComponents) > 0:
             name, quantity, dictComponentsValueStr = self.totalLine.getFormattedValue()
@@ -257,8 +273,9 @@ class CalculatorFrameModel(Observable.Observable):
         # Create dictFood2group with all food to group and every components
         dictFood2Group = dict()
         for foodname, quantity in listFoodNameAndQty2Group:
-            newFood = Foodstuff.Foodstuff(self.configApp, self.database, foodname,
-                                          quantity, self.dictAllExistingComponents.keys())
+            newFood = Foodstuff.Foodstuff(self.configApp, self.database,
+                                          foodname, quantity,
+                                          listFollowedComponents=self.dictAllExistingComponents.keys())
             dictFood2Group[foodname] = newFood
 
         # Create a total line to group theese foodstuffs
@@ -269,9 +286,9 @@ class CalculatorFrameModel(Observable.Observable):
 
         # Insert new group in database
         self.database.insertNewComposedProduct(productName, familyName,
-                                        totalQuantity,
-                                        totalLineGroup.getData("dictComponentsQualifierQuantity"),
-                                        listFoodNameAndQty2Group)
+                                               totalQuantity,
+                                               totalLineGroup.getData("dictComponentsQualifierQuantity"),
+                                               listFoodNameAndQty2Group)
 
         # Insert new group foodstuff in this model
         self.addFoodInTable([[productName, str(totalQuantity)]])
@@ -309,6 +326,9 @@ class CalculatorFrameModel(Observable.Observable):
         listNamesQties = [[foodname, self.dictFoodStuff[foodname].getData("quantity")]
                           for foodname in self.dictFoodStuff.keys()]
 
+        # V0.41 : add nbDays to save this value in database
+        listIdPortion.append(self.nbDays)
+
         # Insert portion in database
         self.database.insertPortion(listIdPortion, listNamesQties)
 
@@ -318,11 +338,40 @@ class CalculatorFrameModel(Observable.Observable):
 
     def displayPortion(self, portionCode):
         """ Reset the model and add foodstuffs from chosen portion """
+        self.logger.debug("CalculatorFrameModel/displayPortion() : start")
         self.dictFoodStuff.clear()
-        listFoodnameQuantity = self.database.getFoodNameAndQuantity4Portion(portionCode)
-        listFoodnameQuantityStr = [[foodname, str(quantity)]
-                                for foodname, quantity in listFoodnameQuantity]
-        self.addFoodInTable(listFoodnameQuantityStr, notifObs=False, addQuantity=False)
+        self.listFoodModifiedInTable = []
+        self.currentComponentCodes = self.specialComponentsCodes
+
+        # Get all infos from database for this portion : 2 access for speed
+        # v0.41 : get nbDays and update observers for this portion
+        nbDays, listProductPortion = self.database.getAllInfo4Portion(portionCode,
+                                                                      self.specialComponentsCodes)
+
+        # Notify observer for updating nbDays
+        self.updateNbDaysByModel(nbDays)
+
+        # Create model elements : foodstuffs and components
+        currentProductCode = 0
+        for productPortion in listProductPortion:
+            quantity = productPortion[0]
+            foodname = productPortion[1]
+            productCode = productPortion[2]
+            if productCode != currentProductCode:
+                self.dictFoodStuff[foodname] = Foodstuff.Foodstuff(self.configApp,
+                                                                   self.database,
+                                                                   foodname, quantity,
+                                                                   listInfoProduct=productPortion[0:7])
+                currentProductCode = productCode
+                self.listFoodModifiedInTable.append(foodname)
+            self.dictFoodStuff[foodname].addComponentFromList(productPortion[7:])
+
+        # Add missing components for all foodstuffs
+        for food in self.dictFoodStuff.values():
+            food.addMissingComponents(self.currentComponentCodes)
+
+        self.logger.debug("CalculatorFrameModel/displayPortion() : end model modif")
+
         self.totalLine.update(self.dictFoodStuff)
 
         # Notify observers
@@ -395,3 +444,35 @@ class CalculatorFrameModel(Observable.Observable):
 
         return isDataAvailable, waterInFood, waterNeeded, isEnougthWater
 
+    def updateNbDays(self, nbDays):
+        """ Called if user change nb days to eat food displayed in table """
+        if self.nbDays != nbDays:
+            self.nbDays = nbDays
+            if self.getNumberOfFoodStuff() > 0:
+                # Notify observers
+                self.setChanged()
+                self.notifyObservers("CHANGE_NB_DAYS")
+
+    def updateNbDaysByModel(self, nbDays):
+        """ Called if model change nb days to eat food displayed in table
+            Typically when loading a portion """
+        if self.nbDays != nbDays:
+            self.nbDays = nbDays
+            # Notify observers
+            self.setChanged()
+            self.notifyObservers("CHANGE_NB_DAYS_BY_MODEL")
+
+    def getNbDays(self):
+        """ Return nb days to eat food """
+        return self.nbDays
+
+    def selectComponentsCodes(self, listPathologiesNames):
+        """ select components codes to follow """
+        listComponentsCodes = self.database.getComponentsCodes4Pathologies(listPathologiesNames)
+        self.updateFollowedComponents(listComponentsCodes, notifyObservers=False)
+        self.setChanged()
+        self.notifyObservers("CHANGE_SELECTED_COMPONENTS")
+
+    def getAskedByUserCodes(self):
+        """ Return components codes asked by user """
+        return self.askedByUserCodes

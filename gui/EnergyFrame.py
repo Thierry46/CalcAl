@@ -10,12 +10,11 @@ import logging
 
 from tkinter import *
 
+from util import CalcalExceptions
 from . import TableTreeView
 
-from util import CalcalExceptions
-
 class EnergyFrame(LabelFrame):
-    """ Dialog box used to get information from user to save a portion """
+    """ Frame to display energy given by food table """
     def __init__(self, parent, mainWindow, calculatorFrameModel, configApp):
         super(EnergyFrame, self).__init__(parent, text=_("Energy given by foods"))
         self.mainWindow = mainWindow
@@ -86,9 +85,9 @@ class EnergyFrame(LabelFrame):
         """ Update energy table according foodstuffs entered in model """
         self.logger.debug("EnergyFrame : updateEnergyTable()")
 
-        listSupplyEnergyRatio, listValues, listSupplyEnergy = self.calculatorFrameModel.getEnergyRatio()
+        listSupplyEnergyRatio, listValues, listSupplyEnergy = \
+                                self.calculatorFrameModel.getEnergyRatio()
         self.energyTable.deleteAllRows()
         self.energyTable.insertGroupRow([(_("By ratio"), listSupplyEnergyRatio),
                                          (_("By energy") + " (kcal)", listSupplyEnergy),
-                                         (_("By value") , listValues)])
-
+                                         (_("By value"), listValues)])

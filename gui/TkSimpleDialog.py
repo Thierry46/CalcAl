@@ -10,8 +10,9 @@ Modified by TMD : 30/5/2016 - 1/6/2016
 from tkinter import *
 
 class TkSimpleDialog(Toplevel):
-
-    def __init__(self, parent, title = None):
+    """ Modal dialog box base constructor (should be overridden) """
+    def __init__(self, parent, title=None):
+        """ Construct this modal frame """
         super(TkSimpleDialog, self).__init__(parent)
         self.parent = parent
         self.result = None
@@ -42,8 +43,8 @@ class TkSimpleDialog(Toplevel):
         self.parent.wait_window(self)
 
     def buttonbox(self, master):
-        # add standard button box. override if you don't want the
-        # standard buttons
+        """ add standard button box. override if you don't want the
+            standard buttons """
 
         box = Frame(master)
 
@@ -60,7 +61,7 @@ class TkSimpleDialog(Toplevel):
     # standard button semantics
 
     def ok(self, event=None):
-
+        """ Ok button pressed : prepare data returned for user """
         if not self.validate():
             self.initial_focus.focus_set() # put focus back to parent widget
         else:
@@ -70,7 +71,7 @@ class TkSimpleDialog(Toplevel):
             self.cancel()
 
     def cancel(self, event=None):
-        # put focus back to the parent window
+        """ Put focus back to the parent window """
         self.parent.focus_set()
         self.destroy()
 
@@ -86,13 +87,17 @@ class TkSimpleDialog(Toplevel):
 
     # command hooks to override
     def validate(self):
-        return True # override
+        """ Validation function that return True, must be overriden """
+        return True
 
     def apply(self):
-        pass # override
+        """ Prepare results, must be overriden """
+        pass
 
     def setResult(self, result):
+        """ Prepare results """
         self.result = result
 
     def getResult(self):
+        """ Return results collected by this dialog """
         return self.result

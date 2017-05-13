@@ -59,7 +59,7 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
             familyNamesFiltered = self.familyNames
         else:
             familyNamesFiltered = [name for name in self.familyNames
-                                        if stringInFamily.upper() in name.upper()]
+                                   if stringInFamily.upper() in name.upper()]
         for family in familyNamesFiltered:
             self.familyList.insert(END, family)
 
@@ -74,12 +74,12 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
             if self.nameVar.get() == "":
                 raise ValueError(_("Please give a food name"))
             # Name must not exist in database
-            if self.database.existFoodstuffName(self.nameVar.get()) :
+            if self.database.existFoodstuffName(self.nameVar.get()):
                 raise ValueError(_("Please give a food name that doesn't exist in database"))
             isOK = True
         except ValueError as exc:
             self.bell()
-            messagebox.showwarning(_("Bad input"), message = _("Error") + " : " + str(exc) + " !")
+            messagebox.showwarning(_("Bad input"), message=_("Error") + " : " + str(exc) + " !")
         return isOK
 
     def apply(self):

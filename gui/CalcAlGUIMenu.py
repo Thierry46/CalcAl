@@ -31,15 +31,15 @@ import logging
 import os.path
 import shutil
 
-from tkinter import *
+import tkinter
 from tkinter import filedialog
 
-class CalcAlGUIMenu(Menu):
+class CalcAlGUIMenu(tkinter.Menu):
     """ Menu definition class """
 
     def __init__(self, master, calculatorFrameModel):
         """ Constructor : Define menu bar GUIs widgets """
-        Menu.__init__(self, master)
+        tkinter.Menu.__init__(self, master)
         self.master = master
         self.calculatorFrameModel = calculatorFrameModel
         self.calculatorFrameModel.addObserver(self)
@@ -49,57 +49,57 @@ class CalcAlGUIMenu(Menu):
 
         self.allowSelection = False
 
-        self.databaseMenu = Menu(self, tearoff=0)
+        self.databaseMenu = tkinter.Menu(self, tearoff=0)
         self.databaseMenu.add_command(label=_("New"),
                                       command=self.master.getStartFrame().newDB)
         self.databaseMenu.add_command(label=_("Info"),
-                                      state=DISABLED,
+                                      state=tkinter.DISABLED,
                                       command=self.master.getStartFrame().infoDB)
         self.databaseMenu.add_command(label=_("Delete"),
-                                      state=DISABLED,
+                                      state=tkinter.DISABLED,
                                       command=self.master.getStartFrame().deleteDB)
         self.databaseMenu.add_command(label=_("Join"),
                                       command=self.master.getStartFrame().joinDB)
         self.add_cascade(label=_("Database"), menu=self.databaseMenu)
 
 
-        self.selectionMenu = Menu(self, tearoff=0)
+        self.selectionMenu = tkinter.Menu(self, tearoff=0)
         self.selectionMenu.add_command(label=_("Modify"),
-                                       state=DISABLED,
+                                       state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().copySelectionInDefinitionFrame)
         self.selectionMenu.add_command(label=_("Group"),
-                                       state=DISABLED,
+                                       state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().groupFood)
         self.selectionMenu.add_command(label=_("Ungroup"),
-                                       state=DISABLED,
+                                       state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().ungroupFood)
         self.selectionMenu.add_command(label=_("Erase line"),
-                                       state=DISABLED,
-                                       command=lambda inBd=False:self.master.getCalculatorFrame().deleteFood(inBd))
+                                       state=tkinter.DISABLED,
+                                       command=lambda inBd=False: self.master.getCalculatorFrame().deleteFood(inBd))
         self.selectionMenu.add_command(label=_("Delete in database"),
-                                       state=DISABLED,
-                                       command=lambda inBd=True:self.master.getCalculatorFrame().deleteFood(inBd))
+                                       state=tkinter.DISABLED,
+                                       command=lambda inBd=True: self.master.getCalculatorFrame().deleteFood(inBd))
         self.selectionMenu.add_command(label=_("Clipboard"),
-                                       state=DISABLED,
+                                       state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().copyInClipboard)
         self.selectionMenu.add_command(label=_("Info"),
-                                       state=DISABLED,
+                                       state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().infoFood)
         self.selectionMenu.add_command(label=_("Save portion"),
-                                       state=DISABLED,
-        command=self.master.getCalculatorFrame().savePortion)
+                                       state=tkinter.DISABLED,
+                                       command=self.master.getCalculatorFrame().savePortion)
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
 
-        self.pluginsMenu = Menu(self, tearoff=0)
+        self.pluginsMenu = tkinter.Menu(self, tearoff=0)
         listPlugins = ["Ciqual_2013_Reader", "USDA_28_Reader"]
         for plugin in listPlugins:
             self.pluginsMenu.add_command(label=plugin,
-                                         command=lambda plug=plugin:self.installReader(plug+".py"))
+                                         command=lambda plug=plugin: self.installReader(plug+".py"))
         self.add_cascade(label=_("Plugins"), menu=self.pluginsMenu)
 
-        otherMenu = Menu(self, tearoff=0)
+        otherMenu = tkinter.Menu(self, tearoff=0)
         otherMenu.add_command(label=_("About"), command=self.master.about)
-        self.isLoglevelDebug = BooleanVar()
+        self.isLoglevelDebug = tkinter.BooleanVar()
         self.isLoglevelDebug.set(False)
         # Observer self.setLogLevel on self.isLoglevelDebug called if modified : 'w'
         self.isLoglevelDebug.trace_variable('w', self.setLogLevel)
@@ -138,9 +138,9 @@ class CalcAlGUIMenu(Menu):
     def enableDatabaseMenu(self, isEnabled):
         """ Autorise ou non les options de configuration du menu Fichier """
         if isEnabled:
-            etat = NORMAL
+            etat = tkinter.NORMAL
         else:
-            etat = DISABLED
+            etat = tkinter.DISABLED
         last = self.databaseMenu.index("end")
         for itemMenu in range(last+1):
             self.databaseMenu.entryconfigure(itemMenu, state=etat)
@@ -148,9 +148,9 @@ class CalcAlGUIMenu(Menu):
     def enableSelectionMenu(self, isEnabled):
         """ Autorise ou non les options de configuration du menu Fichier """
         if isEnabled and self.allowSelection:
-            etat = NORMAL
+            etat = tkinter.NORMAL
         else:
-            etat = DISABLED
+            etat = tkinter.DISABLED
         last = self.selectionMenu.index("end")
         for itemMenu in range(last+1):
             self.selectionMenu.entryconfigure(itemMenu, state=etat)
@@ -165,8 +165,8 @@ class CalcAlGUIMenu(Menu):
                 raise ValueError(_("Plugin") + " " + pluginName + " " +
                                  _("has already been installed"))
             filename = filedialog.askopenfilename(filetypes=(("Py File", "*.py"),
-                                                             ("All Files","*.*")),
-                                                  title = _("Choose a file"))
+                                                             ("All Files", "*.*")),
+                                                  title=_("Choose a file"))
             if not filename:
                 raise ValueError(_("Installation canceled"))
             shutil.copy2(filename, pluginPath)
@@ -174,5 +174,3 @@ class CalcAlGUIMenu(Menu):
             self.logger.info(_("Plugin") + " " + pluginName + " " + _("installed"))
         except ValueError as exc:
             self.master.setStatusText(_("Error") + " : " + str(exc) + " !", True)
-
-

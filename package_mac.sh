@@ -3,12 +3,18 @@
 # Object ... : Package CalcAl on mac and produce a .dmg file ready to istall by user
 # Author ... : MAILLARD Thierry (TMD)
 # Ref ...... : http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
-# Date ..... : 16/10/2015 - 13/11/2016
+# Date ..... : 16/10/2015 - 17/11/2016
 # Modif .... :
+
+# Get Version of app from CalcAl.ini and modify setup_model.py to create setup.py
+idVersion="Number = "
+version=$(grep "${idVersion}" CalcAl.ini | sed "s/${idVersion}//1")
+echo "Update version number : ${version} in setup.py"
+sed "s/VERSION_NUMBER/${version}/1" setup_model.py > setup.py
 
 cd /Users/thierry/Documents/dietetique/CalcAl
 echo "Build Mac app in dist directory"
-rm -rf build dist __pycache__ */__pycache__
+rm -rf build dist __pycache__ */__pycache__ resources/databases/test
 python3 setup.py py2app
 
 echo "Build R/W DMG pack.temp.dmg"
@@ -71,6 +77,6 @@ hdiutil convert "./pack.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "dist/$
 mv dist/${dmgName} .
 
 echo "Cleaning..."
-rm -rf ./pack.temp.dmg build dist __pycache__ */__pycache__
+rm -rf ./pack.temp.dmg build dist __pycache__ */__pycache__ setup.py
 
 echo "Compress project, Save it and send ${dmgName} to user."

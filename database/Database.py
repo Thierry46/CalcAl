@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Database
 Author : Thierry Maillard (TMD)
-Date  : 23/3/2016 - 2/10/2016
+Date  : 23/3/2016 - 1/12/2016
 
 Role : Define a database and method to create, consult and save it.
 ************************************************************************************
@@ -11,28 +11,34 @@ Role : Define a database and method to create, consult and save it.
 import logging
 import os.path
 import sqlite3
-import re
 import time
 
+from util import DateUtil
 from . import DatabaseReaderFactory
 
 class Database():
     """ Define a database """
 
     def __init__(self, configApp, dirProject):
-        """ Initialize a database 
+        """ Initialize a database
             dirProject : project directory
             If initDB : import data in a new dataBase
             """
         self.configApp = configApp
         self.dirProject = dirProject
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
+        self.databasePath = None
+        self.connDB = None
+        self.dbname = None
 
     def initDBFromFile(self, databasePath, databaseType, initFile):
         """ Create a new database databasePath by reading a file initFile """
         self.open(databasePath)
         databaseReader = DatabaseReaderFactory.DatabaseReaderFactory.getInstance(self.configApp,
-                                     self.dirProject, databaseType, self.connDB, self.dbname)
+                                                                                 self.dirProject,
+                                                                                 databaseType,
+                                                                                 self.connDB,
+                                                                                 self.dbname)
         databaseReader.initDBFromFile(initFile)
 
     def open(self, databasePath):
@@ -44,16 +50,18 @@ class Database():
         self.createUserTables() # V0.32
 
     def close(self):
-         """ Close database """
-         if self.connDB:
+        """ Close database """
+        if self.connDB:
             self.connDB.close()
             self.connDB = None
             self.logger.info("Database : " + self.getDbname() + " closed.")
 
     def getDatabasePath(self):
+        """ Return current database path """
         return self.databasePath
 
     def getDbname(self):
+        """ Return current database short name """
         return self.dbname
 
     def getListComponents(self):
@@ -95,48 +103,6 @@ class Database():
         self.logger.info(foodname + " exists ? :" + str(existname))
         return existname
 
-    def getComponentsValuesRaw4Food(self, foodName, quantity, listComponentsCodes):
-        """ Return, for a given foodname and a listComponentsCodes, a list of
-            (constituant codes, value multipled by quantity, qualifValue)
-            27-28/7/2016 : v0.28 : Unknown constituant values not stored in database
-                return defalt value [constituantCode, 0.0, "-"] if
-                a component is not found for this foodname
-                Constituants are now sorted according order of listComponentsCodes
-            """
-        listComponentsValues = []
-        listComponentsValuesAll = []
-        if len(listComponentsCodes) > 0:
-            cursor = self.connDB.cursor()
-            # Get values for all asked componentsCodes
-            cursor.execute("SELECT constituantCode,value*" + str(quantity) + "/100.0, qualifValue\n" +\
-                           """ FROM constituantsValues
-                               INNER JOIN products
-                               INNER JOIN constituantsNames
-                               WHERE constituantsValues.productCode = products.code
-                               AND  constituantsNames.code = constituantsValues.constituantCode
-                               AND products.name=?
-                               AND constituantCode IN (""" + \
-                       ",".join([str(code) for code in listComponentsCodes]) + ")",
-                       (foodName,))
-            listComponentsValues = cursor.fetchall()
-            cursor.close()
-
-            # 27/7/2016 : v0.28 : add default constituant values to results
-            # sorted by listComponentsCodes order
-            for constituantCode in listComponentsCodes:
-                values4thisComponent = [values for values in listComponentsValues
-                                            if constituantCode == values[0]]
-                nbValues = len(values4thisComponent)
-                assert nbValues <= 1, "getComponentsValuesRaw4Food() find more than 1 record (" + \
-                                      str(nbValues) + ") in table constituantsValues " + \
-                                      "for constituantCode=" + \
-                                      str(constituantCode)  + " and for foodName=" + foodName
-                if nbValues > 0:
-                    listComponentsValuesAll.append(values4thisComponent[0])
-                else:
-                    listComponentsValuesAll.append([constituantCode, 0.0, "-"])
-        return listComponentsValuesAll
-
     def getFamily4FoodName(self, foodName):
         """ Given a foodName return its family name """
         cursor = self.connDB.cursor()
@@ -159,7 +125,7 @@ class Database():
         listeFoodstuffName = [name[0] for name in cursor.fetchall()]
         cursor.close()
         self.logger.info(str(len(listeFoodstuffName)) + " products names available for " +
-                            partWildcard)
+                         partWildcard)
         return listeFoodstuffName
 
     def getMinMaxForConstituants(self):
@@ -177,57 +143,43 @@ class Database():
         cursor.close()
         return listMinMax
 
-    def getProductComponents4Filters(self, listFilters, listSelectedComponentsCodes):
-        """ v0.28 : Return the total number of products that match the filter
-            and a list of products names and their constituants values
-            that match the given filters for the first nbMaxResultSearch items"""
-        productNameAllOk = set()
-        listProductListName = []
-        nbMaxResultSearch = int(self.configApp.get('Limits', 'nbMaxResultSearch'))
-
+    def getProductComponents4Filters(self, listFilters, messageQueue):
+        """ Return list by filter [dict[product] = [constituantCode, qualifValue, value]]
+            that match the listfilter
+            """
         if len(listFilters) == 0:
             raise ValueError(_("Please select at least one operator in a filter line"))
 
+        numFilter = 1
+        numberResults = 0
+        messageproductsCondition = ""
+        listDictProductValues = []
         for constituantCode, selectedOperator, level in listFilters:
+            dictProductValues = {}
             # Build condition for extraction of products from BD
             condition = " AND constituantCode=" + str(constituantCode) + \
                 " AND value" + selectedOperator + str(level)
-            listProductListName.append(set(self.getProductNamesCondition(condition)))
-
-        # Intersection of all listProductListName sets
-        if len(listProductListName) > 0 and len(listProductListName[0]) > 0:
-            productNameAllOk = listProductListName[0]
-            index = 1
-            while index < len(listProductListName):
-                productNameAllOk = productNameAllOk.intersection(listProductListName[index])
-                index = index + 1
-
-        # Get components values for all results product
-        nbFoundProducts = len(productNameAllOk)
-        counter = 0
-        listNameComponentsValuesRaw= []
-        for foodName in productNameAllOk:
-            listComponentsValuesRaw = self.getComponentsValuesRaw4Food(foodName, 100.0,
-                                                                   listSelectedComponentsCodes)
-            listNameComponentsValuesRaw.append([foodName, listComponentsValuesRaw])
-            counter = counter + 1
-            if counter >= nbMaxResultSearch:
-                break
-
-        return nbFoundProducts, listNameComponentsValuesRaw
+            productValues = self.getProductNamesCondition(condition)
+            for product in productValues:
+                dictProductValues[product[0]] = [product[1], product[2], product[3]]
+            numberResults += len(productValues)
+            messageproductsCondition = _("Filter") + " " + str(numFilter) + " : " + \
+                                        str(numberResults) + " " + _("results")
+            messageQueue.put(messageproductsCondition)
+            listDictProductValues.append(dictProductValues)
+            numFilter += 1
+        return listDictProductValues
 
     def getProductNamesCondition(self, condition):
-        """ Return a list of products names that mach the given condition on their values """
-        listeFoodstuffNames=[]
+        """ Return a list [name, constituantCode, qualifValue, value]
+            that mach the given condition on their values """
         cursor = self.connDB.cursor()
-        cursor.execute("""SELECT name FROM products
-            INNER JOIN constituantsValues
+        cursor.execute("""SELECT products.name, constituantCode, qualifValue, value
+            FROM products, constituantsValues
             WHERE constituantsValues.productCode = products.code""" + condition)
-        listenames = cursor.fetchall()
+        listProductNamesConstituantsValues = cursor.fetchall()
         cursor.close()
-        if len(listenames) > 0:
-            listeFoodstuffNames = [name[0] for name in listenames]
-        return listeFoodstuffNames
+        return listProductNamesConstituantsValues
 
     def insertNewComposedProduct(self, productName, familyName,
                                  totalQuantity, dictComponentsQualifierQuantity,
@@ -248,18 +200,13 @@ class Database():
                 # Set the new productCode
                 cursor.execute("SELECT min(code) from products")
                 newProductCode = min(cursor.fetchone()[0] - 1,
-                                    int(self.configApp.get('Limits', 'startGroupProductCodes'))-1)
-
-                # Get the codes for all existing components
-                cursor.execute("SELECT DISTINCT code from constituantsNames")
-                listeCodesConstituant = [codeConstituant[0]
-                                         for codeConstituant in cursor.fetchall()]
+                                     int(self.configApp.get('Limits', 'startGroupProductCodes'))-1)
 
                 # Prepare components values to record in database
                 # Format of record to insert : productCode, componentCode, qualifValue, value
                 fieldsComposants = []
                 for componentCode, fields in dictComponentsQualifierQuantity.items():
-                     fieldsComposants.append([newProductCode, componentCode, fields[0], fields[1]])
+                    fieldsComposants.append([newProductCode, componentCode, fields[0], fields[1]])
 
                 # Prepare composition product % to record in database
                 # Format of record to insert : productCode, productCodePart, quantityPercent
@@ -291,7 +238,7 @@ class Database():
                     INSERT INTO products(familyName, code, name, source, dateSource, urlSource)
                     VALUES(?, ?, ?, ?, ?, ?)
                     """, (familyName, newProductCode, productName,
-                                source, dateSource, urlSource))
+                          source, dateSource, urlSource))
 
                 cursor.close()
         except sqlite3.IntegrityError:
@@ -306,7 +253,7 @@ class Database():
         cursor = self.connDB.cursor()
         cursor.execute("SELECT code FROM products WHERE name=?", (productName,))
         productCode = cursor.fetchone()[0]
-        if productCode >= int(self.configApp.get('Limits', 'startGroupProductCodes')) :
+        if productCode >= int(self.configApp.get('Limits', 'startGroupProductCodes')):
             raise ValueError(_("Can't ungroup") + " " + productName + " : " + _("not a group"))
         # Get members of this group
         cursor.execute("""SELECT name, quantityPercent
@@ -371,7 +318,7 @@ class Database():
         # Get info on members of this group
         if dictInfoFood["isGroup"]:
             cursor.execute("SELECT COUNT(*) FROM compositionProducts WHERE productCode = ?",
-                       (dictInfoFood["code"],))
+                           (dictInfoFood["code"],))
             dictInfoFood["nbGroupsMembers"] = cursor.fetchone()[0]
             if dictInfoFood["nbGroupsMembers"] > 0:
                 listGroup = []
@@ -384,7 +331,7 @@ class Database():
                     dictGroup["namePart"] = namePercent[0]
                     dictGroup["percentPart"] = namePercent[1]
                     listGroup.append(dictGroup)
-                dictInfoFood["groups"] =listGroup
+                dictInfoFood["groups"] = listGroup
 
         cursor.close()
         return dictInfoFood
@@ -432,7 +379,8 @@ class Database():
         # Get foodName code
         cursor.execute("SELECT code FROM products WHERE name=?", (foodName,))
         returnValue = cursor.fetchone()
-        assert returnValue is not None, "deleteUserProduct() : foodname to delete : " + foodName + " not found !"
+        assert returnValue is not None, "deleteUserProduct() : foodname to delete : " + \
+                                        foodName + " not found !"
         code = returnValue[0]
 
         # Only user foodstufs can be deleted
@@ -511,7 +459,8 @@ class Database():
                 date TEXT,
                 patient TEXT,
                 type TEXT,
-                period TEXT
+                period TEXT,
+                nbDays INTEGER
                 )""")
 
         cursor.execute("""
@@ -520,6 +469,71 @@ class Database():
                 productCode INTEGER,
                 quantity REAL
                 )""")
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS pathologies(
+                name TEXT PRIMARY KEY UNIQUE,
+                description TEXT,
+                reference TEXT
+                )""")
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS pathologiesConstituants(
+                pathologyName TEXT,
+                constituantCode INTEGER
+                )""")
+
+        # V0.41 : Add column nbDays to existing portions table
+        try:
+            cursor.execute(" ALTER TABLE portions ADD COLUMN nbDays INTEGER DEFAULT 1")
+            self.logger.warning("v0.41 : Table portions has got old schema : add an nbDays field")
+        except sqlite3.OperationalError:
+            self.logger.debug("OK v0.41 : Table portions as got an nbDays field")
+
+        # V0.41 : Check and correct dates in portions table (to delete in a future version)
+        cursor.execute("SELECT code, date FROM portions")
+        listCodeDate = cursor.fetchall()
+        listPb = []
+        nbDateCorrected = 0
+        for codeDate in listCodeDate:
+            code, date = codeDate
+            try:
+                dateFormated = DateUtil.formatDate(date)
+                if dateFormated != date:
+                    cursor.execute("UPDATE portions SET date=? WHERE code=?", (dateFormated, code))
+                    nbDateCorrected += 1
+            except ValueError:
+                listPb.append([code, date])
+        if len(listPb) > 0:
+            self.logger.warning(_("Dates are invalid in following portions") + " : " + str(listPb))
+        if nbDateCorrected > 0:
+            self.logger.warning(str(nbDateCorrected) + " " +_("dates corrected in portions table"))
+
+        # V0.42 : 26/11/2016 : Patient tables
+        # Check if patientInfo table exists
+        cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='patientInfo'")
+        if cursor.fetchone() is None:
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS patientInfo(
+                    code TEXT PRIMARY KEY UNIQUE,
+                    birthYear INTEGER DEFAULT 0,
+                    gender TEXT DEFAULT "U",
+                    size INTEGER DEFAULT 170,
+                    notes TEXT DEFAULT ""
+                )""")
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS patientPathologies(
+                    patientCode TEXT,
+                    pathologyName TEXT
+                )""")
+          # Create patient whith existing ration info (to delete in a future version)
+            cursor.execute("SELECT DISTINCT patient FROM portions")
+            CodePatents = cursor.fetchall()
+            nbInsertedPatient = 0
+            for code in CodePatents:
+                cursor.execute("INSERT INTO patientInfo(code) VALUES(?)", (code[0],))
+                nbInsertedPatient += 1
+            self.logger.warning(str(nbInsertedPatient) + " " +_("patient get from portion table"))
 
         self.connDB.commit()
         cursor.close()
@@ -541,11 +555,11 @@ class Database():
         portionIdFiltered = []
         for portionId in self.getPortions(withCode):
             condTotal = True
-            for num, input in enumerate(listUserFilters):
+            for num, inputFilter in enumerate(listUserFilters):
                 numField = num
                 if withCode:
                     numField = numField + 1
-                cond = input == "" or input.upper() in portionId[numField].upper()
+                cond = (inputFilter == "" or inputFilter.upper() in portionId[numField].upper())
                 condTotal = condTotal and cond
             if condTotal:
                 portionIdFiltered.append(portionId)
@@ -555,7 +569,7 @@ class Database():
     def getPortionCode(self, portionName, portionDate, portionPatient):
         """ Return the code in database for the portion given its Ids and True if it exists """
         cursor = self.connDB.cursor()
-        cursor.execute("""SELECT code from portions 
+        cursor.execute("""SELECT code from portions
                           WHERE UPPER(name)=? and UPPER(date)=? and UPPER(patient)=?""",
                        (portionName.upper(), portionDate.upper(), portionPatient.upper()))
         results = cursor.fetchone()
@@ -582,9 +596,9 @@ class Database():
     def insertPortion(self, fields4ThisPortion, listNamesQties):
         """ Insert or modify a portion in database """
         portionCode, exist = self.getPortionCode(fields4ThisPortion[0], fields4ThisPortion[1],
-                                                 fields4ThisPortion[2],)
+                                                 fields4ThisPortion[2])
         cursor = self.connDB.cursor()
-        if exist :
+        if exist:
             # Delete existing products for this portion
             cursor.execute("DELETE FROM portionsDetails WHERE portionCode=?",
                            (portionCode,))
@@ -592,15 +606,15 @@ class Database():
             # Even 3 Ids field must be modified because of char case
             cursor.execute("""
                 UPDATE portions
-                    SET name=?, date=?, patient=?, type=?, period=?
+                    SET name=?, date=?, patient=?, type=?, period=?, nbDays=?
                     WHERE code=?
                 """, fields4ThisPortion)
             self.logger.debug("insertPortion : portionCode=" + str(portionCode) + " modified")
         else:
             fields4ThisPortion.insert(0, portionCode)
             cursor.execute("""
-                INSERT INTO portions(code, name, date, patient, type, period)
-                VALUES(?, ?, ?, ?, ?, ?)
+                INSERT INTO portions(code, name, date, patient, type, period, nbDays)
+                VALUES(?, ?, ?, ?, ?, ?, ?)
                 """, fields4ThisPortion)
             self.logger.debug("insertPortion : portionCode=" + str(portionCode) + " created")
 
@@ -614,7 +628,7 @@ class Database():
                           " products to insert for portion " + str(portionCode))
 
         # Save in portionsDetails table products and quantities composing this portion
-        cursor.executemany(""" INSERT INTO portionsDetails(portionCode, productCode, quantity)
+        cursor.executemany("""INSERT INTO portionsDetails(portionCode, productCode, quantity)
                                       VALUES(?, ?, ?)""",
                            fieldsPortionsDetails)
 
@@ -622,20 +636,45 @@ class Database():
         cursor.close()
         self.logger.debug("insertPortion : saved")
 
-    def getFoodNameAndQuantity4Portion(self, portionCode):
-        """ Return a list of (FoodName, Quantity) contained in portion which code is given """
+    def getAllInfo4Portion(self, portionCode, specialComponentsCodes):
+        """ Return infos for the portion selected by portionCode
+            ! There can be missing components for products : replaced by "-" in Calculator frame
+            The case where all special components are missing for a product is ignored
+            """
+        self.logger.debug("Database : getAllInfo4Portion for portion " + str(portionCode))
+
+        # Build IN sqlite clause for specialComponentsCodes
+        specialComponentsCodesStr = [str(code) for code in specialComponentsCodes]
+        inClause = ",".join(specialComponentsCodesStr)
+
         cursor = self.connDB.cursor()
-        cursor.execute("""SELECT products.name, quantity
-                        FROM portionsDetails
-                        INNER JOIN products
-                        WHERE productCode=products.code AND portionCode=? """,
-                       (portionCode,) )
-        listFoodNameQuantity = cursor.fetchall()
+        # V0.41 : get nbDays for this portion
+        cursor.execute("SELECT nbDays FROM portions WHERE code=?", (portionCode,))
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError(_("Portion code not found in database") + " : " + str(portionCode))
+        nbDays = result[0]
+
+        cursor.execute("""SELECT portionsDetails.quantity, products.name, products.code,
+                                products.familyName, products.source, products.dateSource,
+                                products.urlSource, constituantsNames.code,
+                                constituantsNames.name, constituantsNames.shortcut,
+                                constituantsValues.value, constituantsValues.qualifValue
+                        FROM portionsDetails, products, constituantsNames, constituantsValues
+                        WHERE portionsDetails.portionCode=? AND
+                            portionsDetails.productCode=products.code AND
+                            constituantsNames.code=constituantsValues.constituantCode AND
+                            products.code=constituantsValues.productCode AND
+                            constituantsNames.code IN (""" + inClause + """)
+                            ORDER BY products.code""",
+                       (portionCode,))
+        listProductPortion = cursor.fetchall()
         cursor.close()
-        self.logger.debug("getFoodNameAndQuantity4Portion : get " +
-                            str(len(listFoodNameQuantity)) + " items for portion " +
-                            str(portionCode))
-        return listFoodNameQuantity
+
+        self.logger.debug("getAllInfo4Portion : get " +
+                          str(len(listProductPortion)) + " items for portion " +
+                          str(portionCode))
+        return nbDays, listProductPortion
 
     def deletePortion(self, portionCode):
         """ Delete a given portion in this database
@@ -652,3 +691,216 @@ class Database():
         cursor.close()
         self.logger.debug("deletePortion : portion " + str(portionCode) + " " + _("deleted"))
 
+    def savePathology(self, name, description, reference, listConstituantsCodes):
+        """ Insert a new pathology in database
+            V0.40 : 22/11/2016 """
+        self.logger.debug("Database/savePathology " + name)
+        cursor = self.connDB.cursor()
+
+        # Checks parameters
+        if name is None or len(name) < 2:
+            raise ValueError(_("Invalid pathology name : use more than one letter") + " : " + name)
+        if listConstituantsCodes is None or len(listConstituantsCodes) < 1:
+            raise ValueError(_("No component given for that pathology") + " : " + name)
+        for code in listConstituantsCodes:
+            # Get info about component for a product
+            cursor.execute("SELECT code FROM constituantsNames WHERE code=?", (code,))
+            result = cursor.fetchone()
+            if result is None:
+                raise ValueError(_("Invalid component code given for pathology") + " : " +
+                                 str(code))
+        cursor.close()
+
+        # Replace existing pathology
+        self.deletePathology(name)
+        cursor = self.connDB.cursor()
+        cursor.execute("""INSERT INTO pathologies(name, description, reference)
+                            VALUES(?, ?, ?)
+                        """, (name, description, reference))
+
+        # V0.41 : insert all pathology constituants with only one SQL statement
+        # Save in pathologiesConstituants table (pathologyName, constituantCode) composing
+        # pathology componants
+        pathologiesConstituants = []
+        for code in listConstituantsCodes:
+            pathologiesConstituants.append([name, code])
+        cursor.executemany("""INSERT INTO pathologiesConstituants(pathologyName, constituantCode)
+                                VALUES(?, ?)""",
+                           pathologiesConstituants)
+
+        self.connDB.commit()
+        cursor.close()
+
+    def getDefinedPathologiesNames(self):
+        """ Return a list of all pathologies defined in database
+        V0.40 : 22/11/2016 """
+        self.logger.debug("Database/getDefinedPathologiesNames")
+        cursor = self.connDB.cursor()
+        cursor.execute("SELECT name FROM pathologies")
+        results = cursor.fetchall()
+        cursor.close()
+        listNames = [result[0] for result in results]
+        self.logger.debug("Database/getDefinedPathologiesNames : " + str(listNames))
+        return listNames
+
+    def deletePathology(self, name):
+        """ Delete the name pathology in this database
+        V0.40 : 22/11/2016 """
+        self.logger.debug("Database/deletePathology for name " + name)
+        cursor = self.connDB.cursor()
+
+        # Delete elements values
+        cursor.execute("DELETE FROM pathologiesConstituants WHERE pathologyName=?", (name,))
+        cursor.execute("DELETE FROM pathologies WHERE name=?", (name,))
+
+        # Commit to be seen by other database connexion
+        self.connDB.commit()
+        cursor.close()
+        self.logger.debug("deletePathology : name " + name + " " + _("deleted"))
+
+    def getComponentsCodes4Pathologies(self, listPathologiesNames):
+        """ Delete the name pathology in this database
+        V0.40 : 22/11/2016 """
+        self.logger.debug("Database/getComponentsCodes4Pathologies for names " +
+                          str(listPathologiesNames))
+        if listPathologiesNames is None or len(listPathologiesNames) < 1:
+            raise ValueError(_("No pathology selected"))
+        cursor = self.connDB.cursor()
+        inClause = ",".join(["'" + patho + "'" for patho in listPathologiesNames])
+        cursor.execute("""SELECT constituantCode
+                        FROM pathologiesConstituants
+                        WHERE pathologyName IN (""" +
+                       inClause + ")")
+        results = cursor.fetchall()
+        listCodes = set([result[0] for result in results])
+
+        if len(results) == 0:
+            raise ValueError(_("Unknown pathologies selected") + " : " + str(listPathologiesNames))
+
+        cursor.close()
+        self.logger.debug("getComponentsCodes4Pathologies : " + str(len(listCodes)) +
+                          " distincts codes founds")
+        return listCodes
+
+    def getDefinedPathologiesDetails(self, name):
+        """ Return a details (id fields and constituants) for name pathology
+        V0.40 : 22/11/2016 """
+        self.logger.debug("Database/getDefinedPathologiesDetails")
+        cursor = self.connDB.cursor()
+        cursor.execute("""SELECT description, reference FROM pathologies
+                        WHERE name=?""", (name,))
+        result = cursor.fetchone()
+        if result is None:
+            raise ValueError(_("Unknown pathology : ") + " : " + name)
+        cursor.close()
+        description = result[0]
+        reference = result[1]
+
+        listComponentsCodes = self.getComponentsCodes4Pathologies([name])
+
+        self.logger.debug("Database/getDefinedPathologiesDetails : name=" + name +
+                          " description=" + description + " reference=" + reference +
+                          " constituants=" + str(listComponentsCodes))
+        return name, description, reference, listComponentsCodes
+
+    def getAllPatientCodes(self):
+        """ Return a list of all patient codes defined in database
+            V0.42 : 26/11/2016 """
+        self.logger.debug("Database/getAllPatientCodes")
+        cursor = self.connDB.cursor()
+        cursor.execute("SELECT code FROM patientInfo ORDER BY code")
+        results = cursor.fetchall()
+        cursor.close()
+        listCodes = [result[0] for result in results]
+        self.logger.debug("Database/getAllPatientCodes : " + str(listCodes))
+        return listCodes
+
+    def getInfoPatient(self, patientCode):
+        """ Return a dictionary for value defined for this patient
+        V0.42 : 28/11/2016 """
+        self.logger.debug("Database/getInfoPatient")
+        cursor = self.connDB.cursor()
+        dictPatient = dict()
+        cursor.execute("""SELECT code, birthYear, gender, size, notes
+                       FROM patientInfo WHERE code=?""",
+                       (patientCode,))
+        result = cursor.fetchone()
+        cursor.close()
+        if result is None:
+            raise ValueError(_("Please select at least one operator in a filter line"))
+        dictPatient["code"] = result[0]
+        dictPatient["birthYear"] = result[1]
+        dictPatient["gender"] = result[2]
+        dictPatient["size"] = result[3]
+        dictPatient["notes"] = result[4]
+        self.logger.debug("Database/getInfoPatient : " + str(dictPatient))
+        return dictPatient
+
+    def insertPatientInDatabase(self, listInfoPatient):
+        """Insert new patient in database """
+        self.logger.debug("Database/insertPatientInDatabase")
+        cursor = self.connDB.cursor()
+        cursor.execute("""
+            INSERT INTO patientInfo(code, birthYear, gender, size, notes)
+                VALUES(?, ?, ?, ?, ?)
+            """, (listInfoPatient[0], int(listInfoPatient[1]),
+                  listInfoPatient[2], int(listInfoPatient[3]),
+                  listInfoPatient[4]))
+        self.connDB.commit()
+        cursor.close()
+
+    def updatePatientInDatabase(self, listInfoPatient):
+        """Update patient in database """
+        self.logger.debug("Database/updatePatientInDatabase")
+        cursor = self.connDB.cursor()
+        cursor.execute("""
+            UPDATE patientInfo
+            SET birthYear=?, gender=?, size=?, notes=?
+            WHERE code=?
+            """, (int(listInfoPatient[1]),
+                  listInfoPatient[2], int(listInfoPatient[3]),
+                  listInfoPatient[4], listInfoPatient[0]))
+        self.connDB.commit()
+        cursor.close()
+
+    def updatePatientPathologies(self, patientCode, listpathologies):
+        """ Update pathologies for a patient """
+        self.logger.debug("Database/updatePatientPathologies : patient " + patientCode +
+                          "pathologies=" + str(listpathologies))
+        cursor = self.connDB.cursor()
+        cursor.execute("DELETE FROM patientPathologies WHERE patientCode=?", (patientCode,))
+
+        # Insert New pathologies in table
+        values2Insert = [(patientCode, pathology) for pathology in listpathologies]
+        cursor.executemany("""
+            INSERT INTO patientPathologies(patientCode, pathologyName)
+            VALUES(?, ?)
+            """, values2Insert)
+
+        self.connDB.commit()
+        cursor.close()
+
+    def getPathologies4Patient(self, patientCode):
+        """ Return list of pathologies registred for patient patientCode """
+        self.logger.debug("Database/getPathologies4Patient : patient " + patientCode)
+        cursor = self.connDB.cursor()
+        cursor.execute("SELECT pathologyName FROM patientPathologies WHERE patientCode=?",
+                       (patientCode,))
+        results = cursor.fetchall()
+        cursor.close()
+        listPathologies = [pathology[0] for pathology in results]
+        self.logger.debug("listPathologies=" + str(listPathologies))
+        return listPathologies
+
+    def deletePatient(self, patientCode):
+        """ Delete all information for given patient in database """
+        self.logger.debug("Database/deletePatient : patient " + patientCode)
+        cursor = self.connDB.cursor()
+        cursor.execute("DELETE FROM patientPathologies WHERE patientCode=?", (patientCode,))
+        cursor.execute("DELETE FROM patientInfo WHERE code=?", (patientCode,))
+        cursor.execute(""" DELETE FROM portionsDetails
+                           WHERE portionCode IN (SELECT code FROM portions WHERE patient=?)""",
+                       (patientCode,))
+        cursor.execute("DELETE FROM portions WHERE patient=?", (patientCode,))
+        self.connDB.commit()
+        cursor.close()

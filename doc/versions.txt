@@ -1,7 +1,68 @@
 CalcAl - versions summary
 ==========================
 
-CalcAl_v0.36g : 12/11/2016 : Refactoring
+Problem to solve : On Mac OSX Sierra
+2016-11-18 17:22:15.145 Python[2389:114966] CALayer position contains NaN: [nan 0]
+Bug implementation Tkinter 8.5 with this new OS
+Wait for new OS release.
+
+CalcAl_v0.42 : 1/12/2016 : Patient frame
+- 8042 lines py code (include 1380 lines pytest)
+- Correct error button label in Pathology Frame
+- Create new tables
+- Get existing patient from portions table to initialise patients
+- Comboboxes for rations frame and dialog
+- Clear not error messages automatically after a delay
+- New banner for frame patient designed by Perrine
+- Disable pathologie definition if multiple pathologies selection
+- Use quality checker Pylint and correct problems
+python3 -m pylint --disable=invalid-name,unused-wildcard-import,undefined-variable,too-many-locals,too-many-branches,too-many-arguments,too-many-public-methods,too-many-statements,too-few-public-methods,too-many-instance-attributes,too-many-ancestors,too-many-nested-blocks,bad-continuation,line-too-long,unused-argument,bad-continuation *.py */*.py > ../qualite/resu_pylint.txt
+
+CalcAl_v0.41 : 25/11/2016 : nbDays stored in portions table
+- 7253 lines py code (include 1380 lines pytest)
+- insert all pathology constituants with only one SQL statement
+	in database/savePathology()
+- Update schema of portions table with a new column nbDays (default value to 1)
+	in database/Database.py/createUserTables()
+	existing database are updating
+- save nbDays in table portions in database.Database/insertPortion()
+- Displaying nbDays when reloading a portion from database
+- Correct bug in CalculatorFrame/changeNbDays() when setting nbDays to 1 (pb test)
+- Correct dates format in portion tables
+- Check date entered by user when saving a portion
+- New button Today in gui/PortionInfoChooser()
+- Tooltip on Date entry in gui/PortionInfoChooser()
+- Check date copied from and old portion : if problem : message warning dialog.
+- New banner designed by Perrine for pathology Frame.
+- Editor for pathology description instead of entry field +
+	Reorganisation frames in gui/PathologyFrame.py
+
+CalcAl_v0.40 : 23/11/2016 : Pathology frame
+- 7021 lines py code (include 1299 lines pytest)
+- Correct problem of special component not present in Model when loading a ration.
+- Implement pathology frame
+
+CalcAl_v0.39 : 18/11/2016 : Speed portion display
+- 6387 lines py code (include 1076 lines pytest)
+- Speed portion display when put from Portion frame to calculator.
+	by accessing only one time to database and creating Foodstuffs
+	and Components without accessing database.
+
+CalcAl_v0.38 : 17/11/2016 : Nb days to eat a portion in Calculator Frame
+- 6296 lines py code (include 1064 lines pytest)
+- Correct bug of bad version in Mac .app info
+	package_mac.sh get version number from CalcAl.ini file
+- New combobox in calculator frame for nbDays to eat food if >1 2nd total line
+- CalculatorFrameModel/displayPortion() :Reset components to special component
+	to speed up components insertion when displaying a portion in calculator frame.
+
+CalcAl_v0.37 : 13/11/2016 : speed search frame
+- 6218 lines py code (include 1055 lines pytest)
+- Correct bug in CalculatorFrame, unable to change database
+	when line of food exist
+- improve speed in Search frame
+
+CalcAl_v0.36 : 12/11/2016 : Refactoring
 - 6046 lines py code (include 1055 lines pytest)
 - Model package to host diet modules
 - Introduce Design Pattern : Publish–subscribe pattern 

@@ -34,6 +34,7 @@ from tkinter import *
 from tkinter.ttk import *
 
 class TableTreeView(Frame):
+    """ Table widget """
     def __init__(self, master, firstColumnsTitle, nbMinLines,
                  firstColWidth=100, otherColWidth=75, colMinWidth=50,
                  selectmode="none"):
@@ -46,24 +47,24 @@ class TableTreeView(Frame):
         self.otherColWidth = otherColWidth
         self.colMinWidth = colMinWidth
 
-        self.grid_rowconfigure(0, weight = 1)
-        self.grid_columnconfigure(0, weight = 1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
         # Create treeview, scrollbars
         self.treeview = Treeview(self, height=nbMinLines, selectmode=selectmode)
         vsb = Scrollbar(self, orient=VERTICAL, command=self.treeview.yview)
-        vsb.grid(row=0, column=1, sticky=(N,S))
+        vsb.grid(row=0, column=1, sticky=(N, S))
         hsb = Scrollbar(self, orient=HORIZONTAL, command=self.treeview.xview)
-        hsb.grid(row=1, column=0, sticky=(E,W))
+        hsb.grid(row=1, column=0, sticky=(E, W))
         self.treeview.config(yscrollcommand=vsb.set)
         self.treeview.config(xscrollcommand=hsb.set)
-        self.treeview.grid(row=0, sticky=(N,S,W,E))
-        self.grid_rowconfigure(0, weight = 1)
+        self.treeview.grid(row=0, sticky=(N, S, W, E))
+        self.grid_rowconfigure(0, weight=1)
 
         # Create header line
         # Item key column
         self.treeview.heading("#0", text=firstColumnsTitle[0],
-                              command=lambda select=True:self.selectAllOrNothing(select))
+                              command=lambda select=True: self.selectAllOrNothing(select))
         if self.numStableCol > 0:
             self.treeview['columns'] = firstColumnsTitle[1:] # Other columns
             for titleCol in firstColumnsTitle[1:]:
@@ -77,9 +78,8 @@ class TableTreeView(Frame):
 
     def setColumnsDefaultProperties(self):
         """ Set Default column properties """
-        # TODO : parameter widths
         self.treeview.column("#0", anchor=W, width=self.firstColWidth,
-                             stretch=False, minwidth=self.colMinWidth )
+                             stretch=False, minwidth=self.colMinWidth)
         for columnName in self.treeview['columns']:
             self.treeview.column(columnName, anchor=E, width=self.otherColWidth,
                                  stretch=False, minwidth=self.colMinWidth)
@@ -102,7 +102,11 @@ class TableTreeView(Frame):
         else:
             self.treeview.insert('', 'end', text=name, values=columnsValues, tags=(tag,))
         if seeItem:
-         self.treeview.see(self.searchItem(name))
+            self.see(name)
+
+    def see(self, name):
+        """ Display on the screen an item whoose key is given in parameter """
+        self.treeview.see(self.searchItem(name))
 
     def insertGroupRow(self, listNameListColumn):
         """ V0.35 For speeding up : insert a group of row """
@@ -132,8 +136,9 @@ class TableTreeView(Frame):
             listSelectedRows = self.getSelectedItems(excludeRowWithTitle)
         listValues = []
         for rowItem in self.treeview.get_children():
-            if (not excludeRowWithTitle or self.getTextForItemIndex(rowItem) != excludeRowWithTitle ) \
-                and (not onlySelected or (rowItem in listSelectedRows)):
+            if (not excludeRowWithTitle or \
+                self.getTextForItemIndex(rowItem) != excludeRowWithTitle) and \
+                (not onlySelected or (rowItem in listSelectedRows)):
                 valuesRow = [self.treeview.item(rowItem, option='text'),
                              self.treeview.item(rowItem, option='values')[:self.numStableCol]]
                 listValues.append(valuesRow)
@@ -146,8 +151,9 @@ class TableTreeView(Frame):
             listSelectedRows = self.getSelectedItems(excludeRowWithTitle)
         listValues = []
         for rowItem in self.treeview.get_children():
-            if (not excludeRowWithTitle or self.getTextForItemIndex(rowItem) != excludeRowWithTitle ) \
-                and (not onlySelected or (rowItem in listSelectedRows)):
+            if (not excludeRowWithTitle or \
+                self.getTextForItemIndex(rowItem) != excludeRowWithTitle) and \
+                (not onlySelected or (rowItem in listSelectedRows)):
                 listValues.append(self.treeview.item(rowItem, option='text'))
         return listValues
 
@@ -185,7 +191,7 @@ class TableTreeView(Frame):
         numCol = 0
         for title in listTitlesCol:
             self.treeview.heading(numCol, text=title)
-            self.treeview.heading(numCol, command=lambda col=numCol:self.sortby(col, False))
+            self.treeview.heading(numCol, command=lambda col=numCol: self.sortby(col, False))
             numCol = numCol + 1
 
         # Add value in last colums of each row
@@ -236,13 +242,13 @@ class TableTreeView(Frame):
                 for child in self.treeview.get_children()
                 if 'normalRow' in self.treeview.item(child, option='tags')]
         # if the data to be sorted is numeric change to float
-        data =  self.change2Numeric(data)
+        data = self.change2Numeric(data)
         # now sort the data in place
         data.sort(reverse=descending)
         for ix, item in enumerate(data):
             self.treeview.move(item[1], '', ix)
         # switch the heading so it will sort in the opposite direction
-        self.treeview.heading(col, command=lambda col=col:self.sortby(col, not descending))
+        self.treeview.heading(col, command=lambda col=col: self.sortby(col, not descending))
 
     def change2Numeric(self, data):
         """ Try to convert each first field of data in numeric value
@@ -265,12 +271,13 @@ class TableTreeView(Frame):
         """ Select every or no normal row according parameter """
         for child in self.treeview.get_children():
             if 'normalRow' in self.treeview.item(child, option='tags'):
-                if selectAll :
+                if selectAll:
                     self.treeview.selection_add(child)
                 else:
                     self.treeview.selection_remove(child)
         selectAll = not selectAll
-        self.treeview.heading("#0", command=lambda select=selectAll:self.selectAllOrNothing(select))
+        self.treeview.heading("#0",
+                              command=lambda select=selectAll: self.selectAllOrNothing(select))
 
     def getTableAsText(self):
         """ Return table selected content in text format """

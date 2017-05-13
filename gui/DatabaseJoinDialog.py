@@ -10,10 +10,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Combobox
 
-from . import CallTypWindow
 from . import TkSimpleDialog
-
-import os.path
 
 class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
     """ Dialog box to choose a food name and family """
@@ -24,14 +21,16 @@ class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
         self.dbName = ""
         self.delaymsTooltips = int(self.configApp.get('Limits', 'delaymsTooltips'))
         super(DatabaseJoinDialog, self).__init__(parent, title)
+        self.dbNameResult = ""
 
     def body(self, master):
         """ Body content of this dialog """
         Label(master, text=_("Please choose secondary database") + " :").pack(side=TOP)
-        listOtherDatabase = [databaseName for databaseName in self.databaseManager.getListDatabaseInDir()
-                                      if databaseName != self.dbNameMaster]
+        listOtherDatabase = [databaseName
+                             for databaseName in self.databaseManager.getListDatabaseInDir()
+                             if databaseName != self.dbNameMaster]
         self.secondaryDatabaseCombobox = Combobox(master, exportselection=0,
-                                             state="readonly", values=listOtherDatabase)
+                                                  state="readonly", values=listOtherDatabase)
         self.secondaryDatabaseCombobox.current(0)
         self.secondaryDatabaseCombobox.pack(side=TOP)
 
@@ -60,7 +59,7 @@ class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
             isOK = True
         except ValueError as exc:
             self.bell()
-            messagebox.showwarning(_("Bad input"), message = _("Error") + " : " + str(exc) + " !")
+            messagebox.showwarning(_("Bad input"), message=_("Error") + " : " + str(exc) + " !")
         return isOK
 
     def apply(self):

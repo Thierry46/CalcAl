@@ -1,5 +1,5 @@
 # messages.po : French translation file for CalcAl project labels.
-# Date : 10/3/2016 - 12/10/2016
+# Date : 10/3/2016 - 1/12/2016
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
 # Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
@@ -85,6 +85,9 @@ msgstr "Calculateur"
 msgid "Search"
 msgstr "Recherche"
 
+msgid "Patients"
+msgstr "Patients"
+
 msgid "Tab"
 msgstr "Onglet"
 
@@ -93,12 +96,6 @@ msgstr "activé"
 
 msgid "Based on Nutrial components database Ciqual 2013"
 msgstr "Basé sur les composants nutritionnels de la base Ciqual 2013"
-
-###############
-# Database
-###############
-msgid "Traces"
-msgstr "Traces"
 
 ########################
 # CalcAlGUIMenu
@@ -521,6 +518,15 @@ msgstr "Enregistrement de la portion annulé"
 msgid "Portion saved in database"
 msgstr "Ration sauvée dans la base de données"
 
+msgid "Duration to eat"
+msgstr "Durée pour absorber"
+
+msgid "this portion (days)"
+msgstr "la portion (jours)"
+
+msgid "Components selected"
+msgstr "Composants selectionnés"
+
 # -- Tooltips --
 msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
 msgstr "Utiliser les jokers :\n* pour n caractère\n? pour un seul"
@@ -666,6 +672,28 @@ msgstr "Non créé par un utilisateur"
 msgid "used by"
 msgstr "utilisé par"
 
+msgid "Invalid pathology name : use more than one letter"
+msgstr "Nom d'aliment invalide : utilisez plus d'une lettre"
+
+msgid "No component given for that pathology"
+msgstr "Aucun composant fourni pour cette pathologie"
+
+msgid "No pathology selected"
+msgstr "Aucune pathologie choisie"
+
+msgid "Unknown pathologies selected"
+msgstr "Pathologies choisies inconnues"
+
+msgid "Portion code not found in database"
+msgstr "Code portion introuvable dans la base"
+
+msgid "Dates are invalid in following portions"
+msgstr "Les dates sont incorrectes dans les portions suivantes"
+
+msgid "dates corrected in portions table"
+msgstr "dates corrigées dans la table des portions"
+
+
 ########################
 # DatabaseReaderFactory
 ########################
@@ -733,6 +761,9 @@ msgstr "Filtres"
 msgid "Portion name"
 msgstr "Nom de la ration"
 
+msgid "Today"
+msgstr "Aujourd'hui"
+
 msgid "Date"
 msgstr "Date"
 
@@ -796,6 +827,24 @@ msgstr "Voulez-vous vraiment modifier cette portion dans la base ?"
 msgid "Please modify portion identificators"
 msgstr "Veuillez modifier les identifiants de la portion"
 
+msgid "Loading values"
+msgstr "Chargement des valeurs"
+
+msgid "Please correct the date displayed"
+msgstr "Veuillez corriger la date affichée"
+
+msgid "Allowed formats for dates"
+msgstr "Formats autorisés pour les dates"
+
+msgid "DD/MM/YYYY"
+msgstr "JJ/MM/AAAA"
+
+msgid "DD/MM/YY"
+msgstr "JJ/MM/AA"
+
+msgid "YYYY/MM/DD"
+msgstr "AAAA/MM/JJ"
+
 ##########################
 # PortionFrame
 ##########################
@@ -820,5 +869,162 @@ msgstr "Suppression annulée"
 msgid "Portion code"
 msgstr "Code ration"
 
-msgid "Portion deleted"
-msgstr "Ration détruite"
+##########################
+# TotalLine
+##########################
+msgid "per day"
+msgstr "par jour"
+
+##########################
+# PathologiesFrame
+##########################
+
+msgid "Pathologies"
+msgstr "Pathologies"
+
+msgid "Defined pathologies"
+msgstr "Pathologies définies"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Pathology name"
+msgstr "Nom de la pathologie"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Save pathology"
+msgstr "Sauver la pathologie"
+
+msgid "Select composants in calculator"
+msgstr "Activer les composants dans le calculator"
+
+msgid "Clear pathology"
+msgstr "Effacer la pathologie"
+
+msgid "Pathology saved in database"
+msgstr "Pathologie sauvée dans la base"
+
+msgid "Pathology deleted in database"
+msgstr "Pathologie détruite dans la base"
+
+msgid "Please select one and only one pathology to delete"
+msgstr "Selectionnez une et une seule pathologie à détruire"
+
+msgid "Please select at least one pathology"
+msgstr "Selectionnez au moins une pathologie"
+
+msgid "Pathology definition"
+msgstr "Définition d'une pathologie"
+
+msgid "Componants\nto folllow\nfor this\npathology"
+msgstr "Composants\nà suivre\npour cette\npathologie"
+
+##########################
+# DateUtil
+##########################
+
+msgid "No separator in the date"
+msgstr "Pas de séparateur dans la date"
+
+msgid "Too many different separators in the date"
+msgstr "trop de séparateurs différents dans la date"
+
+msgid "Date is not valid"
+msgstr "la date n'est pas valide"
+
+##########################
+# PatientFrame
+##########################
+msgid "Patient selection"
+msgstr "Sélection du patient"
+
+msgid "New Patient"
+msgstr "Nouveau patient"
+
+msgid "Birth year"
+msgstr "Année de naissance"
+
+msgid "Gender"
+msgstr "Sexe"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Graph"
+msgstr "tracer"
+
+msgid "Patient monitoring"
+msgstr "Suivi du patient"
+
+# Gender
+msgid "M"
+msgstr "M"
+msgid "F"
+msgstr "F"
+msgid "U"
+msgstr "I"
+
+msgid "Appointment date"
+msgstr "Date du suivi"
+
+msgid "Weight (kg)"
+msgstr "Poids (kg)"
+
+msgid "Hip size"
+msgstr "Tour de hanche"
+
+msgid "Physical activity"
+msgstr "Activité physique"
+
+msgid "New monitoring..."
+msgstr "Nouveau suivi..."
+
+msgid "Notes for this patient"
+msgstr "Notes pour ce patient"
+
+msgid "Show rations"
+msgstr "Afficher les rations"
+
+msgid "Show pathologies"
+msgstr "Afficher les pathologies"
+
+msgid "Patient information"
+msgstr "Données concernant le patient"
+
+msgid "Patient pathologies"
+msgstr "Pathologies de ce patient"
+
+msgid "Monitored parameters"
+msgstr "Paramètres suivis"
+
+msgid "Modify a monitoring..."
+msgstr "Modifier un suivi..."
+
+msgid "Patient displayed"
+msgstr "Patient affiché"
+
+msgid "Patient code must be 3 capital letters followed by 3 digits"
+msgstr "Le code patient doit être 3 majuscules suivies de 3 chiffres"
+
+msgid "Patient info updated in database"
+msgstr "Information patient mises à jour dans la base"
+
+msgid "Patient age must be in"
+msgstr "L'age du patient doit être compris dans"
+
+msgid "Patient gender must be M F or U"
+msgstr "Le sexe du patient doit être M, F ou I"
+
+msgid "Patient size must be in"
+msgstr "La taille du patient doit être comprise entre"
+
+msgid "Patient created in database"
+msgstr "Le patient a été créé dans la base"
+
+msgid "Patient deleted in database"
+msgstr "Le patient a été supprimé de la base"

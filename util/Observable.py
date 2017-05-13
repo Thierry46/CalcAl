@@ -22,15 +22,19 @@ https://en.wikipedia.org/wiki/Design_Patterns
 """
 
 class Observable(object):
+    """ Define method  for observable in MVC design pattern """
     def __init__(self):
+        """ Init list of observer and change flag """
         self.obs = []
         self.changed = False
 
     def addObserver(self, observer):
+        """ Add the calling observer to the list of observer of this observable """
         if observer not in self.obs:
             self.obs.append(observer)
 
     def deleteObserver(self, observer):
+        """ Remove observer from the list of observer of this observable """
         self.obs.remove(observer)
 
     def notifyObservers(self, arg = None):
@@ -45,16 +49,21 @@ class Observable(object):
             self.clearChanged()
 
     def deleteObservers(self):
+        """ Remove all observers from the list of observer of this observable """
         self.obs = []
 
     def setChanged(self):
+        """ Set change flag """
         self.changed = True
 
     def clearChanged(self):
+        """ Clear change flag """
         self.changed = False
 
     def hasChanged(self):
+        """ Get change flag """
         return self.changed
 
     def countObservers(self):
+        """ Return the number of observers registred on this model """
         return len(self.obs)
