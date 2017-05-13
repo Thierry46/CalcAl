@@ -1,0 +1,420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="fr"><head>
+
+
+
+
+
+
+  
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>CalcAl Versions</title>
+  
+
+  
+  
+  <meta content="Thierry Maillard" name="author">
+
+  
+  <meta content="CalcAl : historique des versions" name="description"></head><body alink="#000099" bgcolor="#ccffff" link="#000099" text="#000000" vlink="#990099">
+<h1 align="center"><img alt="Logo CalcAl" src="../images/logo_calcal.gif" align="right" border="0" height="135" hspace="10" vspace="10" width="150">CalcAl - Historique des versions<br>
+</h1>
+
+<ul>
+
+  <li><a href="#Stable">Versions utilisateurs</a></li>
+  <li><a href="#Beta">Versions de développement</a><br>
+  </li>
+</ul>
+
+<br>
+
+<hr size="2" width="100%">
+<h2><a name="Stable"></a>Versions utilisateurs<br>
+</h2>A venir.<br>
+<br>
+
+<hr size="2" width="100%"><h2><a name="Beta"></a>Versions de développement</h2>CalcAl_v0.52 : 8/5/2017 : Quality and ergonomy<br>
+- 8693 lines py code (include 1409 lines pytest), 4722 statements analysed<br>
+
+- Pylint : code has been rated at 9.91/10<br>
+
+
+&nbsp;&nbsp;&nbsp; - Import BD dialog : file chooser filter according DB type<br>
+&nbsp;&nbsp;&nbsp; - Possibility to cancel Web Browser launching<br>
+&nbsp;&nbsp;&nbsp; - correct bug when importing zipped Ciqual : zipped archive not supported because <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  Ciqual table is given uncompressed on ANSES web site.<br>
+- Use decorators for statics functions<br>
+- Use flake8 to check PEPS 8 coding rules. <br>
+- Quality improvements, harden pylints rules in .pylintrc.<br>
+
+<br>
+CalcAl_v0.51 : 5/3/2017 : Include documentation in project<br>
+&nbsp;&nbsp;&nbsp; - French documentation available in directory CalcAl_doc<br>
+&nbsp;&nbsp;&nbsp; - New option of menu ? / Documentation that launch documentation in user's WEB browser.<br>
+&nbsp;&nbsp;&nbsp; - New Help button in New database dialog<br>
+<br>
+CalcAl_v0.50 : 18/2/2017 : Improve packaging on Mac and correct bugs<br>
+- 8577 lines py code (include 1364 lines pytest)<br>
+&nbsp;&nbsp;&nbsp; - Rewrite package_mac.sh :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; - correct crash in semi-standalone version<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; - import the good tinter version in standalone .app<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; - parameter to script to build semi-standalone version with -s option.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; - identify .app : standalone and semi_standalone<br>
+&nbsp;&nbsp;&nbsp; - Round group composition values with 1 digit.<br>
+&nbsp;&nbsp;&nbsp; - CalculatorFrame : add buttons :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; + to improve food search, - to clear food selector entry<br>
+&nbsp;&nbsp;&nbsp; - Clean Database/createUserTables() : remove old database updating<br>
+<br>
+CalcAl_v0.49 : 1/2/2017 : correction bug search frame<br>
+- 8547 lines py code (include 1364 lines pytest)<br>
+- Pylint : code has been rated at 9.77/10<br>
+&nbsp;&nbsp;&nbsp; - SearchFood() : correct bug in column order :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; SearchThreadedTask.py/runSearch remove set conversion for listComp<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; set is not ordered, but list is ordered when iterating<br>
+&nbsp;&nbsp;&nbsp; - Search frame messages : add constituent names in message<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; To see on an hight speed machine, activate debug<br>
+&nbsp;&nbsp;&nbsp; - Message Translation : results, about group…<br>
+<br>
+<br>
+CalcAl_v0.48 : 18/1/2017 : Installer on Mac and windows<br>
+&nbsp;&nbsp;&nbsp; - On windows : Package_win.bat<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Create exe with py2exe and package it<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Build an installer using InnoSetup<br>
+&nbsp;&nbsp;&nbsp; - On mac : Package_mac.sh<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; - Add background image in .dmg<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; - Add a link to /applications in .dmg<br>
+<br>
+CalcAl_v0.47 : 7/1/2017 : Energies recalculated when missing<br>
+- 8509 lines py code (include 1364 lines pytest)<br>
+- Pylint : code has been rated at 9.77/10<br>
+&nbsp;&nbsp;&nbsp; - Add new function : Database/correctEnergyKcal() to correct databases<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; when energies are missing.<br>
+&nbsp;&nbsp;&nbsp; - Remove absolute path in package_mac.sh and setup_model.py<br>
+<br>
+CalcAl_v0.46 : 27/12/2016 : correct encoding and accent problems<br>
+&nbsp;&nbsp;&nbsp; - in CiqualReader.py&nbsp; : change encoding when reading ciqual ref file :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; iso8859-1 -&gt; cp1252<br>
+&nbsp;&nbsp;&nbsp; - Bug implementation Tkinter 8.5 with new OS X.12.1 corrected in OS X.12.2<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 2016-11-18 17:22:15.145 Python[2389:114966] CALayer position contains NaN: [nan 0]<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; when placing mouse cursor on an empty scrollbar.<br>
+&nbsp;&nbsp;&nbsp; - Correct Tk 8.5.18 corrects accents problems causing exception<br>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.5.18.0/ActiveTcl8.5.18.0.298892-macosx10.5-i386-x86_64-threaded.dmg<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; This version Tk 8.5.18 corrects accents problems causing exception :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; libc++abi.dylib: terminating with uncaught exception of type NSException<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Install :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Download .dmg, double clic on it<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Right-clic on the package + Open + admin password + Continue + Accept licence +<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; admin password + install Software + Yes + No + Installation Succes + Close<br>
+&nbsp;&nbsp;&nbsp; - Correct problem in database/Database.py/getProductsNamesContainingPart() :<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; capitalise only first car in global search for selecting food with wildcards<br>
+<br>
+CalcAl_v0.45 : 19/12/2016 : Ciqual 2016<br>
+- 8415 lines py code (include 1364 lines pytest)<br>
+- Pylint : code has been rated at 9.78/10<br>
+- Create resources/database/ciqual_2016_constituants.txt table to get components codes<br>
+- Add new components codes in locale/*/componants_shortcuts.txt to get shorctcuts for<br>
+&nbsp;&nbsp;&nbsp; new components : Salt and Chloride<br>
+- Ciqual_2013_Reader -&gt; Ciqual_Reader for reading Ciqual 2013 and 2016 init file<br>
+- Modify database/joinDatabase to add or update components from second DB<br>
+&nbsp;&nbsp;&nbsp; and to deal with product of same name but different code in the 2 databases<br>
+- Correct bug in Energy table when database does not contain alcool component<br>
+&nbsp;&nbsp;&nbsp; ie : USDA SR28 database<br>
+- Log message when deleting a database.<br>
+- Correct Bug in getEnergyRatio() when adding food without energy defined<br>
+&nbsp;&nbsp;&nbsp; or no energy supplied like for water.<br>
+- Correct Bug in EnergyFrame : don’t update when erasing a food in calculator frame.<br>
+<br>
+CalcAl_v0.44 : 3/12/2016 : Test on Pocket PC Windows 7 + Quality<br>
+- 8277 lines py code (include 1364 lines pytest)<br>
+- Pylint : code has been rated at 9.73/10<br>
+- portability on Windows 7 :<br>
+&nbsp;&nbsp;&nbsp; User home detection : package pwd not available<br>
+&nbsp;&nbsp;&nbsp; homeUser = os.path.expanduser("~")<br>
+- Adapt Windows size to tiny computer (Pocket PC)<br>
+- Correct Pylint warnings<br>
+<br>
+CalcAl_v0.43 : 2/12/2016 : Quality review<br>
+- 7980 lines py code (include 1379 lines pytest)<br>
+- Pylint : code has been rated at 9.63/10<br>
+- Solve problem update() of observer overriding tkinter update() method<br>
+Pylint warning : Arguments number differs from overridden 'update' method (arguments-differ)<br>
+- Solve Pylint warning :<br>
+&nbsp;&nbsp;&nbsp; Wildcard import tkinter (wildcard-import)<br>
+&nbsp;&nbsp;&nbsp; Wildcard import tkinter.ttk (wildcard-import)<br>
+- Solve bug missing argument in Module model.CalculatorFrameModel<br>
+************* Module model.CalculatorFrameModel<br>
+E:166,18: No value for argument 'message' in constructor call (no-value-for-parameter)<br>
+E:208,18: No value for argument 'message' in constructor call (no-value-for-parameter)<br>
+W:213,12: Unused variable 'name' (unused-variable)<br>
+W:213,18: Unused variable 'quantity' (unused-variable)<br>
+W:395,12: Unused variable 'name' (unused-variable)<br>
+W:395,18: Unused variable 'quantity' (unused-variable)<br>
+W:429,12: Unused variable 'name' (unused-variable)<br>
+W:429,18: Unused variable 'quantity' (unused-variable)<br>
+C: 41, 0: standard import "import logging" comes before "from model import Foodstuff" (wrong-import-order)<br>
+- CalculatorFrame : Solve bug when deleting a group : definition Frame not updated :<br>
+&nbsp;&nbsp;&nbsp; family combobox and food name combobox.<br>
+- PatientFrame : add new tooltips<br>
+- When deleting a pathologies, deletes all records related to this pathology in<br>
+&nbsp;&nbsp;&nbsp; patientPathologies table<br>
+<br>
+CalcAl_v0.42 : 1/12/2016 : Patient frame<br>
+- 7927 lines py code (include 1380 lines pytest)<br>
+- Pylint : code has been rated at 9.55/10<br>
+- Correct error button label in Pathology Frame<br>
+- Create new tables<br>
+- Get existing patient from portions table to initialise patients<br>
+- Comboboxes for rations frame and dialog<br>
+- Clear not error messages automatically after a delay<br>
+- New banner for frame patient designed by Perrine<br>
+- Disable pathologie definition if multiple pathologies selection<br>
+- Use quality checker Pylint and correct some problems<br>
+python3 -m pylint
+--disable=invalid-name,unused-wildcard-import,undefined-variable,too-many-locals,too-many-branches,too-many-arguments,too-many-public-methods,too-many-statements,too-few-public-methods,too-many-instance-attributes,too-many-ancestors,too-many-nested-blocks,bad-continuation,line-too-long,unused-argument,bad-continuation
+*.py */*.py &gt; doc/resu_pylint.txt<br>
+<br>
+CalcAl_v0.41 : 25/11/2016 : nbDays stored in portions table<br>
+- 7253 lines py code (include 1380 lines pytest)<br>
+- insert all pathology constituants with only one SQL statement<br>
+&nbsp;&nbsp;&nbsp; in database/savePathology()<br>
+- Update schema of portions table with a new column nbDays (default value to 1)<br>
+&nbsp;&nbsp;&nbsp; in database/Database.py/createUserTables()<br>
+&nbsp;&nbsp;&nbsp; existing database are updating<br>
+- save nbDays in table portions in database.Database/insertPortion()<br>
+- Displaying nbDays when reloading a portion from database<br>
+- Correct bug in CalculatorFrame/changeNbDays() when setting nbDays to 1 (pb test)<br>
+- Correct dates format in portion tables<br>
+- Check date entered by user when saving a portion<br>
+- New button Today in gui/PortionInfoChooser()<br>
+- Tooltip on Date entry in gui/PortionInfoChooser()<br>
+- Check date copied from and old portion : if problem : message warning dialog.<br>
+- New banner designed by Perrine for pathology Frame.<br>
+- Editor for pathology description instead of entry field +<br>
+&nbsp;&nbsp;&nbsp; Reorganisation frames in gui/PathologyFrame.py<br>
+<br>
+CalcAl_v0.40 : 23/11/2016 : Pathology frame<br>
+- 7021 lines py code (include 1299 lines pytest)<br>
+- Correct problem of special component not present in Model when loading a ration.<br>
+- Implement pathology frame<br>
+<br>
+CalcAl_v0.39 : 18/11/2016 : Speed portion display<br>
+- 6387 lines py code (include 1076 lines pytest)<br>
+- Speed portion display when put from Portion frame to calculator.<br>
+&nbsp;&nbsp;&nbsp; by accessing only one time to database and creating Foodstuffs<br>
+&nbsp;&nbsp;&nbsp; and Components without accessing database.<br>
+<br>
+CalcAl_v0.38 : 17/11/2016 : Nb days to eat a portion in Calculator Frame<br>
+- 6296 lines py code (include 1064 lines pytest)<br>
+- Correct bug of bad version in Mac .app info<br>
+&nbsp;&nbsp;&nbsp; package_mac.sh get version number from CalcAl.ini file<br>
+- New combobox in calculator frame for nbDays to eat food if &gt;1 2nd total line<br>
+- CalculatorFrameModel/displayPortion() :Reset components to special component<br>
+&nbsp;&nbsp;&nbsp; to speed up components insertion when displaying a portion in calculator frame.<br>
+<br>
+CalcAl_v0.37 : 13/11/2016 : speed search frame<br>
+- 6218 lines py code (include 1055 lines pytest)<br>
+- Correct bug in CalculatorFrame, unable to change database<br>
+&nbsp;&nbsp;&nbsp; when line of food exist<br>
+- improve speed in Search frame<br>
+<br>
+CalcAl_v0.36 : 12/11/2016 : Refactoring<br>
+- 6046 lines py code (include 1055 lines pytest)<br>
+- Model package to host diet modules<br>
+- Introduce Design Pattern : Publish–subscribe pattern <br>
+- Unit testing : unittest.sh + unittest<br>
+- Add sugar and total energy in energy table<br>
+- Better control of Selection Menu : Disable if no food in table<br>
+<br>
+CalcAl_v0.35 : 14/10/2016 : Packaging Mac<br>
+- 4404 lines py code<br>
+- new doc file : packaging.txt<br>
+- import path to package inside gui and database with relative path.<br>
+- __init__.py in package dir gui and database<br>
+- remove directorysrc and move its entries to project base dir<br>
+- Test in Calcal.py if Calcal.ini file is availaible<br>
+- Calcal.py : configApp.read(fileConfigApp, encoding="utf-8") add encoding else crash of app<br>
+- CalcAlGUIMenu/installReader() : bug : add self.configApp.get("Resources", "ReadersDir")<br>
+- Calcal.py/setLocaleCalcal() new function to solve locale setting problems in bundle app<br>
+- Impossible to run plugin import for readers in a Mac app.<br>
+&nbsp;&nbsp;&nbsp; Solution :<br>
+&nbsp;&nbsp;&nbsp; Deliver to users versions with or without plugins by adding or deleting pllugin<br>
+&nbsp;&nbsp;&nbsp; in database directory before packaging Mac app.<br>
+- Speed up portion insertion in calculator frame by adding group of aliments in tables,<br>
+&nbsp;&nbsp;&nbsp; add functions : CalculatorFrame.py/addFoodGroupInTable() and<br>
+&nbsp;&nbsp;&nbsp; TableTreeView.py/insertGroupRow()<br>
+<br>
+CalcAl_v0.34 : 2/10/2016 : Don't write in project directory<br>
+- 4310 lines py code<br>
+- Don't write in project directory but in user's home dir for :<br>
+&nbsp;&nbsp;&nbsp; - Log messages,<br>
+&nbsp;&nbsp;&nbsp; - databases.<br>
+- Avoid code replication between : Database/formatListComponentsValues() and<br>
+&nbsp;&nbsp;&nbsp; Database/formatListQualifiersValues()<br>
+- Avoid portability problem : remove a / in key CalcAl.ini/Resources/ReadersDir<br>
+&nbsp;&nbsp;&nbsp; Create key CalcAl.ini/Resources/SourceDir<br>
+<br>
+CalcAl_v0.33 : 30/9/2016 : speed up<br>
+- 4281 lines py code<br>
+- StartFrame frame :<br>
+&nbsp;&nbsp;&nbsp; bind return keys on database list<br>
+&nbsp;&nbsp;&nbsp; failed to bind doubleclic on database list<br>
+- Calculator frame : speed up insertion of a foodstufff in main table food<br>
+&nbsp;&nbsp;&nbsp; Problem : addTotalRow() exttracts all values for each componant of each foodstuf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; again from database to be summed.<br>
+&nbsp;&nbsp;&nbsp; Solution : Sum values from displayed table and not from database<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TableTreeView : add method getAllColumnsValues()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Database :&nbsp; add methods formatListQualifiersValues<br>
+<br>
+CalcAl_v0.32 : 28/9/2016 : Portion management<br>
+- 4223 lines py code<br>
+- Portion management<br>
+- User table are now not created by readers,<br>
+&nbsp;&nbsp;&nbsp; but cheched is done each time a database is opened.<br>
+&nbsp;&nbsp;&nbsp; and created in Database/createUserTables()<br>
+- Language detection and translation :<br>
+&nbsp;&nbsp;&nbsp; Hack on Windows : ref : http://python.zirael.org/e-localization4.html<br>
+&nbsp;&nbsp;&nbsp; For gettext.install to detect User language<br>
+- Plugin installation modified in CalcAlGUIMenu.py<br>
+- add more advice on tables Tooltip : Ctrl-c<br>
+<br>
+CalcAl_v0.31 : 18/9/2016 : Thread when search food<br>
+- 3659 lines py code<br>
+- SearchFoodFrame : use thread when searching in database to avoid GUI blocking<br>
+- CalcAlGUIMenu : Add in menu selection of erase item<br>
+- USDA_28_Reader : Capitalize family and product name<br>
+- Change icon for erase line in food calculator : eraseselection.gif<br>
+<br>
+CalcAl_v0.30 : 27/8/2016 :<br>
+- 3436 lines py code<br>
+- DatabaseManager class to manage database operations for CalcAl software<br>
+- Info button on database<br>
+- Solve problem vO.29 : groups and usda products codes are in the same range &gt;= 1000000<br>
+&nbsp;&nbsp;&nbsp; minCompositionProductCode -&gt; startGroupProductCodes<br>
+&nbsp;&nbsp;&nbsp; all users codes are now negatives : groups codes start below 0<br>
+&nbsp;&nbsp;&nbsp; modif CalcAl.ini and Database.py<br>
+- Solve old ungrouping problem :<br>
+&nbsp;&nbsp;&nbsp; When ungrouping and one or more members of the group already present in the list,<br>
+&nbsp;&nbsp;&nbsp; the quantity of this previous element is replace instead of added with ungrouped parts<br>
+- Info button for food in CalculatorFrame<br>
+- Change field name productCodeCiqual -&gt; productCodePart in compositionProducts table<br>
+&nbsp;&nbsp;&nbsp; + productCodeUSDA -&gt; productCodePart<br>
+- Suppress double quotes in familyName when importing Ciqual database<br>
+- Bouton to delete user elements in CalculatorFrame : group<br>
+- Correction Language detection problems in CalcAl.py<br>
+- Translation of shortcut table in english : locale/en/componants_shortcuts.txt<br>
+- Join button added : join products and constituants values and names<br>
+&nbsp;&nbsp;&nbsp; from 2 databases are merged but user groups are ignored<br>
+<br>
+CalcAl_v0.29 : 30/7/2016 : USDA_28_Reader<br>
+- 2974 lines py code<br>
+- Add USDA_28_Reader.py to read USDA abreviated database<br>
+- Add file usda_constituants.txt to match Ciqual constituants name<br>
+<br>
+CalcAl_v0.28 : 28/7/2016 : unknown constituants<br>
+- 2732 lines py code<br>
+- Empty value (-) for unknown constituants are not recorded in databases<br>
+- Results of getComponentsValuesRaw4Food() are now sorted by its parameter<br>
+&nbsp;&nbsp;&nbsp; listComponentsCodes order<br>
+- SearchFoodFrame : constituants are displayed according filters order<br>
+- SearchFoodFrame/search() : Déplacement génération code SQL de condition de recherche<br>
+&nbsp;&nbsp;&nbsp; dans module Database Database/getProductComponents4Filters<br>
+<br>
+CalcAl_v0.27 : 11/7/2016 : Reader plugins<br>
+- 2692 lines py code<br>
+- Simplify constructors parameter by passing dirProject<br>
+- Database reader as plugins : message to contact support if missing<br>
+- Add support Emails in About box<br>
+- Read .csv or .csv.zip file for ciqual database<br>
+- Copy database provider URL in clipboard in DatabaseInitialiser.py<br>
+- Install a Ciqual Reader plugin present on the computer<br>
+<br>
+CalcAl_v0.26 : 24/6/2016 :<br>
+- 2627 lines py code<br>
+- Database is choosen with a file chooser : class DatabaseInitialiser.py<br>
+- Correction of bug if change database : init pane calculator<br>
+- Suppress btn search by component in pane calculator<br>
+- Ciqual init file out of sources<br>
+- Demo.db database with only "Aliments moyens"<br>
+- prevent to delete Demo.db database<br>
+<br>
+CalcAl_v0.25 : 18/6/2016 :<br>
+- 2563 lines py code<br>
+- Bypass for python error message when start button icon is disabled<br>
+- Module database : implement design pattern factory to structure this module<br>
+- New class : DatabaseReaderFactory.py + CiqualReader.py<br>
+<br>
+CalcAl_v0.24 : 3/6/2016 :<br>
+- 2463 lines py code<br>
+- Solve pb of décimal séparateur when copying in clipboard.<br>
+&nbsp;&nbsp;&nbsp; Use locale.localeconv()['decimal_point'] in TableTreeView.py<br>
+&nbsp;&nbsp;&nbsp; to know local usage for this system.<br>
+- In search frame, display first results when too many ar found.<br>
+- Correct bug CalculatorFrame/Energy %&nbsp; when food gives no energy (water)<br>
+- Dialog box when creating a group.<br>
+- CalculatorFrame : Put a food in table when hitting return in quantity<br>
+- set binding Ctrl-C, Command-C and double clic for food tables in<br>
+&nbsp;&nbsp;&nbsp; CalculatorFrame and SearchFrame<br>
+- set binding Ctrl-C, Command-C for energy table to copy values in clipboard<br>
+<br>
+CalcAl_v0.23 : 29/5/2016 :<br>
+- Compulsory mention of Ciqual in Start Frame and About box<br>
+- Add database menu<br>
+- In startframe, list of database showing 4 element and a scrollbar added.<br>
+- Correct bug in search frame for the order of components titles diferent from<br>
+&nbsp;&nbsp;&nbsp; order of values.<br>
+- Icon for start button<br>
+<br>
+CalcAl_v0.22 : 22/5/2016 :<br>
+- 2179 lines py code<br>
+- Allow . ou , as decimal separator for quantity.<br>
+- TableTreeView : Correct change2Numeric() when value contains "&lt; "<br>
+- SearchFoodFrame :<br>
+&nbsp;&nbsp;&nbsp; - Display foods and components with TreeView widget for search results<br>
+&nbsp;&nbsp;&nbsp; - Erase filter line if operator is erased.<br>
+&nbsp;&nbsp;&nbsp; - improve look of the frame<br>
+- Copy to clipboard for table content.<br>
+<br>
+CalcAl_v0.21 : 21/5/2016 :<br>
+- 2054 lines py code<br>
+- Tables headers are actives<br>
+&nbsp;&nbsp;&nbsp; - for values header, sort columns by values ascending or descending order<br>
+&nbsp;&nbsp;&nbsp; - for key header, select or deselect al rows<br>
+- All Components values are qualified : Number, Traces, -, &lt; Number<br>
+&nbsp;&nbsp;&nbsp; Sums are made according rules in config file to maintain values qualification.<br>
+<br>
+CalcAl_v0.20 : 15/5/2016 :<br>
+- 1927 lines py code<br>
+- Tables implemented with Tkinter TreeView widget<br>
+- Better windows layout and resizing<br>
+- Reduce number code lines of 300 lines for same functionalities<br>
+<br>
+CalcAl_v0.19 : 7/5/2016 :<br>
+- 2212 lines py code<br>
+- Tables implemented with grid layout<br>
+- Test on touchable Windows 8 PC and Mac with small screen<br>
+<br>
+<hr size="2" width="100%">Chapitre précédent :&nbsp; <a href="CalcAl_maintenance.html">Maintenance</a> - Chapitre
+suivant : <a href="CalcAl_evolution.html">Evolution</a><br>
+
+
+<hr size="2" width="100%"><br>
+
+Copyleft (c) 2017&nbsp; - <a href="http://perrine.maillard.free.fr/" target="_blank">Perrine </a>et <a href="http://thierry.maillard.pagesperso-orange.fr/" target="_blank">Thierry</a>
+Maillard<br>
+
+Vous avez la permission de copier, distribuer ou modifier ce document
+selon les termes de la licence GNU de documentation libre, dans sa
+version 1.3 ou dans toute version ultérieure publiée par la Free
+Software Foundation ; sans Section Invariante, sans Texte De Première
+De Couverture, et sansTexte De Quatrième De Couverture. <br>
+
+Une copie de cette licence est incluse dans la section intitulée
+"Licence GNU de documentation libre" : <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation
+License</a>.<br>
+
+Une copie de cette Licence est incluse dans le fichier <a href="licences/gfdl.1.3-js.fr.html">gfdl.1.3-js.fr.html</a><br>
+
+<br>
+
+</body></html>
