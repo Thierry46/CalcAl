@@ -18,7 +18,7 @@ class DatabaseManager():
     """ Manage database operations for CalcAl software """
 
     def __init__(self, configApp, dirProject, baseDirPath):
-        """ Initialize a database 
+        """ Initialize a database
             dirProject : project directory
             baseDirPath : path to user's dataBase
             """
@@ -73,7 +73,7 @@ class DatabaseManager():
     def getListDatabaseInDir(self):
         """ return a list of database names that already exists """
         listDBFiles = [filename for filename in os.listdir(self.baseDirPath)
-                                if filename.endswith(self.extDB)]
+                       if filename.endswith(self.extDB)]
         listDBFiles.sort()
         return listDBFiles
 

@@ -3,13 +3,36 @@
 ************************************************************************************
 Name : PortionInfoChooser
 Role : Get information from user to save a portion
-Date  : 25/9/2016
+Date  : 25/9/2016 - 25/11/2016
+
+Licence : GPLv3
+Copyright (c) 2015 - Thierry Maillard
+
+This file is part of Calcal project.
+
+Calcal project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+FinancesLocales project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
+import datetime
+
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Combobox
+
+from util import DateUtil
 from . import TkSimpleDialog
+from . import CallTypWindow
 
 class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
     """ Dialog box used to get information from user to save a portion """
@@ -21,6 +44,7 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
 
     def body(self, master):
         """ Body content of this dialog """
+        delaymsTooltips = int(self.configApp.get('Limits', 'delaymsTooltips'))
 
         # Filters frame
         filtersFrame = LabelFrame(master, text=_("Filters"))
@@ -29,29 +53,42 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
         self.nameVar = StringVar()
         self.nameVar.trace_variable("w", self.updatePortionListBox)
         nameEntry = Entry(filtersFrame, textvariable=self.nameVar)
-        nameEntry.grid(row=0, column=1, sticky=W)
+        nameEntry.grid(row=0, column=2, sticky=W)
         nameEntry.focus_set()
 
-        Label(filtersFrame, text=_("Date") + " :").grid(row=1, column=0, sticky=W)
+        Label(filtersFrame, text=_("Date")).grid(row=1, column=0, sticky=W)
+        Button(filtersFrame, text=_("Today"),
+               command=self.setTodayDate).grid(row=1, column=1, sticky=W)
         self.dateVar = StringVar()
         self.dateVar.trace_variable("w", self.updatePortionListBox)
-        Entry(filtersFrame, textvariable=self.dateVar).grid(row=1, column=1, sticky=W)
+        dateEntry = Entry(filtersFrame, textvariable=self.dateVar)
+        dateEntry.grid(row=1, column=2, sticky=W)
+        CallTypWindow.createToolTip(dateEntry,
+                                    _("Allowed formats for dates")+":\n"+\
+                                    _("DD/MM/YYYY") + ", " +  _("DD/MM/YY") + ", " + \
+                                    _("YYYY/MM/DD"),
+                                    delaymsTooltips)
+
 
         Label(filtersFrame, text=_("Patient code") + " :").grid(row=2, column=0, sticky=W)
-        self.patientVar = StringVar()
-        self.patientVar.trace_variable("w", self.updatePortionListBox)
-        Entry(filtersFrame, textvariable=self.patientVar).grid(row=2, column=1, sticky=W)
+        listPatientCodes = [""] + self.parent.getPatientFrameModel().getAllPatientCodes()
+        self.patientCodeCombobox = Combobox(filtersFrame, exportselection=0,
+                                            state="readonly", width=20,
+                                            values=listPatientCodes)
+        self.patientCodeCombobox.bind('<<ComboboxSelected>>', self.updatePortionListBox)
+        self.patientCodeCombobox.grid(row=2, column=2, sticky=W)
+
 
         Button(filtersFrame, text=_("Erase filters"),
-               command=self.eraseFilters).grid(row=3, columnspan=2)
+               command=self.eraseFilters).grid(row=3, column=1, sticky=W)
 
         # Portion listbox frame
         idListFrame = Frame(master)
         idListFrame.pack(side=TOP)
         Label(idListFrame, text=_("Filtered existing portions")).grid(row=0, columnspan=2)
         self.portionListBox = Listbox(idListFrame,
-                                  background=self.configApp.get('Colors', 'colorFamilyList'),
-                                  height=10, width=35)
+                                      background=self.configApp.get('Colors', 'colorFamilyList'),
+                                      height=10, width=35)
         self.portionListBox.grid(row=1, columnspan=2)
         scrollbarRight = Scrollbar(idListFrame, orient=VERTICAL,
                                    command=self.portionListBox.yview)
@@ -71,20 +108,26 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
                     variable=self.portionTypeVar, value=_("Ration")).pack(side=LEFT)
         Radiobutton(portionTypeFrame, text=_("Ingesta"),
                     variable=self.portionTypeVar, value=_("Ingesta")).pack(side=LEFT)
-                    
+
         Label(otherfieldFrame, text=_("Period Of day") + " :").grid(row=1, column=0, sticky=EW)
         periodValues = [_("Morning"), _("Noon"), _("Evening"), _("Day"), _("Other")]
         self.periodCombobox = Combobox(otherfieldFrame, exportselection=0, values=periodValues,
-                             state="readonly", width=10)
+                                       state="readonly", width=10)
         self.periodCombobox.grid(row=1, column=1, sticky=EW)
 
         return nameEntry # initial focus
+
+    def setTodayDate(self):
+        """ Display today date in date field """
+        dateNow = datetime.datetime.now()
+        dateFormated = '{:04d}/{:02d}/{:02d}'.format(dateNow.year, dateNow.month, dateNow.day)
+        self.dateVar.set(dateFormated)
 
     def eraseFilters(self):
         """ Set to empty string id filters fields """
         self.nameVar.set("")
         self.dateVar.set("")
-        self.patientVar.set("")
+        self.patientCodeCombobox.set("")
 
     def clicExistingPortion(self, evt):
         """ Update portion input field with chosen listbox item """
@@ -93,15 +136,23 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
         if len(selectedExistingPortion) > 0:
             nameDate = self.portionListBox.get(selectedExistingPortion[0]).split(" / ")
             self.nameVar.set(nameDate[0])
-            self.dateVar.set(nameDate[1])
-            self.patientVar.set(nameDate[2])
+            dateRead = nameDate[1]
+            try:
+                DateUtil.formatDate(dateRead)
+            except ValueError as exc:
+                self.bell()
+                messagebox.showwarning(_("Loading values"),
+                                       str(exc) + "\n" +
+                                       _("Please correct the date displayed") + " !")
+            self.dateVar.set(dateRead)
+            self.patientCodeCombobox.set(nameDate[2])
             self.portionTypeVar.set(nameDate[3])
             self.periodCombobox.set(nameDate[4])
 
     def updatePortionListBox(self, *args):
         """ Update portionListBox filtering with id frame fields content """
         self.portionListBox.delete(0, END)
-        userIdFilters = [self.nameVar.get(), self.dateVar.get(), self.patientVar.get()]
+        userIdFilters = [self.nameVar.get(), self.dateVar.get(), self.patientCodeCombobox.get()]
         portionIdFiltered = self.database.getPortionsFiltred(userIdFilters)
         portionListSeparatorSeparator = ' ' + \
             self.configApp.get('Other', 'portionListSeparatorSeparator') + ' '
@@ -118,7 +169,8 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
                 raise ValueError(_("Please give a portion name"))
             if self.dateVar.get() == "":
                 raise ValueError(_("Please give a date"))
-            if self.patientVar.get() == "":
+            DateUtil.formatDate(self.dateVar.get())
+            if self.patientCodeCombobox.get() == "":
                 raise ValueError(_("Please give a patient code"))
             if self.portionTypeVar.get() == "":
                 raise ValueError(_("Please give a portion type"))
@@ -128,7 +180,7 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
             # Ask if portion exists
             code, portionExists = self.database.getPortionCode(self.nameVar.get(),
                                                                self.dateVar.get(),
-                                                               self.patientVar.get())
+                                                               self.patientCodeCombobox.get())
 
             if portionExists:
                 isMofificationOk = messagebox.askyesno(_("Add or modify Portion in database"),
@@ -136,7 +188,7 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
                         "\n" + _("Portion code") + " : " + str(code) + \
                         "\n" + _("Portion name") + " : " + self.nameVar.get() + \
                         "\n" + _("Date") + " : "  + self.dateVar.get() + \
-                        "\n" + _("Patient code") + " : "  + self.patientVar.get(),
+                        "\n" + _("Patient code") + " : "  + self.patientCodeCombobox.get(),
                         icon='warning')
                 if not isMofificationOk:
                     raise ValueError(_("Please modify portion identificators"))
@@ -144,9 +196,9 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
             isOK = True
         except ValueError as exc:
             self.bell()
-            messagebox.showwarning(_("Bad input"), message = _("Error") + " : " + str(exc) + " !")
+            messagebox.showwarning(_("Bad input"), message=_("Error") + " : " + str(exc) + " !")
         return isOK
 
     def apply(self):
-        self.setResult([self.nameVar.get(), self.dateVar.get(), self.patientVar.get(),
+        self.setResult([self.nameVar.get(), self.dateVar.get(), self.patientCodeCombobox.get(),
                         self.portionTypeVar.get(), self.periodCombobox.get()])

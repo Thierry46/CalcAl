@@ -4,7 +4,7 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2016 - 28/9/2016
+Date : 7/5/2016 - 30/11/2016
 
 Role : GUI for CalcAl Food Calculator project.
 
@@ -32,20 +32,23 @@ import logging
 import os.path
 import platform
 
-from tkinter import *
+import tkinter
+#from tkinter import *
 from tkinter import ttk
 from tkinter import font
+
+from model import CalculatorFrameModel
+from model import PatientFrameModel
 
 from . import CalcAlGUIMenu
 from . import StartFrame
 from . import CalculatorFrame
 from . import SearchFoodFrame
 from . import PortionFrame
+from . import PathologyFrame
+from . import PatientFrame
 
-from model import CalculatorFrameModel
-
-
-class CalcAlGUI(Tk):
+class CalcAlGUI(tkinter.Tk):
     """ Main GUI class """
 
     def __init__(self, configApp, dirProject, databaseManager):
@@ -55,12 +58,13 @@ class CalcAlGUI(Tk):
         - configApp : configuration properties read by ConfigParser
         - dirProject : local directory of th project to access resources
         """
-        Tk.__init__(self, None)
+        tkinter.Tk.__init__(self, None)
         self.configApp = configApp
         self.dirProject = dirProject
         self.databaseManager = databaseManager
-
-        ressourcePath = os.path.join(dirProject, self.configApp.get('Resources', 'ResourcesDir'))
+        self.delaySeconds2ClearMessage = int(self.configApp.get('Limits',
+                                                                'delaySeconds2ClearMessage')) * 1000
+        self.cancelMessageId = None
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
         self.logger.info(_("Starting GUI") + "...")
 
@@ -69,8 +73,8 @@ class CalcAlGUI(Tk):
         screenheight = self.winfo_screenheight()
         self.bigScreen = (screenheight > heightBigScreenInPixel)
         self.logger.debug("heightBigScreenInPixel=" + str(heightBigScreenInPixel) +
-                         ", screenheight=" + str(screenheight) +
-                         ", bigScreen=" + str(self.bigScreen))
+                          ", screenheight=" + str(screenheight) +
+                          ", bigScreen=" + str(self.bigScreen))
 
         # Set handler called when closing main window
         self.protocol("WM_DELETE_WINDOW", self.onClosing)
@@ -85,34 +89,48 @@ class CalcAlGUI(Tk):
 
         # Create model for calculator Frame
         self.calculatorFrameModel = CalculatorFrameModel.CalculatorFrameModel(configApp)
+        # Create model for calculator Frame
+        self.patientFrameModel = PatientFrameModel.PatientFrameModel(configApp)
 
         # Create panels contents
         self.startFrame = StartFrame.StartFrame(self.note, self, 'logoStartFrame',
-                                                self.calculatorFrameModel)
-        self.note.add(self.startFrame, text = _("Welcome"))
+                                                self.calculatorFrameModel,
+                                                self.patientFrameModel)
+        self.note.add(self.startFrame, text=_("Welcome"))
         self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self, 'logoCalculator',
-                                                               self.calculatorFrameModel)
-        self.note.add(self.calculatorFrame, text = _("Calculator"), state="disabled")
+                                                               self.calculatorFrameModel,
+                                                               self.patientFrameModel)
+        self.note.add(self.calculatorFrame, text=_("Calculator"), state="disabled")
 
-        self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self, 'logoSearchFood')
-        self.note.add(self.searchFoodFrame, text = _("Search"), state="disabled")
-        self.note.pack(side=TOP)
+        self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self, 'logoSearchFood',
+                                                               self.calculatorFrameModel)
+        self.note.add(self.searchFoodFrame, text=_("Search"), state="disabled")
 
         self.portionFrame = PortionFrame.PortionFrame(self.note, self, 'logoPortion',
-                                                      self.calculatorFrameModel)
-        self.note.add(self.portionFrame, text = _("Portions"), state="disabled")
-        self.note.pack(side=TOP)
+                                                      self.calculatorFrameModel,
+                                                      self.patientFrameModel)
+        self.note.add(self.portionFrame, text=_("Portions"), state="disabled")
+
+        self.pathologyFrame = PathologyFrame.PathologyFrame(self.note, self, 'logoPathology',
+                                                            self.calculatorFrameModel,
+                                                            self.patientFrameModel)
+        self.note.add(self.pathologyFrame, text=_("Pathologies"), state="disabled")
+        self.patientFrame = PatientFrame.PatientFrame(self.note, self, 'logoPatient',
+                                                      self.patientFrameModel)
+        self.note.add(self.patientFrame, text=_("Patients"), state="disabled")
+
+        self.note.pack(side=tkinter.TOP)
 
         # Add menu bar
         self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self, self.calculatorFrameModel)
         self.config(menu=self.menuCalcAl)
 
         # Create Status frame at the bottom of the sceen
-        statusFrame = Frame(self)
-        self.statusLabel = Label(statusFrame, text=_('Ready'))
-        self.statusLabel.pack(side=LEFT)
-        self.statusLabel.pack(side=TOP)
-        statusFrame.pack(side=TOP)
+        statusFrame = tkinter.Frame(self)
+        self.statusLabel = tkinter.Label(statusFrame, text=_('Ready'))
+        self.statusLabel.pack(side=tkinter.LEFT)
+        self.statusLabel.pack(side=tkinter.TOP)
+        statusFrame.pack(side=tkinter.TOP)
 
     def getStartFrame(self):
         """Return start frame"""
@@ -123,17 +141,28 @@ class CalcAlGUI(Tk):
         return self.calculatorFrame
 
     def setStatusText(self, text, isError=False):
-        """ Display a text in status bar and log it """
+        """ Display a text in status bar and log it
+            V0.42 : normal messages are cleard after delay"""
+        if self.cancelMessageId is not None:
+            # Remove autoclear registred before
+            self.statusLabel.after_cancel(self.cancelMessageId)
+            self.cancelMessageId = None
         self.statusLabel['text'] = text
-        if (isError):
+        if isError:
             self.bell()
             self.logger.error(text)
         else:
             self.logger.info(text)
+            # V0.42 : clear message after delay
+            self.cancelMessageId = self.statusLabel.after(self.delaySeconds2ClearMessage,
+                                                          self.clearStatusText)
+
+    def clearStatusText(self):
+        """ Clear status message by writting Ready """
+        self.statusLabel['text'] = _('Ready')
 
     def onClosing(self):
         """ Handler called at the end of main window """
-        stopAppli = True
         self.closeDatabase()
         self.destroy()
 
@@ -173,15 +202,17 @@ class CalcAlGUI(Tk):
         self.enableTabCalculator(False)
         self.enableTabSearch(False)
         self.enableTabPortion(False)
+        self.enableTabPathology(False)
+        self.enableTabPatient(False)
         self.setTitle(None)
 
-    def enableTabCalculator(self, isEnable, init=True):
+    def enableTabCalculator(self, isEnable):
         """ Activate or desactivate calculator tab """
         if isEnable:
             stateTab = 'normal'
             self.menuCalcAl.enableDatabaseMenu(False)
         else:
-            stateTab='disabled'
+            stateTab = 'disabled'
         self.note.tab(1, state=stateTab)
         self.menuCalcAl.enableSelectionMenu(isEnable)
         if isEnable:
@@ -192,7 +223,7 @@ class CalcAlGUI(Tk):
         if isEnable:
             stateTab = 'normal'
         else:
-            stateTab='disabled'
+            stateTab = 'disabled'
         self.note.tab(2, state=stateTab)
         if isEnable:
             self.searchFoodFrame.init()
@@ -203,12 +234,33 @@ class CalcAlGUI(Tk):
         if isEnable:
             stateTab = 'normal'
         else:
-            stateTab='disabled'
+            stateTab = 'disabled'
         self.note.tab(3, state=stateTab)
         if isEnable:
             self.note.select(3)
 
+    def enableTabPathology(self, isEnable=True):
+        """ Activate or desactivate portion tab """
+        if isEnable:
+            stateTab = 'normal'
+        else:
+            stateTab = 'disabled'
+        self.note.tab(4, state=stateTab)
+        if isEnable:
+            self.note.select(4)
+
+    def enableTabPatient(self, isEnable=True):
+        """ Activate or desactivate portion tab """
+        if isEnable:
+            stateTab = 'normal'
+        else:
+            stateTab = 'disabled'
+        self.note.tab(5, state=stateTab)
+        if isEnable:
+            self.note.select(5)
+
     def isBigScreen(self):
+        """ Return True if a big screen is detected > config('Limits', 'heightBigScreenInPixel') """
         return self.bigScreen
 
     def about(self):
@@ -217,37 +269,37 @@ class CalcAlGUI(Tk):
 
         appName = self.configApp.get('Version', 'AppName')
         helv36 = font.Font(family="Helvetica", size=36, weight="bold")
-        Label(window, text=appName, font=helv36, fg="red").pack(side=TOP)
+        Label(window, text=appName, font=helv36, fg="red").pack(side=tkinter.TOP)
 
         version = _("Version") + " : " + self.configApp.get('Version', 'Number') + ' - ' + \
         self.configApp.get('Version', 'Date')
-        Label(window, text=version).pack(side=TOP)
+        Label(window, text=version).pack(side=tkinter.TOP)
 
         labelLogo = self.createButtonImage(window,
                                            imageRessourceName='logoAboutBox',
                                            text4Image=self.configApp.get('Version', 'Author'))
-        labelLogo.pack(side=TOP)
+        labelLogo.pack(side=tkinter.TOP)
 
         emails = self.configApp.get('Version', 'EmailSupport1')  + ", " +\
                  self.configApp.get('Version', 'EmailSupport2')
-        Label(window, text=emails).pack(side=TOP)
-        Label(window, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=TOP)
+        Label(window, text=emails).pack(side=tkinter.TOP)
+        Label(window, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=tkinter.TOP)
 
         versionPython = "Python : " + platform.python_version() + ", Tk : " + str(TkVersion)
-        Label(window, text=versionPython).pack(side=TOP)
+        Label(window, text=versionPython).pack(side=tkinter.TOP)
         osMachine = _("On") + " : " + platform.system() + ", " + platform.release()
-        Label(window, text=osMachine).pack(side=TOP)
+        Label(window, text=osMachine).pack(side=tkinter.TOP)
 
     def createButtonImage(self, parent, imageRessourceName=None, text4Image=None):
         """ Create a button or label with an image and a text dipayed """
         compoundValue = 'image'
         if text4Image:
             compoundValue = 'top'
-        ressourcePath = os.path.join(self.dirProject,
-                                     self.configApp.get('Resources', 'ResourcesDir'))
-        imagesDirPath = os.path.join(ressourcePath, self.configApp.get('Resources', 'ImagesDir'))
-        imagePath = os.path.join(imagesDirPath, self.configApp.get('Resources', imageRessourceName))
-        imgobj = PhotoImage(file=imagePath)
+        imagePath = os.path.join(self.dirProject,
+                                 self.configApp.get('Resources', 'ResourcesDir'),
+                                 self.configApp.get('Resources', 'ImagesDir'),
+                                 self.configApp.get('Resources', imageRessourceName))
+        imgobj = tkinter.PhotoImage(file=imagePath)
         buttonImage = ttk.Button(parent, image=imgobj, compound=compoundValue, text=text4Image)
         buttonImage.img = imgobj # store a reference to the image as an attribute of the widget
         return buttonImage
@@ -257,4 +309,3 @@ class CalcAlGUI(Tk):
         self.clipboard_clear()
         self.clipboard_append(text)
         self.setStatusText(str(len(text)) + " " + _("characters copied and available in clipboard"))
-

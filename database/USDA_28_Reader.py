@@ -12,10 +12,9 @@ import logging
 import locale
 import zipfile
 import os
-import re
 
 class USDA_28_Reader():
-
+    """Read a USDA 2013 database from CSV or CSVzipped text file"""
     def __init__(self, configApp, dirProject, connDB, dbname):
         """ Initialize a USDA database reader
         configApp : ressource .ini for application
@@ -27,8 +26,8 @@ class USDA_28_Reader():
                                          self.configApp.get('Resources', 'LocaleDir'))
         self.localDirPath = os.path.join(self.localDirPath, locale.getlocale()[0][:2])
         self.databaseRefDir = os.path.join(dirProject,
-                                        self.configApp.get('Resources', 'ResourcesDir'),
-                                        self.configApp.get('Resources', 'DatabaseDir'))
+                                           self.configApp.get('Resources', 'ResourcesDir'),
+                                           self.configApp.get('Resources', 'DatabaseDir'))
         self.connDB = connDB
         self.dbname = dbname
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
@@ -114,7 +113,7 @@ class USDA_28_Reader():
                     # Duplicated products names are not allowed in database
                     if productName in productNameList:
                         self.logger.warning("analyseProductUSDA() : productName=" + productName +
-                                         " already recorded -> ignored, linenum=" + str(linenum))
+                                            " already recorded -> ignored, linenum=" + str(linenum))
                         break
                     else:
                         productNameList.append(productName)
@@ -123,17 +122,19 @@ class USDA_28_Reader():
                                                   dateSource, urlSource)
                             VALUES(?, ?, ?, ?, ?, ?)
                             """,
-                            (familyName, productCode, productName, source, dateSource, urlSource))
+                                       (familyName, productCode, productName, source,
+                                        dateSource, urlSource))
                 elif str(numField) in dictConstituantsPosition.keys():
                     # Record constituants values in database if not empty
                     if len(field) > 0:
                         qualifValue = "N"
                         value = float(field)
-                        cursor.execute("""INSERT INTO constituantsValues(productCode, constituantCode,
+                        cursor.execute("""INSERT INTO constituantsValues(productCode,
+                                                                         constituantCode,
                                                                          value, qualifValue)
                                        VALUES(?, ?, ?, ?)""",
-                                    (productCode, dictConstituantsPosition[str(numField)],
-                                     value, qualifValue))
+                                       (productCode, dictConstituantsPosition[str(numField)],
+                                        value, qualifValue))
                 numField = numField + 1
         self.logger.info(str(linenum) + " lines read.")
 
@@ -158,7 +159,7 @@ class USDA_28_Reader():
                 param = line.split('=')
                 if len(param) == 2:
                     dicoShortcuts[param[0].strip()] = param[1].strip()
-        fileShort.closed
+        fileShort.close()
 
         # Create constituants in database
         cursor.execute("""
@@ -193,15 +194,15 @@ class USDA_28_Reader():
                                          unitConstituant,
                                          dicoShortcuts[codeConstituant]))
                     dictConstituantsPosition[numField] = codeConstituant
-        fileConstituants.closed
+        fileConstituants.close()
 
         # Record in constituants names table
         assert len(constituants) > 0, USDAConstituantsFilePath + " : bad file"
         cursor.executemany("""
-                        INSERT INTO constituantsNames(code, name, unit, shortcut)
-                        VALUES(?, ?, ?, ?)
-                        """,
-                        constituants)
+                            INSERT INTO constituantsNames(code, name, unit, shortcut)
+                            VALUES(?, ?, ?, ?)
+                            """,
+                           constituants)
 
         self.logger.info(str(len(constituants)) + " constituants available.")
         return dictConstituantsPosition

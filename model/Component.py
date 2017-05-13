@@ -3,7 +3,7 @@
 ************************************************************************************
 Class : Component
 Author : Thierry Maillard (TMD)
-Date : 21/10/2016
+Date : 21/10/2016 - 18/11/2016
 
 Role : Define a Component.
 
@@ -32,13 +32,24 @@ from util import CalcalExceptions
 
 class Component(ModelBaseData.ModelBaseData):
     """ Model for a component """
-    def __init__(self, configApp, database, codeProduct, codeComponent, quantity):
+    def __init__(self, configApp, database, codeProduct, codeComponent, quantity,
+                 listInfoComponent=None):
         super(Component, self).__init__(configApp, database, "Component")
-        self.update(self.database.getInfoComponent(codeProduct, codeComponent))
+        if listInfoComponent is not None:
+            assert len(listInfoComponent) == 5, "Bad usage for Component constructor : len list"
+            self.setData("productCode", codeProduct)
+            self.setData("constituantCode", codeComponent)
+            self.setData("name", listInfoComponent[1])
+            self.setData("shortcut", listInfoComponent[2])
+            self.setData("value", listInfoComponent[3])
+            self.setData("qualifValue", listInfoComponent[4])
+        else:
+            self.update(self.database.getInfoComponent(codeProduct, codeComponent))
         self.updateQuantity(quantity)
         self.logger.debug("Created in model" + str(self))
 
     def updateQuantity(self, quantity):
+        """ Update value for this component given quantity of food """
         self.setData("quantity", quantity * self.dictData["value"] / 100.0)
 
     def getValueFormated(self):
@@ -51,18 +62,18 @@ class Component(ModelBaseData.ModelBaseData):
         """ Static method to convert (qualifier, quantity) into a string """
         formatFloatValue = "{0:." + configApp.get('Limits', 'nbMaxDigit') + "f}"
         resultValue = ""
-        if qualifier == "N" :
+        if qualifier == "N":
             resultValue = formatFloatValue.format(quantity)
-        elif qualifier == "-" :
+        elif qualifier == "-":
             resultValue = "-"
-        elif qualifier == "T" :
+        elif qualifier == "T":
             resultValue = _("Traces")
-        elif qualifier == "<" :
+        elif qualifier == "<":
             resultValue = "< " + formatFloatValue.format(quantity)
         else:
             raise CalcalExceptions.CalcalInternalError(configApp,
-                               "getValueFormated : unknown value qualifier : " +\
-                               qualifier)
+                                                       "getValueFormated : unknown value qualifier : " +\
+                                                       qualifier)
         return resultValue
 
     # To use method getValueFormatedStatic() without instantiating class : static method

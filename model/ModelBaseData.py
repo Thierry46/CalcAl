@@ -10,12 +10,11 @@ Rôle : Base class for model classes.
 """
 
 import logging
-from util.CalcalExceptions import CalcalInternalError
 
 class ModelBaseData(object):
     """ Base class for model classes """
 
-    def __init__(self, configApp, database, nameElement) :
+    def __init__(self, configApp, database, nameElement):
         self.configApp = configApp
         self.logger = logging.getLogger(configApp.get('Log', 'LoggerName'))
         self.database = database

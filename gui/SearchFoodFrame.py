@@ -9,26 +9,30 @@ Role : Define search food frame content.
 ************************************************************************************
 """
 import queue
-import threading
 
 from tkinter import *
 from tkinter.ttk import Combobox
 
+from model import SearchThreadedTask
 from . import CallTypWindow
-
 from . import FrameBaseCalcAl
 from . import TableTreeView
-from database import Database
 
 class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Search frame used to choose food according a component selection """
 
-    def __init__(self, master, mainWindow, logoFrame):
+    def __init__(self, master, mainWindow, logoFrame, calculatorFrameModel):
         """ Initialize Search Frame """
         super(SearchFoodFrame, self).__init__(master, mainWindow, logoFrame)
+        self.calculatorFrameModel = calculatorFrameModel
+        self.calculatorFrameModel.addObserver(self)
+
         self.numberFilter = int(self.configApp.get('Search', 'numberFilter'))
         self.nbMaxResultSearch = int(self.configApp.get('Limits', 'nbMaxResultSearch'))
         maxWidthComponent = int(self.configApp.get('Search', 'maxWidthComponent'))
+        self.endMarker = _("OK") # Marker at the beginning of last message
+        self.listComponents = []
+        self.queue = None
 
         topFrame = Frame(self)
         topFrame.pack(side=TOP)
@@ -74,8 +78,8 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         # buttonFiltersFrame
         self.btnSearch = self.mainWindow.createButtonImage(buttonFiltersFrame,
-                                                      imageRessourceName='btn_search',
-                                                      text4Image=_("Search in data"))
+                                                           imageRessourceName='btn_search',
+                                                           text4Image=_("Search in data"))
         self.btnSearch.configure(command=self.search)
         self.btnSearch.pack(side=TOP)
         Button(buttonFiltersFrame, text=_("Reset filters"),
@@ -91,8 +95,8 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         int(self.configApp.get('Size', 'searchResultTableOtherColWidth')),
                         int(self.configApp.get('Size', 'searchResultTableColMinWdth')),
                         selectmode="extended")
-        self.searchResultTable.setColor('normalRow',self.configApp.get('Colors',
-                                                                       'colorSearchTable'))
+        self.searchResultTable.setColor('normalRow', self.configApp.get('Colors',
+                                                                        'colorSearchTable'))
         self.searchResultTable.pack(side=TOP, fill=BOTH, expand=YES)
         self.searchResultTable.setBinding('<Double-Button-1>', self.putInCalculator)
         self.searchResultTable.setBinding('<Command-c>', self.copyInClipboard)
@@ -107,6 +111,19 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         _("Ctrl-C to put in clipboard"),
                         2 * self.delaymsTooltips)
 
+    def update(self, observable, event):
+        """Called when the model object is modified. """
+        if observable == self.calculatorFrameModel:
+            self.logger.debug("SearchFoodFrame received from model : " + event)
+            try:
+                if event == "INIT_DB":
+                    self.init()
+                else:
+                    self.logger.debug("SearchFoodFrame : ignore event : " + event)
+
+            except CalcalExceptions.CalcalValueError as exc:
+                message = _("Error") + " : " + str(exc) + " !"
+                self.mainWindow.setStatusText(message, True)
 
     def eraseEmptyRows(self, evt):
         """ Erase filter line if its operator is empty """
@@ -119,7 +136,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def putInCalculator(self, event=None):
         """ Update food definition in calculator pane with new components chosen """
-        try :
+        try:
             # Get selection
             listSelectedRows = self.searchResultTable.getSelectedItems()
             if len(listSelectedRows) != 1:
@@ -128,9 +145,9 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
             # Update foodstuffFrame comboboxes of calculator frame
             self.mainWindow.getCalculatorFrame().updateFoodstuffFrame(foodName)
-            self.mainWindow.enableTabCalculator(True, init=False)
+            self.mainWindow.enableTabCalculator(True)
         except ValueError as exc:
-                self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
+            self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
     def copyInClipboard(self, event=None):
         "Copy search results in clipboard"
@@ -143,6 +160,8 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def init(self):
         """Initialyse filters combobox"""
+        self.logger.debug("SearchFoodFrame/init()")
+        self.searchResultTable.deleteAllRows()
         self.reset()
 
         database = self.databaseManager.getDatabase()
@@ -163,65 +182,23 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def search(self):
         """ Search products that match filters in DB
             V0.31 : Thread use"""
-        #self.btnSearch.configure(state=DISABLED)
-        self.mainWindow.setStatusText(_("Searching in database") + "...")
-        self.queue = queue.Queue()
-        ThreadedTask(self.queue, self).start()
-        self.master.after(100, self.process_queue)
-
-    def process_queue(self):
-        """ Display messages that thread have put in the queue """
-        try:
-            msg = self.queue.get(0)
-            error = msg.endswith("!")
-            self.mainWindow.setStatusText(msg, error)
-        except queue.Empty:
-            self.master.after(100, self.process_queue)
-
-    def reset(self):
-        """ Reset filters in DB """
-        for numLine in range(self.numberFilter):
-            self.listOperatorCombobox[numLine].current(0)
-
-from model import Component
-class ThreadedTask(threading.Thread):
-    """ V0.31 : Thread used to search food in database without blocking GUI """
-    def __init__(self, queue, parent):
-        threading.Thread.__init__(self)
-        self.queue = queue
-        self.parent = parent
-        self.formatFloatValue = "{0:." + self.parent.configApp.get('Limits', 'nbMaxDigit') + "f}"
-    
-    def run(self):
-        self.runSearch()
-
-    def runSearch(self):
-        listSelectedComponentsCodes = []
-        listTitle4Components = []
-
-        # Clean result table
-        self.parent.searchResultTable.deleteAllRows()
-        self.parent.searchResultTable.updateVariablesColumns(listTitle4Components, [])
-
-        # Database must be reopen in this thread
-        databasePath = self.parent.databaseManager.getDatabase().getDatabasePath()
-        database = Database.Database(self.parent.configApp, self.parent.dirProject)
-        database.open(databasePath)
-
+        # Get selected components, operator and threshold to filter database
         try:
             listFilters = []
-            for numLine in range(self.parent.numberFilter):
-                selectedOperator = self.parent.listOperatorCombobox[numLine].get()
+            listSelectedComponentsCodes = []
+            listTitle4Components = []
+
+            for numLine in range(self.numberFilter):
+                selectedOperator = self.listOperatorCombobox[numLine].get()
                 if len(selectedOperator) > 0:
-                    isAtLeast1Filter = True
                     # Check fields for active filter lines
-                    selectedComponent = self.parent.listConboboxComponents[numLine].get()
+                    selectedComponent = self.listConboboxComponents[numLine].get()
                     if len(selectedComponent) == 0:
                         raise ValueError(_("Please select a component for filter number") +
                                          " : " + str(numLine+1))
-                    try :
-                        level = float(self.parent.listUserValueEntry[numLine].get().replace(",", "."))
-                    except ValueError as excName:
+                    try:
+                        level = float(self.listUserValueEntry[numLine].get().replace(",", "."))
+                    except ValueError:
                         raise ValueError(_("Level must be a float number for filter number") +
                                          " : " + str(numLine+1))
                     if level < 0.0:
@@ -229,57 +206,45 @@ class ThreadedTask(threading.Thread):
                                      " : " + str(numLine+1))
                     # Get constituantCode
                     indexChoosenComponent = \
-                            self.parent.listConboboxComponents[numLine]['values'].index(selectedComponent)
-                    constituantCode = self.parent.listComponents[indexChoosenComponent][0]
+                            self.listConboboxComponents[numLine]['values'].index(selectedComponent)
+                    constituantCode = self.listComponents[indexChoosenComponent][0]
                     if constituantCode not in listSelectedComponentsCodes:
                         listSelectedComponentsCodes.append(constituantCode)
-                        constituantName = self.parent.listComponents[indexChoosenComponent][1]
-                        constituantUnit = self.parent.listComponents[indexChoosenComponent][2]
+                        constituantName = self.listComponents[indexChoosenComponent][1]
+                        constituantUnit = self.listComponents[indexChoosenComponent][2]
                         listTitle4Components.append(constituantName + " (" + constituantUnit + ")")
 
                     # Append current filter to the list
                     listFilters.append([constituantCode, selectedOperator, level])
 
+           # Clean result table
+            self.searchResultTable.deleteAllRows()
+            self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
             # Update table header line with components names selected in filters
-            self.parent.searchResultTable.updateVariablesColumns(listTitle4Components, [])
+            self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
 
-            # Get components values for product selected by filters
-            nbFoundProducts, listNameComponentsValuesRaw = \
-                                database.getProductComponents4Filters(listFilters,
-                                                                      listSelectedComponentsCodes)
-
-            listComponentsValues = []
-            for foodName, listComponentsValuesRaw in listNameComponentsValuesRaw:
-                listQualifier = []
-                listValues = []
-                for constituantCode, value, qualifier in listComponentsValuesRaw:
-                    listQualifier.append(qualifier)
-                    listValues.append(value)
-                listValuesFormated = self.formatListQualifiersValues(listQualifier, listValues)
-                listComponentsValues.append([foodName, listValuesFormated])
-
-            # Update table content with results
-            self.parent.searchResultTable.insertGroupRow(listComponentsValues)
-
-            # Check number of results
-            if (nbFoundProducts > self.parent.nbMaxResultSearch):
-                message = _("Too many results") +" : " + str(self.parent.nbMaxResultSearch) + \
-                          " " + _("on") + " " + str(nbFoundProducts) + " " + _("displayed") + \
-                          ". " + _("Please improve filters") + " !"
-            else:
-                message = str(nbFoundProducts) + " " + _("results matching filters")
-            self.queue.put(message)
+        	# Search food that match filter criteria
+            self.queue = queue.Queue()
+            SearchThreadedTask.SearchThreadedTask(self, self.queue, self.endMarker,
+                                                  listFilters).start()
+            self.master.after(100, self.process_queue)
         except ValueError as exc:
-            self.queue.put(_("Error") + " : " + str(exc) + " !")
-        finally:
-            database.close()
+            message = _("Error") + " : " + str(exc) + " !"
+            self.mainWindow.setStatusText(message, True)
 
-    def formatListQualifiersValues(self, listQualifier, listValues):
-        """ Format qualifiers and values list """
-        listValuesFormated = []
-        for index, qualifier in enumerate(listQualifier):
-            resultValue = Component.Component.getValueFormatedStatic(self.parent.configApp,
-                                                                     qualifier, listValues[index])
-            listValuesFormated.append(resultValue)
-        return listValuesFormated
+    def process_queue(self):
+        """ Display messages that thread have put in the queue """
+        try:
+            msg = self.queue.get(0)
+            error = msg.endswith("!")
+            self.mainWindow.setStatusText(msg, error)
+            if not msg.startswith(self.endMarker) and not error:
+                # Listen agai to thread
+                self.master.after(100, self.process_queue)
+        except queue.Empty:
+            self.master.after(100, self.process_queue)
 
+    def reset(self):
+        """ Reset filters in DB """
+        for numLine in range(self.numberFilter):
+            self.listOperatorCombobox[numLine].current(0)

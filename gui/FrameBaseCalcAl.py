@@ -10,10 +10,9 @@ Rôle : Define base frame for all notebook panels.
 """
 import logging
 
-from tkinter import *
-from tkinter import ttk
+import tkinter
 
-class FrameBaseCalcAl(Frame):
+class FrameBaseCalcAl(tkinter.Frame):
     """ Fenetre de base pour les éléments du Notebook """
 
     def __init__(self, master, mainWindow, imageRessourceName=None, text4Image=None):
@@ -35,11 +34,13 @@ class FrameBaseCalcAl(Frame):
         self.delaymsTooltips = int(self.configApp.get('Limits', 'delaymsTooltips'))
 
         # Logo in top frame
-        imageFrame = Frame(self)
-        imageFrame.pack(side=TOP)
-        self.buttonTopImage = self.mainWindow.createButtonImage(imageFrame, imageRessourceName, text4Image)
+        imageFrame = tkinter.Frame(self)
+        imageFrame.pack(side=tkinter.TOP)
+        self.buttonTopImage = self.mainWindow.createButtonImage(imageFrame, imageRessourceName,
+                                                                text4Image)
         self.buttonTopImage.configure(command=self.mainWindow.about)
-        self.buttonTopImage.pack(side=TOP)
+        self.buttonTopImage.pack(side=tkinter.TOP)
 
     def getMainWindow(self):
+        """ Return mainWindow """
         return self.mainWindow

@@ -10,8 +10,6 @@ import logging
 
 from tkinter import *
 
-from . import TableTreeView
-
 from util import CalcalExceptions
 
 class WaterEnergyFrame(LabelFrame):
@@ -28,11 +26,11 @@ class WaterEnergyFrame(LabelFrame):
         bgValueComp = self.configApp.get('Colors', 'colorComponantValueTableFood')
         waterUnknownValue = self.configApp.get('Water', 'WaterUnknownValue')
         Label(self, text=_("Water supplied by food") + " : ",
-              bg = bgNameTable).grid(row=0, column=0, sticky=E)
+              bg=bgNameTable).grid(row=0, column=0, sticky=E)
         self.labelWaterSupplied = Label(self, text=waterUnknownValue, bg=bgValueComp)
         self.labelWaterSupplied.grid(row=0, column=1, sticky=E)
         Label(self, text=_("Water needed") + " : ",
-              bg = bgNameTable).grid(row=1, column=0, sticky=E)
+              bg=bgNameTable).grid(row=1, column=0, sticky=E)
         self.labelWaterNeeded = Label(self, text=waterUnknownValue, bg=bgValueComp)
         self.labelWaterNeeded.grid(row=1, column=1, sticky=E)
 
@@ -61,7 +59,8 @@ class WaterEnergyFrame(LabelFrame):
         self.logger.debug("WaterEnergyFrame/updateWaterFrame()")
 
         # Get sum values for energetic components from model
-        isDataAvailable, waterInFood, waterNeeded, isEnougthWater = self.calculatorFrameModel.getWaterEnergy()
+        isDataAvailable, waterInFood, waterNeeded, isEnougthWater = \
+                    self.calculatorFrameModel.getWaterEnergy()
         if isDataAvailable:
             if isEnougthWater:
                 bgWaterInFood = self.configApp.get('Colors', 'colorWaterOK')
@@ -72,4 +71,3 @@ class WaterEnergyFrame(LabelFrame):
 
         self.labelWaterSupplied.configure(text=waterInFood, bg=bgWaterInFood)
         self.labelWaterNeeded.configure(text=waterNeeded)
-

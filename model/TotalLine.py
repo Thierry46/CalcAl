@@ -3,7 +3,7 @@
 ************************************************************************************
 Class : TotalLine
 Author : Thierry Maillard (TMD)
-Date : 28/10/2016
+Date : 28/10/2016 - 18/11/2016
 
 Role : Define a TotalLine for food table.
 
@@ -25,6 +25,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
+
+Modif. :
+- dictComponentsValueStr is calculated when calling getFormattedValue()
+- getFormattedValue accepts 1 parameter : nbDays
 ************************************************************************************
 """
 from model import ModelBaseData
@@ -38,7 +42,6 @@ class TotalLine(ModelBaseData.ModelBaseData):
         self.setData("containValues", False)
         self.setData("name", _("Total"))
         self.setData("quantity", 0.0)
-        self.setData("dictComponentsValueStr", dict())
         self.setData("dictComponentsQualifierQuantity", dict())
 
         # table for qualification reduction rules
@@ -57,7 +60,7 @@ class TotalLine(ModelBaseData.ModelBaseData):
             # Sum quantities of each food
             self.setData("quantity", 0.0)
             for foodStuff in dictFoodStuff.values():
-                self.setData("quantity",  self.getData("quantity") + foodStuff.getData("quantity"))
+                self.setData("quantity", self.getData("quantity") + foodStuff.getData("quantity"))
 
             # Sum all components values and qualifiers
             dictQualifierQuantity = dict()
@@ -72,17 +75,13 @@ class TotalLine(ModelBaseData.ModelBaseData):
                         dictQualifierQuantity[codeComponent] = [qualifValue, quantity]
 
             # Reduce qualifiers and format all components
-            self.getData("dictComponentsValueStr").clear()
-            for codeComponent, QualifierQuantity in dictQualifierQuantity.items():
-                QualifierQuantity[0] = self.reducQualifier(QualifierQuantity[0],
-                                                           QualifierQuantity[1])
+            self.getData("dictComponentsQualifierQuantity").clear()
+            for codeComponent, qualifierQuantity in dictQualifierQuantity.items():
+                qualifierQuantity[0] = self.reducQualifier(qualifierQuantity[0],
+                                                           qualifierQuantity[1])
                 self.getData("dictComponentsQualifierQuantity")[codeComponent] = \
-                                                        [QualifierQuantity[0],
-                                                         QualifierQuantity[1]]
-                self.getData("dictComponentsValueStr")[codeComponent] = \
-                    Component.Component.getValueFormatedStatic(self.configApp,
-                                                     QualifierQuantity[0],
-                                                     QualifierQuantity[1])
+                                                        [qualifierQuantity[0],
+                                                         qualifierQuantity[1]]
 
     def reducQualifier(self, qualif2Reduce, value):
         """ Reduce qualif2Reduce expression by applying rules read in config file """
@@ -94,7 +93,7 @@ class TotalLine(ModelBaseData.ModelBaseData):
                 QRule2apply = self.QRulesS
             else: # For value near 0
                 QRule2apply = self.QRules0
-            QRule2apply= QRule2apply + self.QRulesO
+            QRule2apply = QRule2apply + self.QRulesO
             for rule in QRule2apply:
                 if rule[0] in qualifResult and rule[1] in qualifResult:
                     qualifResult = qualifResult.replace(rule[0], rule[2])
@@ -110,10 +109,26 @@ class TotalLine(ModelBaseData.ModelBaseData):
         return qualifResult
 
 
-    def getFormattedValue(self):
+    def getFormattedValue(self, nbDays=1):
         """ Return name, quantity and dict(codeComponents) = qty formated
-            for all components of this total line  """
-        return self.getData("name"), self.getData("quantity"), self.getData("dictComponentsValueStr")
+            for all components of this total line
+            V0.38 : build dictComponentsValueStr
+            getFormattedValue accept 1 optional parameter : Nb days
+            Parameter nbDays : all returned values are divided by this integer """
+        assert nbDays > 0, "TotalLine/getFormattedValue() : nbDays must be > 0 " + str(nbDays)
+        dictComponentsValueStr = dict()
+        for codeComponent, qualifierQuantity \
+            in self.getData("dictComponentsQualifierQuantity").items():
+            dictComponentsValueStr[codeComponent] = \
+                    Component.Component.getValueFormatedStatic(self.configApp,
+                                                               qualifierQuantity[0],
+                                                               qualifierQuantity[1] / float(nbDays))
+        totalName = self.getData("name")
+        totalQuantity = self.getData("quantity")
+        if nbDays > 1:
+            totalName += " " + _("per day")
+            totalQuantity /= float(nbDays)
+        return totalName, round(totalQuantity, 1), dictComponentsValueStr
 
     def getRawValue(self):
         """ Return name, quantity and dict(codeComponents) =  [Qualifier, quantity]

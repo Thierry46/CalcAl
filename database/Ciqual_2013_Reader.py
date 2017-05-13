@@ -15,6 +15,7 @@ import os
 import re
 
 class Ciqual_2013_Reader():
+    """ Read a Ciqual 2013 database from CSV or CSVzipped text file. """
 
     def __init__(self, configApp, dirProject, connDB, dbname):
         """ Initialize a Ciqual database reader
@@ -24,7 +25,7 @@ class Ciqual_2013_Reader():
         """
         self.configApp = configApp
         self.localDirPath = os.path.join(dirProject,
-                                        self.configApp.get('Resources', 'LocaleDir'))
+                                         self.configApp.get('Resources', 'LocaleDir'))
         curLocale = locale.getlocale()[0][:2]
 
         self.localDirPath = os.path.join(self.localDirPath, curLocale)
@@ -84,9 +85,9 @@ class Ciqual_2013_Reader():
             Write content in database using cursor
             decode = True if content must be decoded
             # Important : decode read string if it comes from a zipfile !
-            # Read : https://marcosc.com/2008/12/zip-files-and-encoding-i-hate-you/
-            # Read : http://stackoverflow.com/questions/539294/how-do-i-determine-file-encoding-in-osx
-            # file -I ../CIQUAL2013-Donneescsv.csv -> text/x-c; charset=iso-8859-1
+            Read : https://marcosc.com/2008/12/zip-files-and-encoding-i-hate-you/
+            Read : http://stackoverflow.com/questions/539294/how-do-i-determine-file-encoding-in-osx
+            file -I ../CIQUAL2013-Donneescsv.csv -> text/x-c; charset=iso-8859-1
         """
         # Source for Ciqual file
         source = self.configApp.get('Ciqual', 'CiqualCSVFile')
@@ -104,9 +105,9 @@ class Ciqual_2013_Reader():
             # strip pour enlever le CR et NL final
             lineSplitted = lineDecoded.strip().split(";")
             if linenum == 1:
-                dictConstituantsPosition = self.analyseHeaderCiqual(cursor,lineSplitted)
+                dictConstituantsPosition = self.analyseHeaderCiqual(cursor, lineSplitted)
             else:
-                self.analyseProductCiqual(cursor,lineSplitted, linenum,
+                self.analyseProductCiqual(cursor, lineSplitted,
                                           source, dateSource, urlSource,
                                           dictConstituantsPosition)
         self.logger.info(str(linenum) + " lines read.")
@@ -130,12 +131,12 @@ class Ciqual_2013_Reader():
                 param = line.split('=')
                 if len(param) == 2:
                     dicoShortcuts[param[0].strip()] = param[1].strip()
-        fileShort.closed
+        fileShort.close()
 
         numField = 0
         # Check 4 first fields
         FirstFieldsCiqualFile = self.configApp.get('Ciqual', 'FirstFieldsCiqualFile').split(";")
-        for fieldName in FirstFieldsCiqualFile :
+        for fieldName in FirstFieldsCiqualFile:
             readField = headerSplitted[numField]
             if readField != fieldName:
                 raise ValueError(_("Ciqual file : invalid header field") + " " +  str(numField+1) +
@@ -154,13 +155,13 @@ class Ciqual_2013_Reader():
 
         # Record constituants names table
         # Regular expression for data extraction
-        self.regexpConstituant = re.compile(r'^(?P<codeConstituant>\d{1,5}) ' +
-                                    r'(?P<nameConstituant>.*?)' +
-                                    r' \((?P<unitConstituant>[µmk]?[Jgc][a]?[l]?)/100g\)$')
+        regexpConstituant = re.compile(r'^(?P<codeConstituant>\d{1,5}) ' +
+                                       r'(?P<nameConstituant>.*?)' +
+                                       r' \((?P<unitConstituant>[µmk]?[Jgc][a]?[l]?)/100g\)$')
         constituants = []
         dictConstituantsPosition = dict()
         for constituantDescription in headerSplitted[numField:]:
-            match = self.regexpConstituant.search(constituantDescription)
+            match = regexpConstituant.search(constituantDescription)
             if match:
                 code = match.group('codeConstituant')
                 constituants.append((code,
@@ -171,18 +172,18 @@ class Ciqual_2013_Reader():
                 numField = numField + 1
             else:
                 raise ValueError(_("Ciqual file : invalid header field") + " " +
-                                  str(numField1+1) +
-                                  " : " + constituantDescription)
+                                 str(numField+1) +
+                                 " : " + constituantDescription)
         cursor.executemany("""
-                        INSERT INTO constituantsNames(code, name, unit, shortcut)
-                        VALUES(?, ?, ?, ?)
-                        """,
-                        constituants)
+                            INSERT INTO constituantsNames(code, name, unit, shortcut)
+                            VALUES(?, ?, ?, ?)
+                            """,
+                           constituants)
 
         self.logger.info(str(len(constituants)) + " constituants available.")
         return dictConstituantsPosition
 
-    def analyseProductCiqual(self, cursor, productSplitted, linenum,
+    def analyseProductCiqual(self, cursor, productSplitted,
                              source, dateSource, urlSource,
                              dictConstituantsPosition):
         """ Analyse product line of Ciqual database """
@@ -213,9 +214,9 @@ class Ciqual_2013_Reader():
                 value = 0.0
                 qualifValue = "T"
             elif constituantValue.startswith('< '):
-                    constituantValue = constituantValue.replace('< ', '')
-                    value = float(constituantValue.replace(',', '.'))
-                    qualifValue = '<'
+                constituantValue = constituantValue.replace('< ', '')
+                value = float(constituantValue.replace(',', '.'))
+                qualifValue = '<'
             else:
                 value = float(constituantValue.replace(',', '.'))
                 qualifValue = 'N'

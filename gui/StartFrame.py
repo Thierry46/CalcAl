@@ -18,19 +18,20 @@ from . import CallTypWindow
 from . import DatabaseInitialiser
 from . import DatabaseJoinDialog
 from . import FrameBaseCalcAl
-from database import Database
 
 class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Welcome frame used to choose database to use """
 
-    def __init__(self, master, mainWindow, logoFrame, calculatorFrameModel):
+    def __init__(self, master, mainWindow, logoFrame,
+                 calculatorFrameModel, patientFrameModel):
         """ Initialize welcome Frame """
         super(StartFrame, self).__init__(master, mainWindow, logoFrame)
         self.calculatorFrameModel = calculatorFrameModel
+        self.patientFrameModel = patientFrameModel
         ressourcePath = os.path.join(self.dirProject,
                                      self.configApp.get('Resources', 'ResourcesDir'))
         self.databaseDirPath = os.path.join(ressourcePath,
-                                    self.configApp.get('Resources', 'DatabaseDir'))
+                                            self.configApp.get('Resources', 'DatabaseDir'))
 
         Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=TOP)
         centerFrame = Frame(self)
@@ -95,9 +96,12 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.mainWindow.closeDatabase()
             self.databaseManager.openDatabase(dbName)
             self.calculatorFrameModel.setDatabase(self.databaseManager.getDatabase())
+            self.patientFrameModel.setDatabase(self.databaseManager.getDatabase())
             self.mainWindow.setTitle(dbName)
             self.mainWindow.enableTabSearch()
             self.mainWindow.enableTabPortion(True)
+            self.mainWindow.enableTabPathology(True)
+            self.mainWindow.enableTabPatient(True)
             self.mainWindow.enableTabCalculator(True)
             message = _("Start calculator with database") + ' ' + dbName
             self.mainWindow.setStatusText(message)
@@ -110,9 +114,8 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                          self.databaseManager,
                                                          title=_("Initialize a  database"))
         results = dialog.getResult()
-        database = None
         try:
-            if results == None:
+            if results is None:
                 raise ValueError(_("New database canceled"))
 
             self.mainWindow.closeDatabase()
@@ -169,7 +172,8 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     self.mainWindow.closeDatabase()
                     self.databaseManager.deleteDatabase(dbName)
                     self.updateDatabaseListbox()
-                    self.mainWindow.setStatusText(_("Database") + " : " + dbName + " " + _("deleted"))
+                    self.mainWindow.setStatusText(_("Database") + " : " + dbName + " " +
+                                                  _("deleted"))
                     # Python error because DISABLED icon is not define
                     #self.startButton.configure(state=DISABLED)
             except OSError as exc:
@@ -197,7 +201,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                            title=_("Join a database to") + " " + \
                                                                 dbNameMaster)
             results = dialog.getResult()
-            if results == None:
+            if results is None:
                 raise ValueError(_("New database canceled"))
             self.mainWindow.closeDatabase()
             self.databaseManager.joinDatabase(dbNameMaster, results[0], results[1])
@@ -212,4 +216,3 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseListbox.delete(0, END)
         for dbFile in self.databaseManager.getListDatabaseInDir():
             self.databaseListbox.insert(END, dbFile)
-

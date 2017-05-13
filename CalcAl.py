@@ -14,7 +14,7 @@ Options :
     -d ou --debug : Verbose mode when starting
     -b ou --baseDirPath=path : path for databases shared by users
                      on a computer or a network
-    
+
 Paramèters : None.
 
 Licence : GPLv3
@@ -48,9 +48,9 @@ import locale
 import pwd
 import shutil
 import logging
-import getpass
 from logging.handlers import RotatingFileHandler
-import imp # To test if a module is available
+import getpass
+
 from tkinter import TkVersion
 
 from database import DatabaseManager
@@ -139,12 +139,13 @@ def main(argv=None):
     logger.info(_("To contact authors") + " : " + emails)
     logger.info(_("On") + " : " + platform.system() + ", " + platform.release() + ", " +
                 "Python : " + platform.python_version() + ", Tk : " + str(TkVersion))
-    logger.info(_("Detected language and encoding on this computer") + " = " + str(locale.getlocale()))
+    logger.info(_("Detected language and encoding on this computer") + " = " +
+                str(locale.getlocale()))
 
     # Init database path and user demo database
     if not isPathDBSet:
         baseDirPath = os.path.join(homeCalcAl,
-                                       configApp.get('Resources', 'DatabaseDir'))
+                                   configApp.get('Resources', 'DatabaseDir'))
     if not os.path.exists(baseDirPath):
         os.mkdir(baseDirPath)
         logger.info(_("Directory created") + " :" + baseDirPath)
@@ -238,6 +239,3 @@ def setLocaleCalcal(configApp, dirProject):
 if __name__ == "__main__":
     main()
     sys.exit(0)
-
-
-

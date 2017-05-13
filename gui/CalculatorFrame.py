@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : CalculatorFrame
 Author : Thierry Maillard (TMD)
-Date  : 31/3/2016 - 15/10/2016
+Date  : 31/3/2016 - 29/11/2016
 
 Role : Define food calculator frame content.
 ************************************************************************************
@@ -11,6 +11,8 @@ Role : Define food calculator frame content.
 from tkinter import *
 from tkinter.ttk import Combobox
 from tkinter import messagebox
+
+from util import CalcalExceptions
 
 from . import CallTypWindow
 from . import FrameBaseCalcAl
@@ -20,17 +22,17 @@ from . import PortionInfoChooser
 from . import EnergyFrame
 from . import WaterEnergyFrame
 
-from util import CalcalExceptions
-from database import Database
-
 class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Welcome frame used to choose database to use """
 
-    def __init__(self, master, mainWindow, logoFrame, calculatorFrameModel):
+    def __init__(self, master, mainWindow, logoFrame,
+                 calculatorFrameModel,
+                 patientFrameModel):
         """ Initialize welcome Frame """
         super(CalculatorFrame, self).__init__(master, mainWindow, logoFrame)
         self.calculatorFrameModel = calculatorFrameModel
         self.calculatorFrameModel.addObserver(self)
+        self.patientFrameModel = patientFrameModel
         self.formatFloatValue = "{0:." + self.configApp.get('Limits', 'nbMaxDigit') + "f}"
         self.bgLabelFC = self.configApp.get('Colors', 'colorLabelTableFood')
         self.bgLabelComp = self.configApp.get('Colors', 'colorComponantTableFood')
@@ -98,7 +100,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         Label(foodstuffFrame, text=_("Name")).grid(row=1, column=0, sticky=E)
         self.foodstuffNameCombobox = Combobox(foodstuffFrame, exportselection=0,
-                                      state="readonly", width=30)
+                                              state="readonly", width=30)
         self.foodstuffNameCombobox.grid(row=1, column=1, sticky=W)
 
         Label(foodstuffFrame, text=_("Quantity (g)")).grid(row=2, column=0, sticky=E)
@@ -111,10 +113,22 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         # Button to put defined food in table
         addFoodButton = self.mainWindow.createButtonImage(upperMiddleFrame,
-                                               imageRessourceName='arrowDown',
-                                               text4Image=_("Put in the list"))
+                                                          imageRessourceName='arrowDown',
+                                                          text4Image=_("Put in the list"))
         addFoodButton.configure(command=self.addFoodInTable)
-        addFoodButton.pack(side=TOP, padx=5, pady=5)
+        addFoodButton.pack(side=LEFT, padx=5, pady=5)
+
+        # Combo to choose number of day for all food displayed
+        nbDaysComboboxFrame = Frame(upperMiddleFrame)
+        nbDaysComboboxFrame.pack(side=RIGHT)
+        Label(nbDaysComboboxFrame, text=_("Duration to eat")).pack(side=TOP)
+        Label(nbDaysComboboxFrame, text=_("this portion (days)")).pack(side=TOP)
+        maxNbDays2Eat = int(self.configApp.get('Limits', 'maxNbDays2Eat'))
+        self.nbDaysCombobox = Combobox(nbDaysComboboxFrame, exportselection=0,
+                                       state="readonly", width=len(str(maxNbDays2Eat)),
+                                       values=list(range(1, maxNbDays2Eat+1)))
+        self.nbDaysCombobox.bind('<<ComboboxSelected>>', self.updateNbDays)
+        self.nbDaysCombobox.pack(side=TOP)
 
         # Componants frame
         color = self.configApp.get('Colors', 'componentsListboxColor')
@@ -158,7 +172,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                     _("for multiple selection") + "\n" + \
                                     _("Clic on header :") + "\n" + \
                                     _("- of 1st column to select or unselect all") + "\n" + \
-                                    _("- of other column to sort rows" )+ "\n" + \
+                                    _("- of other column to sort rows")+ "\n" + \
                                     _("Ctrl-C to put in clipboard")+ "\n" + \
                                     _("Double-clic to modify"),
                                     2 * self.delaymsTooltips)
@@ -185,13 +199,13 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             eraseFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                      imageRessourceName='eraseSelection',
                                                      text4Image=_("Erase line"))
-            eraseFoodButton.configure(command=lambda inBd=False:self.deleteFood(inBd))
+            eraseFoodButton.configure(command=lambda inBd=False: self.deleteFood(inBd))
             eraseFoodButton.pack(side=LEFT)
 
             deleteFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                   imageRessourceName='deleteSelection',
                                                   text4Image=_("Delete in database"))
-            deleteFoodButton.configure(command=lambda inBd=True:self.deleteFood(inBd))
+            deleteFoodButton.configure(command=lambda inBd=True: self.deleteFood(inBd))
             deleteFoodButton.pack(side=LEFT)
 
             copyInClipboardFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
@@ -222,9 +236,6 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                           self.calculatorFrameModel,
                                           self.configApp).pack(side=LEFT, padx=5, pady=5)
 
-    def getModel(self):
-        return self.calculatorFrameModel
-
     def update(self, observable, event):
         """Called when the model object is modified. """
         if observable == self.calculatorFrameModel:
@@ -246,8 +257,12 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     self.changeSavePortion()
                 elif event == "DISPLAY_PORTION":
                     self.changeDisplayPortion()
-                else:
-                    self.logger.debug("CalculatorFrame : ignore event : " + event)
+                elif event == "CHANGE_NB_DAYS":
+                    self.changeNbDays()
+                elif event == "CHANGE_NB_DAYS_BY_MODEL":
+                    self.changeNbDaysByModel()
+                elif event == "CHANGE_SELECTED_COMPONENTS":
+                    self.changeSelectedComponent()
 
             except CalcalExceptions.CalcalValueError as exc:
                 message = _("Error") + " : " + str(exc) + " !"
@@ -260,18 +275,18 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         database = self.databaseManager.getDatabase()
         assert (database is not None), "CalculatorFrame/init() : no open database !"
 
-        if (initDb):
+        if initDb:
             # Update components list
+            self.foodTable.deleteAllRows()
             self.componentsListbox.delete(0, END)
-            self.listComponents = database.getListComponents()
-            assert (len(self.listComponents) > 0), \
-                "CalculatorFrame/init() : no constituants in database !"
+            self.listComponents = self.calculatorFrameModel.getListComponents()
             for component in self.listComponents:
                 self.componentsListbox.insert(END, component[1] + ' (' + component[2] + ')')
 
             # Update familyFoodstuffCombobox
             listFamilyFoodstuff = database.getListFamilyFoodstuff()
-            assert (len(listFamilyFoodstuff) > 0), "CalculatorFrame/init() : no family in database !"
+            assert (len(listFamilyFoodstuff) > 0), \
+                    "CalculatorFrame/init() : no family in database !"
             self.familyFoodstuffCombobox['values'] = listFamilyFoodstuff
             self.familyFoodstuffCombobox.current(0)
 
@@ -281,9 +296,11 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.familyFoodstuffCombobox.set("")
         self.foodstuffNameCombobox.set("")
         self.foodstuffQuantity.set("")
+        self.nbDaysCombobox.current(0)
+
         self.componentsListbox.selection_clear(0, END)
         self.foodTable.updateVariablesColumns([], [])
- 
+
         # Limit width size of main window
         self.mainWindow.maxsize(int(self.mainWindow.winfo_width()),
                                 int(self.mainWindow.winfo_screenheight()))
@@ -292,25 +309,41 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Change a line in foodtable """
         self.logger.debug("CalculatorFrame : changeFood()")
 
-        self.foodTable.deleteRow(_("Total"))
+        self.deleteTotalLines()
 
         # Update modified food lines
-        for foodName, quantity, dictComponents in self.calculatorFrameModel.getListFoodModifiedInTable():
+        for foodName, quantity, dictComponents \
+            in self.calculatorFrameModel.getListFoodModifiedInTable():
             columnsValues = [quantity] + self.getColumnValues(dictComponents)
             self.foodTable.insertOrCreateRow(foodName, columnsValues)
 
         # Update total line
+        self.updateTotalLines()
+
+        self.mainWindow.setStatusText(_("Foodstuff") + " " + _("added"))
+
+    def deleteTotalLines(self):
+        """ Deletes all totallines in food table """
+        self.foodTable.deleteRow(_("Total"))
+        self.foodTable.deleteRow(_("Total") + " " + _("per day"))
+
+    def updateTotalLines(self):
+        """ Update total line according to model content and self.nbDaysCombobox """
         totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr()
         columnsValues = [quantity] + self.getColumnValues(dictComponents)
         self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
 
-        self.mainWindow.setStatusText(_("Foodstuff") + " " + _("added"))
+        nbDays = int(self.nbDaysCombobox.get())
+        if nbDays >= 1:
+            totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr(nbDays)
+            columnsValues = [quantity] + self.getColumnValues(dictComponents)
+            self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
 
     def changeComponents(self):
         """ Change components columns in foodtable """
         self.logger.debug("CalculatorFrame : changeComponents()")
 
-        self.foodTable.deleteRow(_("Total"))
+        self.deleteTotalLines()
 
         # Prepare list of components to be inserted
         # with respect of food and components order
@@ -331,9 +364,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         # Create new total line
         if self.calculatorFrameModel.getNumberOfFoodStuff() > 0:
-            totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr()
-            columnsValues = [quantity] + self.getColumnValues(dictComponents)
-            self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
+            self.updateTotalLines()
 
         self.mainWindow.setStatusText(str(len(listUserComponentTitle)) + " " +
                                       _("Components displayed"))
@@ -342,7 +373,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Delete foodstuffs in foodtable """
         self.logger.debug("CalculatorFrame : changeDeleteFood()")
 
-        self.foodTable.deleteRow(_("Total"))
+        self.deleteTotalLines()
 
         listFoodname = self.calculatorFrameModel.getListDeletedFoodnames()
         for foodname in listFoodname:
@@ -350,9 +381,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         # Create new total line
         if self.calculatorFrameModel.getNumberOfFoodStuff() > 0:
-            totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr()
-            columnsValues = [quantity] + self.getColumnValues(dictComponents)
-            self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
+            self.updateTotalLines()
 
         if len(listFoodname) < 2:
             foodstuff = _("foodstuff")
@@ -365,16 +394,18 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ return a list [quantity, ordered components] according self.dictSelectedComponents
             components are asked by user in list of components """
         listUserComponentCode = [self.listComponents[index][0]
-                                     for index in self.componentsListbox.curselection()]
-        columnsValues = [dictComponents[componentCode] for componentCode in listUserComponentCode]
-        self.logger.debug("CalculatorFrame/getColumnValues() :columnsValues = " + str(columnsValues))
+                                 for index in self.componentsListbox.curselection()]
+        columnsValues = [dictComponents[componentCode]
+                         for componentCode in listUserComponentCode]
+        self.logger.debug("CalculatorFrame/getColumnValues() :columnsValues = " +
+                          str(columnsValues))
         return columnsValues
 
     def changeGroupFood(self):
         """ Called by the model when a group is created """
         self.logger.debug("CalculatorFrame : changeGroupFood()")
 
-        self.foodTable.deleteRow(_("Total"))
+        self.deleteTotalLines()
 
         productName = self.calculatorFrameModel.getListDeletedFoodnames()[0]
         familyName = self.calculatorFrameModel.getGroupedFamilyFoodname()
@@ -386,9 +417,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.familyFoodstuffCombobox['values'] = listFamily
 
         # Create new total line
-        totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr()
-        columnsValues = [quantity] + self.getColumnValues(dictComponents)
-        self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
+        self.updateTotalLines()
 
         self.mainWindow.setStatusText(_("New product") + " " + productName + " " +
                                       _("saved in database"))
@@ -396,22 +425,19 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def changeUngroupFood(self):
         """ Called by the model when a food is ungrouped """
         self.logger.debug("CalculatorFrame : changeUngroupFood()")
-                
-        self.foodTable.deleteRow(_("Total"))
+        self.deleteTotalLines()
 
         # Delete ungrouped food in table
         foodNameUngrouped = self.calculatorFrameModel.getListDeletedFoodnames()[0]
         self.foodTable.deleteRow(foodNameUngrouped)
 
-        # Ad or update ungrouped parts
+        # Add or update ungrouped parts
         for foodName, quantity, dictComponents in self.calculatorFrameModel.getListFoodModifiedInTable():
             columnsValues = [quantity] + self.getColumnValues(dictComponents)
             self.foodTable.insertOrCreateRow(foodName, columnsValues)
 
         # Create new total line
-        totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr()
-        columnsValues = [quantity] + self.getColumnValues(dictComponents)
-        self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
+        self.updateTotalLines()
 
         self.mainWindow.setStatusText(_("Composed product") + " " + foodNameUngrouped + " " +
                                       _("ungrouped"))
@@ -429,7 +455,6 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.logger.debug("CalculatorFrame : changeDisplayPortion()")
 
         # Erase food table
-        self.foodTable.deleteRow(_("Total"))
         self.foodTable.deleteAllRows()
 
         # Erase components to speed operation
@@ -443,22 +468,41 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodTable.insertGroupRow(tableContent)
 
         # Create new total line
-        totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr()
-        columnsValues = [quantity] + self.getColumnValues(dictComponents)
-        self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
+        self.updateTotalLines()
 
-        self.mainWindow.enableTabCalculator(True, init=False)
+        self.mainWindow.enableTabCalculator(True)
         self.mainWindow.setStatusText(_("Selected portion added in calculator"))
+
+    def changeSelectedComponent(self):
+        """ Model asks to change selected components in components Listbox """
+        # Ask to model what components to select
+        listComponentsCodes = self.calculatorFrameModel.getAskedByUserCodes()
+        # Select componenents
+        self.componentsListbox.selection_clear(0, END)
+        firstIndex = True
+        for code in listComponentsCodes:
+            index = 0
+            for component in self.listComponents:
+                if code == component[0]:
+                    self.componentsListbox.selection_set(index)
+                    if firstIndex:
+                        self.componentsListbox.see(index)
+                        firstIndex = False
+                    break
+                index += 1
+        self.changeComponents()
+        self.mainWindow.setStatusText(_("Components selected"))
+
 
     def validateNameToSearchEntry(self, *args):
         """ File self.foundNamesListbox with products that match nameToSearchEntry content"""
-        isNameFound = False
         foodNamePart = self.nameToSearch.get()
 
         # Search in database product containing foodNamePart
         if len(foodNamePart) > 0:
             database = self.databaseManager.getDatabase()
-            assert (database is not None), "CalculatorFrame/validateNameToSearchEntry() : no open database !"
+            assert (database is not None), \
+                    "CalculatorFrame/validateNameToSearchEntry() : no open database !"
             listFoodName = database.getProductsNamesContainingPart(foodNamePart)
             # Update self.foundNamesListbox with results
             self.foundNamesListbox.delete(0, END)
@@ -466,6 +510,34 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 self.foundNamesListbox.insert(END, name)
         else:
             self.foundNamesListbox.delete(0, END)
+
+    def updateNbDays(self, *args):
+        """ User changes nb days to eat portion """
+        nbDays = int(self.nbDaysCombobox.get())
+        self.calculatorFrameModel.updateNbDays(nbDays)
+
+    def changeNbDays(self):
+        """ Called if an event said that user has changed nbDays Combo """
+        self.deleteTotalLines()
+        self.updateTotalLines()
+
+        # Make updated totalLine visible
+        nbDays = int(self.nbDaysCombobox.get())
+        name = _("Total")
+        if nbDays > 1:
+            name = _("Total") + " " + _("per day")
+        self.foodTable.see(name)
+
+    def changeNbDaysByModel(self):
+        """ V 0.41 : Called if an event said that model asked to change nbDays Combo value """
+        nbDays = self.calculatorFrameModel.getNbDays()
+
+        # Test if nbDays stored in database can be displayed and adapt combobox values
+        if nbDays > max([int(val) for val in self.nbDaysCombobox['values']]):
+            self.nbDaysCombobox['width'] = len(str(nbDays))
+            self.nbDaysCombobox['values'] = list(range(1, nbDays+1))
+
+        self.nbDaysCombobox.set(nbDays)
 
     def updatefoodstuffName(self, *args):
         """ Update foodstuff list name """
@@ -492,7 +564,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def clicComponentsListbox(self, evt=None):
         """ Update model with new components chosen """
         listUserComponentCode = set([self.listComponents[index][0]
-                                  for index in self.componentsListbox.curselection()])
+                                     for index in self.componentsListbox.curselection()])
 
         # Send users choosen codeComponents to model
         self.calculatorFrameModel.updateFollowedComponents(listUserComponentCode)
@@ -500,9 +572,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def addFoodInTable(self, event=None):
         """ Called when hitting Retun key in foodstuffQuantity entry """
         # Check User's input data
-        foodName= self.foodstuffNameCombobox.get()
+        foodName = self.foodstuffNameCombobox.get()
         quantity = self.foodstuffQuantity.get()
-        try :
+        try:
             self.calculatorFrameModel.addFoodInTable([[foodName, quantity]])
         except CalcalExceptions.CalcalValueError as exc:
             message = _("Error") + " : " + str(exc) + " !"
@@ -511,9 +583,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def groupFood(self):
         """ Group and Save foodstuffs that are selected by user in Database """
         listFoodName2Group = self.foodTable.getKeyNames(excludeRowWithTitle=_("Total"),
-                                                               onlySelected=True)
-        try :
-            if len(listFoodName2Group) < 2 :
+                                                        onlySelected=True)
+        try:
+            if len(listFoodName2Group) < 2:
                 raise ValueError(_("Please select more than one foodstuff in food table"))
 
             # Ask new name and family for this new product
@@ -521,7 +593,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             dialog = FamilyNameChooser.FamilyNameChooser(self, database, self.configApp,
                                                          title=_("Save group in database"))
             results = dialog.getResult()
-            if results == None:
+            if results is None:
                 raise ValueError(_("Group recording canceled"))
 
             # Insert new produt in database
@@ -538,8 +610,8 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Ungroup foodstuff selected by user
             v0.30 : Sum ungrouped quantities to existing rows that contain the same food """
         listSelectedFoodName = self.foodTable.getKeyNames(excludeRowWithTitle=_("Total"),
-                                                        onlySelected=True)
-        try :
+                                                          onlySelected=True)
+        try:
             if len(listSelectedFoodName) != 1:
                 raise ValueError(_("Please select one and only one line in food table"))
             # Ask to the model to group selected foods
@@ -553,14 +625,15 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         listSelectedFoodName = self.foodTable.getKeyNames(excludeRowWithTitle=_("Total"),
                                                           onlySelected=True)
         nbSelectedRows = len(listSelectedFoodName)
-        try :
+        try:
             if nbSelectedRows < 1:
                 raise ValueError(_("Please select at least one line in food table"))
             if inDatabase and nbSelectedRows != 1:
                 raise ValueError(_("Please select one and only one line in food table"))
             isDestructionOk = True
             if inDatabase:
-                isDestructionOk = messagebox.askyesno(_("Deleting selected user element in database"),
+                isDestructionOk = messagebox.askyesno(
+                                    _("Deleting selected user element in database"),
                                     _("Do you really want to delete selection in database ?") + \
                                     "\n" + listSelectedFoodName[0],
                                     icon='warning')
@@ -570,8 +643,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
     def copySelectionInDefinitionFrame(self, event=None):
-        """ Copy name and quatity of first element selected in foodTable to meal definition frame """
-        try :
+        """ Copy name and quatity of first element selected in foodTable
+            to meal definition frame """
+        try:
             listSelectedRows = self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total"))
             if len(listSelectedRows) != 1:
                 raise ValueError(_("Please select one and only one line in food table"))
@@ -601,7 +675,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         "v0.30 : 22-23/8/2016 : Display information on selected food"
         maxNameLengthInPopup = int(self.configApp.get("Limits", "maxNameLengthInPopup"))
         listSelectedRows = self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total"))
-        try :
+        try:
             if len(listSelectedRows) != 1:
                 raise ValueError(_("Please select one and only one line in food table"))
             foodName = self.foodTable.getTextForItemIndex(listSelectedRows[0])
@@ -640,7 +714,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     message += "\n- " +  dictGroup["namePart"][:maxNameLengthInPopup] + \
                             tooLongName + "\n\t" + \
                             str(dictGroup["percentPart"]) + " %"
-            else :
+            else:
                 message += "\n" + \
                             _("Source") + " : " + dictInfoFood["source"] + "\n" + \
                             _("URL") + " : " + dictInfoFood["urlSource"]
@@ -654,15 +728,15 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def savePortion(self):
         """ Save Portion in Database """
-        try :
-            if self.calculatorFrameModel.getNumberOfFoodStuff() < 1 :
+        try:
+            if self.calculatorFrameModel.getNumberOfFoodStuff() < 1:
                 raise ValueError(_("No food to save"))
             # Ask information to qualify this portion
             database = self.databaseManager.getDatabase()
             dialog = PortionInfoChooser.PortionInfoChooser(self, database, self.configApp,
                                                            title=_("Save portion in database"))
             results = dialog.getResult()
-            if results == None:
+            if results is None:
                 raise ValueError(_("Portion recording canceled"))
 
             # Ask model to insert new portion in database
@@ -687,3 +761,6 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         message = _("Foodstuff") + " " + foodName + " " + _("selected and copied")
         self.mainWindow.setStatusText(message)
 
+    def getPatientFrameModel(self):
+        """ Return calculator frame model """
+        return self.patientFrameModel
