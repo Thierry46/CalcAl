@@ -1,6 +1,14 @@
 CalcAl - versions summary
 ==========================
 
+CalcAl_v0.36g : 12/11/2016 : Refactoring
+- 6046 lines py code (include 1055 lines pytest)
+- Model package to host diet modules
+- Introduce Design Pattern : Publish–subscribe pattern 
+- Unit testing : unittest.sh + unittest
+- Add sugar and total energy in energy table
+- Better control of Selection Menu : Disable if no food in table
+
 CalcAl_v0.35 : 14/10/2016 : Packaging Mac
 - 4404 lines py code
 - new doc file : packaging.txt

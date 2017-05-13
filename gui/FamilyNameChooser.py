@@ -15,7 +15,7 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
     def __init__(self, parent, database, configApp, title=None):
         self.database = database
         self.configApp = configApp
-        self.familyNames = self.database.getListeFamilyFoodstuff()
+        self.familyNames = self.database.getListFamilyFoodstuff()
         super(FamilyNameChooser, self).__init__(parent, title)
 
     def body(self, master):

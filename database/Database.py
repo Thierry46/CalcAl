@@ -27,11 +27,6 @@ class Database():
         self.configApp = configApp
         self.dirProject = dirProject
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
-        self.formatFloatValue = "{0:." + self.configApp.get('Limits', 'nbMaxDigit') + "f}"
-        # table for qualification reduction rules
-        self.QRulesS = self.configApp.get('QualifValue', 'QRulesS').split(";")
-        self.QRules0 = self.configApp.get('QualifValue', 'QRules0').split(";")
-        self.QRulesO = self.configApp.get('QualifValue', 'QRulesO').split(";")
 
     def initDBFromFile(self, databasePath, databaseType, initFile):
         """ Create a new database databasePath by reading a file initFile """
@@ -61,7 +56,7 @@ class Database():
     def getDbname(self):
         return self.dbname
 
-    def getListeComponents(self):
+    def getListComponents(self):
         """ Return list of tupple (code,shortcut,unit)
             for each entry from constituantsNames table """
         cursor = self.connDB.cursor()
@@ -71,7 +66,7 @@ class Database():
         self.logger.info(str(len(listComponentsUnits)) + " Components available.")
         return listComponentsUnits
 
-    def getListeFamilyFoodstuff(self):
+    def getListFamilyFoodstuff(self):
         """ Return list of family from products table """
         cursor = self.connDB.cursor()
         cursor.execute("SELECT DISTINCT familyName FROM products ORDER BY familyName")
@@ -80,7 +75,7 @@ class Database():
         self.logger.info(str(len(listFamilyFoodstuff)) + " family names available.")
         return listFamilyFoodstuff
 
-    def getListeFoodstuffName(self, familyname):
+    def getListFoodstuffName(self, familyname):
         """ Return list of name in products table belonging to familyname """
         cursor = self.connDB.cursor()
         cursor.execute("SELECT DISTINCT name FROM products WHERE familyName=? ORDER BY name",
@@ -141,107 +136,6 @@ class Database():
                 else:
                     listComponentsValuesAll.append([constituantCode, 0.0, "-"])
         return listComponentsValuesAll
-
-    def getComponentsValues4Food(self, foodName, quantity, listComponentsCodes):
-        """ Return components values multipled by quantity for a given foodName"""
-        listComponentsValuesRaw = self.getComponentsValuesRaw4Food(foodName, quantity,
-                                                                   listComponentsCodes)
-        listComponentsValues = self.formatListComponentsValues(listComponentsValuesRaw)
-        return listComponentsValues
-
-    def sumComponents4FoodList(self, listNamesQties, listComponentsCodes):
-        """Compute a sum for each components values for given foodNames and quantities
-            Return :
-             - sum of food quantities
-             - a list of (constituant codes, sum of values multipled by quantity,
-                          reduced qualifValue)"""
-        constituantCodes = [0 for comp in listComponentsCodes]
-        totalValues = [0.0 for comp in listComponentsCodes]
-        qualifValues = ["" for comp in listComponentsCodes]
-        sumQuantities = 0.0
-        for name, quantity in listNamesQties:
-            listComponentsValuesRaw = self.getComponentsValuesRaw4Food(name, quantity,
-                                                                   listComponentsCodes)
-            sumQuantities = sumQuantities + float(quantity)
-            index = 0
-            for constituantCode, value, qualifier in listComponentsValuesRaw:
-                constituantCodes[index] = constituantCode
-                totalValues[index] = totalValues[index] + value
-                qualifValues[index] = qualifValues[index] + qualifier
-                index = index + 1
-
-        # Reduce number of value qualifier to 1
-        index = 0
-        for index in range(len(qualifValues)):
-            qualifValues[index] = self.reducQualifier(qualifValues[index], totalValues[index])
-            index = index + 1
-
-        # Prepare  by Constituant result list
-        totalByConstituant = []
-        for constituant, value, qualifValue in zip(constituantCodes, totalValues, qualifValues):
-            totalByConstituant.append([constituant, value, qualifValue])
-
-        return sumQuantities, totalByConstituant
-
-    def sumComponents4FoodListFormated(self, listNamesQties, listComponentsCodes):
-        """Return result of sumComponents4FoodList formated """
-        result = None
-        if len(listNamesQties) > 0 :
-            sumQuantities, totalByConstituant = self.sumComponents4FoodList(listNamesQties,
-                                                                            listComponentsCodes)
-            listComponentsValues = self.formatListComponentsValues(totalByConstituant)
-        return sumQuantities, listComponentsValues
-
-    def reducQualifier(self, qualif2Reduce, value):
-        """ Reduce qualif2Reduce expression by applying rules read in config file """
-        qualifResult = "".join(set(qualif2Reduce))
-        nbReduction = 0
-        while nbReduction < 5 and len(qualifResult) > 1:
-            # Apply rules
-            if value >= float(self.configApp.get("Limits", "near0")):
-                QRule2apply = self.QRulesS
-            else: # For value near 0
-                QRule2apply = self.QRules0
-            QRule2apply= QRule2apply + self.QRulesO
-            for rule in QRule2apply:
-                if rule[0] in qualifResult and rule[1] in qualifResult:
-                    qualifResult = qualifResult.replace(rule[0], rule[2])
-                    qualifResult = qualifResult.replace(rule[1], rule[2])
-                qualifResult = "".join(set(qualifResult))
-            nbReduction = nbReduction + 1
-        assert nbReduction<5, "reducQualifier don't converge : " + qualif2Reduce +\
-                              " can't be reduce : " + qualifResult + \
-                              ". Check config/[QualifValue]/QRules"
-        return qualifResult
-
-    def formatListComponentsValues(self, listComponentsValuesRaw):
-        """ Format components values according values qualifiers
-            v0.34 : call formatListQualifiersValues to avoid code duplication """
-        listQualifier = []
-        listValues = []
-        for constituantCode, value, qualifier in listComponentsValuesRaw:
-            listQualifier.append(qualifier)
-            listValues.append(value)
-        listValuesFormated = self.formatListQualifiersValues(listQualifier, listValues)
-        return listValuesFormated
-
-    def formatListQualifiersValues(self, listQualifier, listValues):
-        """ Format qualifiers and values list """
-        listValuesFormated = []
-        for index, qualifier in enumerate(listQualifier):
-            if qualifier == "N" :
-                resultValue = self.formatFloatValue.format(listValues[index])
-            elif qualifier == "-" :
-                resultValue = "-"
-            elif qualifier == "T" :
-                resultValue = _("Traces")
-            elif qualifier == "<" :
-                resultValue = "< " + self.formatFloatValue.format(listValues[index])
-            else:
-                raise ValueError("formatListQualifiersValues : unknown value qualifier : " +\
-                                 qualifier)
-            listValuesFormated.append(resultValue)
-        return listValuesFormated
 
     def getFamily4FoodName(self, foodName):
         """ Given a foodName return its family name """
@@ -311,16 +205,16 @@ class Database():
         # Get components values for all results product
         nbFoundProducts = len(productNameAllOk)
         counter = 0
-        listComponentsValues= []
+        listNameComponentsValuesRaw= []
         for foodName in productNameAllOk:
-            componentsValues = self.getComponentsValues4Food(foodName, 100.0,
-                                                             listSelectedComponentsCodes)
-            listComponentsValues.append([foodName, componentsValues])
+            listComponentsValuesRaw = self.getComponentsValuesRaw4Food(foodName, 100.0,
+                                                                   listSelectedComponentsCodes)
+            listNameComponentsValuesRaw.append([foodName, listComponentsValuesRaw])
             counter = counter + 1
             if counter >= nbMaxResultSearch:
                 break
 
-        return nbFoundProducts, listComponentsValues
+        return nbFoundProducts, listNameComponentsValuesRaw
 
     def getProductNamesCondition(self, condition):
         """ Return a list of products names that mach the given condition on their values """
@@ -335,7 +229,9 @@ class Database():
             listeFoodstuffNames = [name[0] for name in listenames]
         return listeFoodstuffNames
 
-    def insertNewComposedProduct(self, productName, familyName, listNamesQty):
+    def insertNewComposedProduct(self, productName, familyName,
+                                 totalQuantity, dictComponentsQualifierQuantity,
+                                 listFoodNameAndQty2Group):
         """ Insert new composed product in database
             return total quantity for all food """
         if productName is None or  len(productName.strip()) < 2:
@@ -344,8 +240,8 @@ class Database():
         if productName is None or len(familyName.strip()) < 2:
             raise ValueError(_("Invalid family name : use more than one letter"))
 
-        assert (listNamesQty is not None) and len(listNamesQty) > 1, \
-                             "insertNewComposedProduct() : Invalid listNamesQty"
+        assert (listFoodNameAndQty2Group is not None) and len(listFoodNameAndQty2Group) > 1, \
+                             "insertNewComposedProduct() : Invalid listFoodNameAndQty2Group"
         try:
             with self.connDB:
                 cursor = self.connDB.cursor()
@@ -359,19 +255,16 @@ class Database():
                 listeCodesConstituant = [codeConstituant[0]
                                          for codeConstituant in cursor.fetchall()]
 
-                # Prepare data
-                totalQuantity, totalComponentsValues = self.sumComponents4FoodList(listNamesQty,
-                                                                         listeCodesConstituant)
-                assert totalQuantity > 0, "insertNewComposedProduct() : totalQuantity for group = 0"
-                index = 0
+                # Prepare components values to record in database
+                # Format of record to insert : productCode, componentCode, qualifValue, value
                 fieldsComposants = []
-                for compValue in totalComponentsValues:
-                     fieldsComposants.append([newProductCode, compValue[0],
-                                              compValue[1] * 100.0 / totalQuantity,
-                                              compValue[2]])
+                for componentCode, fields in dictComponentsQualifierQuantity.items():
+                     fieldsComposants.append([newProductCode, componentCode, fields[0], fields[1]])
 
+                # Prepare composition product % to record in database
+                # Format of record to insert : productCode, productCodePart, quantityPercent
                 fieldsCompositionProducts = []
-                for element in listNamesQty:
+                for element in listFoodNameAndQty2Group:
                     cursor.execute("SELECT code FROM products WHERE name=?", (element[0],))
                     results = cursor.fetchone()
                     quantityPercent = element[1] * 100.0 / totalQuantity
@@ -380,13 +273,13 @@ class Database():
                 # Save in compositionProducts table details of new product
                 cursor.executemany("""
                         INSERT INTO compositionProducts(productCode, productCodePart,
-                                                        quantityPercent)
+                                    quantityPercent)
                         VALUES(?, ?, ?)
                         """, fieldsCompositionProducts)
 
                 # Save components values of new product
                 cursor.executemany("""
-                    INSERT INTO constituantsValues(productCode, constituantCode, value, qualifValue)
+                    INSERT INTO constituantsValues(productCode, constituantCode, qualifValue, value)
                     VALUES(?, ?, ?, ?)
                     """, fieldsComposants)
 
@@ -404,7 +297,6 @@ class Database():
         except sqlite3.IntegrityError:
             raise ValueError(_("Problem with this new composition product (name already exist)") +
                              " : " + productName)
-        return totalQuantity
 
     def getPartsOfComposedProduct(self, productName, quantity):
         """ Get part of a composed products given a group of food
@@ -497,6 +389,40 @@ class Database():
         cursor.close()
         return dictInfoFood
 
+    def getInfoComponent(self, codeProduct, codeComponent):
+        """ Return a dictionnary of info for a given product component in this database
+            V0.36 : 26/10/2016 """
+        self.logger.debug("Database : getInfoComponent for codeProduct=" + str(codeProduct) +
+                          ", codeComponent=" + str(codeComponent))
+        dictComponent = dict()
+        dictComponent["productCode"] = codeProduct
+        dictComponent["constituantCode"] = codeComponent
+
+        cursor = self.connDB.cursor()
+        # Get info about component for a product
+        cursor.execute("""SELECT name, shortcut
+                        FROM constituantsNames
+                        WHERE code=?""",
+                       (codeComponent,))
+        result = cursor.fetchone()
+        dictComponent["name"] = result[0]
+        dictComponent["shortcut"] = result[1]
+
+        # Get values
+        cursor.execute("""SELECT  value, qualifValue
+                          FROM constituantsValues, constituantsNames
+                          WHERE productCode=? AND constituantCode=?""",
+                       (codeProduct, codeComponent))
+        result = cursor.fetchone()
+        if result:
+            dictComponent["value"] = result[0]
+            dictComponent["qualifValue"] = result[1]
+        else:
+            dictComponent["value"] = 0.0
+            dictComponent["qualifValue"] = '-'
+        cursor.close()
+        return dictComponent
+
     def deleteUserProduct(self, foodName):
         """ Delete a given user foodname in this database
         V0.30 : 23/8/2016 """
@@ -505,7 +431,9 @@ class Database():
 
         # Get foodName code
         cursor.execute("SELECT code FROM products WHERE name=?", (foodName,))
-        code = cursor.fetchone()[0]
+        returnValue = cursor.fetchone()
+        assert returnValue is not None, "deleteUserProduct() : foodname to delete : " + foodName + " not found !"
+        code = returnValue[0]
 
         # Only user foodstufs can be deleted
         if code >= int(self.configApp.get('Limits', 'startGroupProductCodes')):
@@ -712,7 +640,7 @@ class Database():
     def deletePortion(self, portionCode):
         """ Delete a given portion in this database
         V0.32 : 28/9/2016 """
-        self.logger.debug("Database : deletePortion for portion " + portionCode)
+        self.logger.debug("Database : deletePortion for portion " + str(portionCode))
         cursor = self.connDB.cursor()
 
         # Delete elements values
@@ -722,5 +650,5 @@ class Database():
         # Commit to be seen by other database connexion
         self.connDB.commit()
         cursor.close()
-        self.logger.debug("deletePortion : portion " + portionCode + " " + _("deleted"))
+        self.logger.debug("deletePortion : portion " + str(portionCode) + " " + _("deleted"))
 

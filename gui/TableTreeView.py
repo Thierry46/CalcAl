@@ -139,6 +139,18 @@ class TableTreeView(Frame):
                 listValues.append(valuesRow)
         return listValues
 
+    def getKeyNames(self, excludeRowWithTitle=None, onlySelected=False):
+        """ Return keyNames and stable cols for each rows """
+        listSelectedRows = []
+        if onlySelected:
+            listSelectedRows = self.getSelectedItems(excludeRowWithTitle)
+        listValues = []
+        for rowItem in self.treeview.get_children():
+            if (not excludeRowWithTitle or self.getTextForItemIndex(rowItem) != excludeRowWithTitle ) \
+                and (not onlySelected or (rowItem in listSelectedRows)):
+                listValues.append(self.treeview.item(rowItem, option='text'))
+        return listValues
+
     def getAllColumnsValues(self, excludeRowWithTitle=None):
         """ V0.33 : Return all values for optional columns """
         numberOfColumns = len(self.treeview['columns'])
@@ -180,7 +192,7 @@ class TableTreeView(Frame):
         nbRowsInTable = self.treeview.get_children()
         assert nbRowsInTable is None or variablesColValues is None or \
               len(nbRowsInTable) == len(variablesColValues),\
-            "Error : " + str(nbRowsInTable) +  " rows in table is different than " + \
+            "Error : " + str(len(nbRowsInTable)) +  " rows in table is different than " + \
             str(len(variablesColValues)) + " rows values to update !"
         numRow = 0
         for rowItem in self.treeview.get_children():

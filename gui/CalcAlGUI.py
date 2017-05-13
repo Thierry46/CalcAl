@@ -12,20 +12,20 @@ Licence : GPLv3
 Copyright (c) 2016 - Thierry Maillard
 
 
-    This file is part of CalcAl project.
+This file is part of CalcAl project.
 
-    CalcAl project is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+CalcAl project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    CalcAl project is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+CalcAl project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License
+along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************
 """
 import logging
@@ -41,6 +41,9 @@ from . import StartFrame
 from . import CalculatorFrame
 from . import SearchFoodFrame
 from . import PortionFrame
+
+from model import CalculatorFrameModel
+
 
 class CalcAlGUI(Tk):
     """ Main GUI class """
@@ -69,8 +72,6 @@ class CalcAlGUI(Tk):
                          ", screenheight=" + str(screenheight) +
                          ", bigScreen=" + str(self.bigScreen))
 
-        self.deiconify()
-
         # Set handler called when closing main window
         self.protocol("WM_DELETE_WINDOW", self.onClosing)
 
@@ -82,22 +83,28 @@ class CalcAlGUI(Tk):
         self.currentTab = None
         self.note.bind_all("<<NotebookTabChanged>>", self.tabChangedEvent)
 
+        # Create model for calculator Frame
+        self.calculatorFrameModel = CalculatorFrameModel.CalculatorFrameModel(configApp)
+
         # Create panels contents
-        self.startFrame = StartFrame.StartFrame(self.note, self, 'logoStartFrame')
+        self.startFrame = StartFrame.StartFrame(self.note, self, 'logoStartFrame',
+                                                self.calculatorFrameModel)
         self.note.add(self.startFrame, text = _("Welcome"))
-        self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self, 'logoCalculator')
+        self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self, 'logoCalculator',
+                                                               self.calculatorFrameModel)
         self.note.add(self.calculatorFrame, text = _("Calculator"), state="disabled")
 
         self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self, 'logoSearchFood')
         self.note.add(self.searchFoodFrame, text = _("Search"), state="disabled")
         self.note.pack(side=TOP)
 
-        self.portionFrame = PortionFrame.PortionFrame(self.note, self, 'logoPortion')
+        self.portionFrame = PortionFrame.PortionFrame(self.note, self, 'logoPortion',
+                                                      self.calculatorFrameModel)
         self.note.add(self.portionFrame, text = _("Portions"), state="disabled")
         self.note.pack(side=TOP)
 
         # Add menu bar
-        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self)
+        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self, self.calculatorFrameModel)
         self.config(menu=self.menuCalcAl)
 
         # Create Status frame at the bottom of the sceen
@@ -178,8 +185,6 @@ class CalcAlGUI(Tk):
         self.note.tab(1, state=stateTab)
         self.menuCalcAl.enableSelectionMenu(isEnable)
         if isEnable:
-            if init:
-                self.calculatorFrame.init()
             self.note.select(1)
 
     def enableTabSearch(self, isEnable=True):
@@ -201,7 +206,6 @@ class CalcAlGUI(Tk):
             stateTab='disabled'
         self.note.tab(3, state=stateTab)
         if isEnable:
-            self.portionFrame.init()
             self.note.select(3)
 
     def isBigScreen(self):

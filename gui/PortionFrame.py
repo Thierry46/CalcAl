@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : PortionFrame
 Author : Thierry Maillard (TMD)
-Date   : 25/9/2016 - 28/9/2016
+Date   : 25/9/2016 - 13/11/2016
 
 Role : Define portion frame content.
 ************************************************************************************
@@ -20,9 +20,11 @@ from database import Database
 class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Portion frame used to manage ration and eaten food saved in database """
 
-    def __init__(self, master, mainWindow, logoFrame):
+    def __init__(self, master, mainWindow, logoFrame, calculatorFrameModel):
         """ Initialize Portions Frame """
         super(PortionFrame, self).__init__(master, mainWindow, logoFrame)
+        self.calculatorFrameModel = calculatorFrameModel
+        self.calculatorFrameModel.addObserver(self)
 
         # Filters frame
         filtersFrame = LabelFrame(self, text=_("Filters"))
@@ -105,6 +107,22 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         Button(ButtonFrame, text=_("Clipboard"),
                command=self.copyInClipboard).pack(side=TOP)
 
+    def update(self, observable, event):
+        """Called when the model object is modified. """
+        if observable == self.calculatorFrameModel:
+            self.logger.debug("PortionFrame received from model : " + event)
+            try:
+                if event == "INIT_DB":
+                    self.init()
+                if event == "SAVE_PORTION":
+                    self.updateSearchResultTable(None)
+                else:
+                    self.logger.debug("PortionFrame : ignore event : " + event)
+
+            except CalcalExceptions.CalcalValueError as exc:
+                message = _("Error") + " : " + str(exc) + " !"
+                self.mainWindow.setStatusText(message, True)
+
     def putInCalculator(self, event=None):
         """ Update food definition in calculator pane with new components chosen """
         try :
@@ -113,20 +131,11 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             if len(listSelectedRows) != 1:
                 raise ValueError(_("Please select one and only one line in portion table"))
 
-            # initialize calculator frame
-            self.mainWindow.getCalculatorFrame().init()
-
             # Get all foodstuf that compose this portion
             portionCode = self.portionResultTable.getTextForItemIndex(listSelectedRows[0])
-            database = self.databaseManager.getDatabase()
-            assert (database is not None), "PortionFrame/addFoodInTable() : no open database !"
-            listFoodNameQuantity = database.getFoodNameAndQuantity4Portion(portionCode)
 
-            # Put selected portion in table for foods in calculator frame
-            self.mainWindow.getCalculatorFrame().addFoodGroupInTable(listFoodNameQuantity)
-
-            self.mainWindow.enableTabCalculator(True, init=False)
-            self.mainWindow.setStatusText(_("Selected portion added in calculator"))
+            # Ask to frame model to display chosen portion
+            self.calculatorFrameModel.displayPortion(portionCode)
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
@@ -141,6 +150,7 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def updateSearchResultTable(self, *args):
         """ Update portionResultTable filtering with id frame fields content """
+        self.logger.debug("PortionFrame/updateSearchResultTable()")
         self.portionResultTable.deleteAllRows()
         listUserFilters = [self.nameVar.get(), self.dateVar.get(), self.patientVar.get(),
                            self.portionTypeVar.get(), self.periodCombobox.get()]

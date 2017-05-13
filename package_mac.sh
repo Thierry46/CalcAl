@@ -3,12 +3,12 @@
 # Object ... : Package CalcAl on mac and produce a .dmg file ready to istall by user
 # Author ... : MAILLARD Thierry (TMD)
 # Ref ...... : http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
-# Date ..... : 16/10/2015
+# Date ..... : 16/10/2015 - 13/11/2016
 # Modif .... :
 
 cd /Users/thierry/Documents/dietetique/CalcAl
 echo "Build Mac app in dist directory"
-rm -rf build dist
+rm -rf build dist __pycache__ */__pycache__
 python3 setup.py py2app
 
 echo "Build R/W DMG pack.temp.dmg"
@@ -62,15 +62,15 @@ echo "Insert background picture (PB)"
 echo "TODO : solve errors with background"
 
 echo "Finialize the DMG : permissions, compressing and releasing it"
-finalDMGName="dist/CalcAl.dmg"
+dmgName="CalcAl.dmg"
 chmod -Rf go-w /Volumes/"${title}"
 sync
 sync
 hdiutil detach ${device}
-hdiutil convert "./pack.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${finalDMGName}"
-mv ${finalDMGName} ..
+hdiutil convert "./pack.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "dist/${dmgName}"
+mv dist/${dmgName} .
 
 echo "Cleaning..."
-rm -rf ./pack.temp.dmg build dist database/__pycache__ gui/__pycache__
+rm -rf ./pack.temp.dmg build dist __pycache__ */__pycache__
 
-echo "Compress project, Save it and send ../$(basename ${finalDMGName}) to user."
+echo "Compress project, Save it and send ${dmgName} to user."

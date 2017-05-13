@@ -105,15 +105,7 @@ def main(argv=None):
     configApp.read(fileConfigApp, encoding="utf-8")
 
     # Set local : country, region and encoding
-    setLocaleCalcal(configApp)
-
-    # i18n : Internationalization for GUI
-    localeDirPath = os.path.join(dirProject, configApp.get('Resources', 'LocaleDir'))
-    # This installs the function _() in Python’s builtins namespace
-    if platform.system() == 'Windows':
-        # V0.32 : Hack on Windows : ref http://python.zirael.org/e-localization4.html
-        os.environ['LANG'] = locale.getlocale()[0]
-    gettext.install("messages", localeDirPath)
+    setLocaleCalcal(configApp, dirProject)
 
     # No parameter
     if len(args) > 0:
@@ -167,8 +159,7 @@ def main(argv=None):
         logger.info(_("Demo DB copied") + " :" + pathDBDemo)
 
     # Init database manager
-    databaseManager = DatabaseManager.DatabaseManager(configApp, dirProject,
-                                                      baseDirPath)
+    databaseManager = DatabaseManager.DatabaseManager(configApp, dirProject, baseDirPath)
 
     # Launch GUI
     CalcAlGUI.CalcAlGUI(configApp, dirProject, databaseManager).mainloop()
@@ -203,11 +194,12 @@ def initLogging(configApp, homeCalcAl, isModeDebug):
         streamHandler.setLevel(logging.WARNING)
     logger.addHandler(streamHandler)
 
-def setLocaleCalcal(configApp):
+def setLocaleCalcal(configApp, dirProject):
     """ V0.35 :Set local : country, region and encoding
         Big source of bugs and problems on many platform !
         locale is used by gettext package to set messages language
         and by database init files readers.
+        I18N settings.
         """
     # Set locale by getting User language and encoding
     # This sets the locale for all categories to the user’s default setting
@@ -231,6 +223,14 @@ def setLocaleCalcal(configApp):
                   configApp.get('DefaultLocale', 'DefaultLanguageCode') + "." + \
                   configApp.get('DefaultLocale', 'DefaultEncodingCode')
         locale.setlocale(locale.LC_ALL, '')
+
+    # i18n : Internationalization for GUI
+    localeDirPath = os.path.join(dirProject, configApp.get('Resources', 'LocaleDir'))
+    # This installs the function _() in Python’s builtins namespace
+    if platform.system() == 'Windows':
+        # V0.32 : Hack on Windows : ref http://python.zirael.org/e-localization4.html
+        os.environ['LANG'] = locale.getlocale()[0]
+    gettext.install("messages", localeDirPath)
 
 
 ##################################################
