@@ -183,12 +183,15 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         for numLine in range(self.numberFilter):
             self.listOperatorCombobox[numLine].current(0)
 
+from model import Component
 class ThreadedTask(threading.Thread):
     """ V0.31 : Thread used to search food in database without blocking GUI """
     def __init__(self, queue, parent):
         threading.Thread.__init__(self)
         self.queue = queue
         self.parent = parent
+        self.formatFloatValue = "{0:." + self.parent.configApp.get('Limits', 'nbMaxDigit') + "f}"
+    
     def run(self):
         self.runSearch()
 
@@ -241,14 +244,22 @@ class ThreadedTask(threading.Thread):
             self.parent.searchResultTable.updateVariablesColumns(listTitle4Components, [])
 
             # Get components values for product selected by filters
-            nbFoundProducts, listComponentsValues = \
+            nbFoundProducts, listNameComponentsValuesRaw = \
                                 database.getProductComponents4Filters(listFilters,
                                                                       listSelectedComponentsCodes)
 
+            listComponentsValues = []
+            for foodName, listComponentsValuesRaw in listNameComponentsValuesRaw:
+                listQualifier = []
+                listValues = []
+                for constituantCode, value, qualifier in listComponentsValuesRaw:
+                    listQualifier.append(qualifier)
+                    listValues.append(value)
+                listValuesFormated = self.formatListQualifiersValues(listQualifier, listValues)
+                listComponentsValues.append([foodName, listValuesFormated])
+
             # Update table content with results
-            for foodName, componentsValues in listComponentsValues:
-                    self.parent.searchResultTable.insertOrCreateRow(foodName, componentsValues,
-                                                                    seeItem=False)
+            self.parent.searchResultTable.insertGroupRow(listComponentsValues)
 
             # Check number of results
             if (nbFoundProducts > self.parent.nbMaxResultSearch):
@@ -262,6 +273,13 @@ class ThreadedTask(threading.Thread):
             self.queue.put(_("Error") + " : " + str(exc) + " !")
         finally:
             database.close()
-                                                                
-        #self.parent.btnSearch.configure(state=NORMAL)
+
+    def formatListQualifiersValues(self, listQualifier, listValues):
+        """ Format qualifiers and values list """
+        listValuesFormated = []
+        for index, qualifier in enumerate(listQualifier):
+            resultValue = Component.Component.getValueFormatedStatic(self.parent.configApp,
+                                                                     qualifier, listValues[index])
+            listValuesFormated.append(resultValue)
+        return listValuesFormated
 

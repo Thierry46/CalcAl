@@ -6,13 +6,13 @@ Ref : doc/packaging.txt
 py2applet --make-setup --force-system-tk --report-missing-from-imports \
 Calcal.py --iconfile resources/images/logo_calcal.icns \
 --resources CalcAl.ini,locale,resources \
-—-packages database,gui
+—-packages database,gui,model
 
 Modified by TMD :
 - Add encoding at the top
 - Correct OPTIONS
 
-Date : 8/10/2016 - 11/10/2016
+Date : 8/10/2016 - 13/11/2016
 
 Usage:
     python3 setup.py py2app
@@ -22,17 +22,17 @@ from setuptools import setup
 
 APP = ['Calcal.py']
 APP_NAME = 'Calcal'
-DATA_FILES = ['CalcAl.ini', 'locale', 'resources', 'gui','database']
+DATA_FILES = ['CalcAl.ini', 'locale', 'resources', 'gui', 'database', 'model']
 
 ##################################################
-#
+# To choose type distribution
 # 'semi_standalone': True
 #   for light distribution 1 Mo instead of 6 Mo
 #   but python3.5 must be installed on target computer
 ##################################################
 OPTIONS = {'argv_emulation': True,
  'force_system_tk': True,
- 'packages' : ['gui','database'],
+ 'packages' : ['gui','database','model'],
  'iconfile': '/Users/thierry/Documents/dietetique/CalcAl/resources/images/logo_calcal.icns',
  'report_missing_from_imports': True,
  'semi_standalone': True,

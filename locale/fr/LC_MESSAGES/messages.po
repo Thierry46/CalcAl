@@ -422,6 +422,9 @@ msgstr "Composants"
 msgid "By ratio"
 msgstr "En pourcentage"
 
+msgid "By energy"
+msgstr "En énergie"
+
 msgid "By value"
 msgstr "En valeur"
 

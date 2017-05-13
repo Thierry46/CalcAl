@@ -37,12 +37,17 @@ from tkinter import filedialog
 class CalcAlGUIMenu(Menu):
     """ Menu definition class """
 
-    def __init__(self, master):
+    def __init__(self, master, calculatorFrameModel):
         """ Constructor : Define menu bar GUIs widgets """
         Menu.__init__(self, master)
         self.master = master
+        self.calculatorFrameModel = calculatorFrameModel
+        self.calculatorFrameModel.addObserver(self)
+
         self.configApp = self.master.getConfigApp()
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
+
+        self.allowSelection = False
 
         self.databaseMenu = Menu(self, tearoff=0)
         self.databaseMenu.add_command(label=_("New"),
@@ -67,19 +72,19 @@ class CalcAlGUIMenu(Menu):
                                        command=self.master.getCalculatorFrame().groupFood)
         self.selectionMenu.add_command(label=_("Ungroup"),
                                        state=DISABLED,
-                                       command=self.master.getCalculatorFrame().UngroupFood)
+                                       command=self.master.getCalculatorFrame().ungroupFood)
         self.selectionMenu.add_command(label=_("Erase line"),
                                        state=DISABLED,
-                                       command=self.master.getCalculatorFrame().eraseFood)
+                                       command=lambda inBd=False:self.master.getCalculatorFrame().deleteFood(inBd))
         self.selectionMenu.add_command(label=_("Delete in database"),
                                        state=DISABLED,
-                                       command=self.master.getCalculatorFrame().deleteFood)
+                                       command=lambda inBd=True:self.master.getCalculatorFrame().deleteFood(inBd))
         self.selectionMenu.add_command(label=_("Clipboard"),
                                        state=DISABLED,
                                        command=self.master.getCalculatorFrame().copyInClipboard)
         self.selectionMenu.add_command(label=_("Info"),
                                        state=DISABLED,
-        command=self.master.getCalculatorFrame().infoFood)
+                                       command=self.master.getCalculatorFrame().infoFood)
         self.selectionMenu.add_command(label=_("Save portion"),
                                        state=DISABLED,
         command=self.master.getCalculatorFrame().savePortion)
@@ -101,6 +106,19 @@ class CalcAlGUIMenu(Menu):
         otherMenu.add_checkbutton(label='Debug log', variable=self.isLoglevelDebug,
                                   onvalue=True, offvalue=False)
         self.add_cascade(label="?", menu=otherMenu)
+
+    def update(self, observable, event):
+        """Called when the calculator frame model object is modified.
+            anable or disable selection menu items according number of items in tablefood """
+        if observable == self.calculatorFrameModel:
+            self.logger.debug("CalcAlGUIMenu received from its model : " + event)
+            if event == "CHANGE_FOOD" or event == "DISPLAY_PORTION" or event == "DELETE_FOOD":
+                self.allowSelection = (self.calculatorFrameModel.getNumberOfFoodStuff() > 0)
+                self.enableSelectionMenu(self.allowSelection)
+                self.logger.debug("CalcAlGUIMenu : allowSelection menu = " +
+                                  str(self.allowSelection))
+            else:
+                self.logger.debug("CalcAlGUIMenu event ignored")
 
     def setLogLevel(self, *args):
         """ Set logging level """
@@ -129,7 +147,7 @@ class CalcAlGUIMenu(Menu):
 
     def enableSelectionMenu(self, isEnabled):
         """ Autorise ou non les options de configuration du menu Fichier """
-        if isEnabled:
+        if isEnabled and self.allowSelection:
             etat = NORMAL
         else:
             etat = DISABLED

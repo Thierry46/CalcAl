@@ -23,10 +23,10 @@ from database import Database
 class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Welcome frame used to choose database to use """
 
-    def __init__(self, master, mainWindow, logoFrame):
+    def __init__(self, master, mainWindow, logoFrame, calculatorFrameModel):
         """ Initialize welcome Frame """
         super(StartFrame, self).__init__(master, mainWindow, logoFrame)
-
+        self.calculatorFrameModel = calculatorFrameModel
         ressourcePath = os.path.join(self.dirProject,
                                      self.configApp.get('Resources', 'ResourcesDir'))
         self.databaseDirPath = os.path.join(ressourcePath,
@@ -94,6 +94,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             dbName = self.databaseListbox.get(index)
             self.mainWindow.closeDatabase()
             self.databaseManager.openDatabase(dbName)
+            self.calculatorFrameModel.setDatabase(self.databaseManager.getDatabase())
             self.mainWindow.setTitle(dbName)
             self.mainWindow.enableTabSearch()
             self.mainWindow.enableTabPortion(True)
