@@ -14,9 +14,10 @@ from tkinter import messagebox
 from tkinter import font
 
 from gui import CallTypWindow
-
 from gui import FrameBaseCalcAl
 from gui import TableTreeView
+from gui import FamilyNameChooser
+
 from database import Database
 
 class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
@@ -66,9 +67,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.nameToSearchEntry = Entry(upperLeftFrameUp, textvariable=self.nameToSearch, width=10)
         self.nameToSearchEntry.pack(side=LEFT)
         CallTypWindow.createToolTip(self.nameToSearchEntry,
-                  _("Use Wildcards :\n* replaces n chars\n? replaces 1 only")+\
-                  _("\nEx.:fr*s -> fruits, frais,...")+\
-                  _("\nUse ? for character letters like é, â, ô..."),
+                  _("Use Wildcards :\n* replaces n chars\n? replaces 1 only")+"\n"+\
+                  _("Ex.:fr*s -> fruits, frais,...")+"\n"+\
+                  _("Use ? for character letters like é, â, ô..."),
                                     self.delaymsTooltips * 2)
         SearchButton = Button(upperLeftFrameUp, text=_("Search by components"),
                             command=self.mainWindow.enableTabSearch)
@@ -76,6 +77,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         listNamesFrame = Frame(upperLeftFrame)
         listNamesFrame.pack(side=TOP, padx=5, pady=5)
+        CallTypWindow.createToolTip(listNamesFrame,
+                                    _("Click on food name to copy it in definition frame"),
+                                    self.delaymsTooltips)
         self.foundNamesListbox = Listbox(listNamesFrame, height=7, width=40)
         self.foundNamesListbox.grid(row=0, columnspan=2)
         scrollbarNameRight = Scrollbar(listNamesFrame, orient=VERTICAL,
@@ -102,6 +106,8 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodstuffQuantityEntry = Entry(foodstuffFrame, textvariable=self.foodstuffQuantity,
                                             width=10)
         self.foodstuffQuantityEntry.grid(row=2, column=1, sticky=W)
+        self.foodstuffQuantityEntry.bind('<Return>', self.addFoodInTableEvt)
+        self.foodstuffQuantityEntry.bind('<KP_Enter>', self.addFoodInTableEvt)
 
         # Button to put define food in table
         addFoodButton = self.mainWindow.createButtonImage(upperMiddleFrame,
@@ -116,7 +122,8 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                          background=color, height=10, width=18)
         self.componentsListbox.grid(row=0, columnspan=2)
         CallTypWindow.createToolTip(self.componentsListbox,
-                                    _("Use Ctrl and Shift keys\nfor multiple selection"),
+                                    _("Use Ctrl and Shift keys") + "\n" + \
+                                    _("for multiple selection"),
                                     self.delaymsTooltips)
         scrollbarRight = Scrollbar(upperRightFrame, orient=VERTICAL,
                                    command=self.componentsListbox.yview)
@@ -130,17 +137,32 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         mealFrame.grid_rowconfigure(0, weight=1)
         mealFrame.grid_columnconfigure(0, weight=1)
         firstColumns = [_("Name"), _("Qty (g)")]
-        self.foodTable = TableTreeView.TableTreeView(mealFrame, firstColumns, 5)
+        self.foodTable = TableTreeView.TableTreeView(mealFrame, firstColumns,
+                                int(self.configApp.get('Size', 'foodTableNumberVisibleRows')),
+                                int(self.configApp.get('Size', 'foodTableFistColWidth')),
+                                int(self.configApp.get('Size', 'foodTableOtherColWidth')),
+                                int(self.configApp.get('Size', 'foodTableColMinWdth')),
+                                selectmode="extended")
         self.foodTable.setColor('normalRow', self.bgValueComp)
         self.foodTable.setColor('totalRow', self.bgLabelFC)
         self.foodTable.pack(side=TOP, fill=BOTH, expand=YES)
+        self.foodTable.setBinding('<Double-Button-1>', self.copySelectionInDefinitionFrame)
+        self.foodTable.setBinding('<Command-c>', self.copyInClipboard)
+        self.foodTable.setBinding('<Control-c>', self.copyInClipboard)
+        CallTypWindow.createToolTip(self.foodTable,
+                                    _("Use Ctrl and Shift keys") + " " + \
+                                    _("for multiple selection") + "\n" + \
+                                    _("Clic on header :") + "\n" + \
+                                    _("- of 1st column to select or unselect all") + "\n" + \
+                                    _("- of other column to sort rows" ),
+                                    2 * self.delaymsTooltips)
 
         # Buttons for action on selection
         if self.mainWindow.isBigScreen():
             modifySelection = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                imageRessourceName='arrowUp',
                                                text4Image=_("Modify"))
-            modifySelection.configure(command=self.CopySelection)
+            modifySelection.configure(command=self.copySelectionInDefinitionFrame)
             modifySelection.pack(side=LEFT)
             groupSelectionButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                  imageRessourceName='groupSelection',
@@ -157,6 +179,11 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                   text4Image=_("Delete"))
             deleteFoodButton.configure(command=self.deleteFood)
             deleteFoodButton.pack(side=LEFT)
+            copyInClipboardFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
+                                                        imageRessourceName='copy2clipboard',
+                                                        text4Image=_("Clipboard"))
+            copyInClipboardFoodButton.configure(command=self.copyInClipboard)
+            copyInClipboardFoodButton.pack(side=LEFT)
 
         # Energy table
         energyFrame = LabelFrame(bottomFrame, text=_("Energy given by foods"))
@@ -169,9 +196,16 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         assert len(self.EnergeticComponentsCodes) == len(self.EnergySuppliedByComponents), \
                 "pb in ini file : EnergeticComponentsCodes and EnergySuppliedByComponents" +\
                 " must have the same number of elements"
-        self.energyTable = TableTreeView.TableTreeView(energyFrame, [_("Components")], 3)
+        self.energyTable = TableTreeView.TableTreeView(energyFrame, [_("Components")],
+                                      int(self.configApp.get('Size', 'energyTableNumberVisibleRows')),
+                                      int(self.configApp.get('Size', 'energyTableFirstColWidth')),
+                                      int(self.configApp.get('Size', 'energyTableOtherColWidth')),
+                                      int(self.configApp.get('Size', 'energyTableColMinWdth')),
+                                      selectmode="extended")
         self.energyTable.setColor('normalRow', self.bgValueComp)
         self.energyTable.pack(side=TOP)
+        self.energyTable.setBinding('<Command-c>', self.copyEnergyInClipboard)
+        self.energyTable.setBinding('<Control-c>', self.copyEnergyInClipboard)
 
         # Water frame
         waterFrame = LabelFrame(bottomFrame, text=_("Water needed"))
@@ -266,24 +300,23 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.selectedComponents = list(self.componentsListbox.curselection())
         selectedComponentsName = [self.componentsListbox.get(index)
                                   for index in self.selectedComponents]
-        # Delete old total line
         self.foodTable.deleteRow(_("Total"))
-
-        # Get components values for all existiong food
-        database = self.mainWindow.getDatabase()
-        assert (database is not None), "CalculatorFrame/clicComponentsListbox() : no open database !"
+        listStableRows = self.foodTable.getStableColumnsValues(excludeRowWithTitle=_("Total"))
+        listNamesQties = [[foodName, float(lQuantity[0])] for foodName, lQuantity in listStableRows]
         listComponentsCodes = [self.listComponents[numSelectedComponent][0]
                                 for numSelectedComponent in self.selectedComponents]
-        listNamesQties = self.foodTable.getStableColumnsValues()
+        database = self.mainWindow.getDatabase()
         listComponentsValues= []
-        for foodName, lQuantity in listNamesQties:
-            componentsValues = database.getComponentsValues4Food(foodName,
-                                                                 lQuantity[0],
+        for foodName, quantity in listNamesQties:
+            componentsValues = database.getComponentsValues4Food(foodName, quantity,
                                                                  listComponentsCodes)
             listComponentsValues.append(componentsValues)
-
         self.foodTable.updateVariablesColumns(selectedComponentsName, listComponentsValues)
         self.addTotalRow()
+
+    def addFoodInTableEvt(self, event):
+        """ Called when hitting Retun key in foodstuffQuantity entry """
+        self.addFoodInTable()
 
     def addFoodInTable(self, foodNameAndQuantity = None, withTotalLine=True):
         """ Add a foodstuff in table """
@@ -297,26 +330,21 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 if foodName == "":
                     raise ValueError(_("Food name must not be empty"))
                 try :
-                    quantity = float(self.foodstuffQuantity.get())
+                    quantity = float(self.foodstuffQuantity.get().replace(',', '.'))
                 except ValueError as excName:
                     raise ValueError(_("Food quantity must be a number"))
                 if quantity <= 0.:
                     raise ValueError(_("Qantity must be greater than zero"))
 
             #Get values in database
-            componentsValues = []
             listComponentsCodes = [self.listComponents[numSelectedComponent][0]
                                    for numSelectedComponent in self.selectedComponents]
-            if len(listComponentsCodes) > 0:
-                database = self.mainWindow.getDatabase()
-                assert (database is not None), "CalculatorFrame/addFoodInTable() : no open database !"
-                componentsValues = database.getComponentsValues4Food(foodName, quantity,
-                                                                         listComponentsCodes)
-            # Delete old total line
+            database = self.mainWindow.getDatabase()
+            assert (database is not None), "CalculatorFrame/addFoodInTable() : no open database !"
+            listComponentsValues = database.getComponentsValues4Food(foodName, quantity,
+                                                                     listComponentsCodes)
             self.foodTable.deleteRow(_("Total"))
-
-            # Insert or create a new row for this foodstuff
-            columnsValues = [quantity] + componentsValues
+            columnsValues = [quantity] + listComponentsValues
             self.foodTable.insertOrCreateRow(foodName, columnsValues)
             if withTotalLine:
                 self.addTotalRow()
@@ -331,32 +359,36 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def groupFood(self):
         """ Group and Save foodstuffs that are selected by user in Database """
-        listSelectedRows = self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total"))
+        listComponentsCodes = [component[0] for component in self.listComponents]
+        listStableRows = self.foodTable.getStableColumnsValues(excludeRowWithTitle=_("Total"),
+                                                               onlySelected=True)
         try :
-            if len(listSelectedRows) < 2:
-                raise ValueError(_("Please select more than one foodstuff in list of food"))
-            productName = simpledialog.askstring(_("Save selected food group in database"),
-                                                 _("Enter the name of new product") + " : ")
-            familyName = simpledialog.askstring(_("Save selected food group in database"),
-                                                _("Enter the family name of new product") + " : ")
-            # Get all selected products names and quantities
-            listNamesQty = []
-            for item in listSelectedRows:
-                listNamesQty.append([self.foodTable.getTextForItemIndex(item),
-                                     float(self.foodTable.getItemValue(item, 0))])
+            if len(listStableRows) < 2 :
+                raise ValueError(_("Please select more than one foodstuff in food table"))
+            listNamesQties = [[foodName, float(lQuantity[0])] for foodName, lQuantity in listStableRows]
+            database = self.mainWindow.getDatabase()
+
+            # Ask new name and family for this new product
+            dialog = FamilyNameChooser.FamilyNameChooser(self, database, self.configApp,
+                                                         title=_("Save group in database"))
+            results = dialog.getResult()
+            if results == None:
+                raise ValueError(_("Group recording canceled"))
 
             # Insert new produt in database
-            database = self.mainWindow.getDatabase()
-            assert (database is not None), "CalculatorFrame/groupFood() : no open database !"
-            totalQuantity = database.insertNewComposedProduct(productName, familyName, listNamesQty)
+            familyName = results[0]
+            productName = results[1]
+            totalQuantity = database.insertNewComposedProduct(productName, familyName,
+                                                              listNamesQties)
 
             # Update family listbox
             listFamily = list(self.familyFoodstuffCombobox['values'])
-            listFamily.append(familyName)
-            self.familyFoodstuffCombobox['values'] = listFamily
+            if familyName not in listFamily:
+                listFamily.append(familyName)
+                self.familyFoodstuffCombobox['values'] = listFamily
 
             # Delete Grouped elements and add new group stuff
-            self.deleteFood(listSelectedRows)
+            self.deleteFood(self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total")))
             self.addFoodInTable((productName, totalQuantity))
 
             self.mainWindow.setStatusText(_("New product") + " " + productName + " " +
@@ -366,10 +398,11 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def UngroupFood(self):
         """ Ungroup and Save foodstuffs that are selected by user in Database """
+        listComponentsCodes = self.listComponents
         listSelectedRows = self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total"))
         try :
             if len(listSelectedRows) != 1:
-                raise ValueError(_("Please select one and only one line in list of food"))
+                raise ValueError(_("Please select one and only one line in food table"))
             foodName = self.foodTable.getTextForItemIndex(listSelectedRows[0])
             quantity = float(self.foodTable.getItemValue(listSelectedRows[0], 0))
             # Get part of this composed products
@@ -394,7 +427,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         nbSelectedRows = len(listSelectedRows)
         try :
             if len(listSelectedRows) < 1:
-                raise ValueError(_("Please select at least one line in list of food"))
+                raise ValueError(_("Please select at least one line in food table"))
             if not isDestructionOk:
                 isDestructionOk = messagebox.askyesno(_("Deleting selected food in table"),
                                                       _("Do you want to delete selection ?"),
@@ -416,12 +449,12 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
-    def CopySelection(self):
+    def copySelectionInDefinitionFrame(self, event=None):
         """ Copy name and quatity of first element selected in foodTable to meal definition frame """
         try :
             listSelectedRows = self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total"))
             if len(listSelectedRows) != 1:
-                raise ValueError(_("Please select one and only one line in list of food"))
+                raise ValueError(_("Please select one and only one line in food table"))
             foodName = self.foodTable.getTextForItemIndex(listSelectedRows[0])
             if foodName == _("Total"):
                 raise ValueError(_("Total") + " " + _("can't be modified"))
@@ -435,69 +468,74 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
+    def copyInClipboard(self, event=None):
+        "Copy selected food in clipboard"
+        try:
+            text = self.foodTable.getTableAsText()
+            self.mainWindow.copyInClipboard(text)
+        except ValueError as exc:
+            message = _("Error") + " : " + str(exc) + " !"
+            self.mainWindow.setStatusText(message, True)
+
+    def copyEnergyInClipboard(self, event=None):
+        "Copy selected energy item in clipboard"
+        try:
+            text = self.energyTable.getTableAsText()
+            self.mainWindow.copyInClipboard(text)
+        except ValueError as exc:
+            message = _("Error") + " : " + str(exc) + " !"
+            self.mainWindow.setStatusText(message, True)
+
     def addTotalRow(self):
         """ Sum all colomns of foodTable and add a total line to food table """
-        listValues = self.foodTable.getColumnsValues()
-        rowValuesSum = None
-        if len(listValues) > 0 :
-            nbMaxDigit = int(self.configApp.get('Limits', 'nbMaxDigit'))
-            rowValuesSum = []
-            for value in listValues[0]:
-                rowValuesSum.append(0.0)
-            for rowValues in listValues:
-                for numCol in range(len(rowValues)):
-                    try:
-                        rowValuesSum[numCol] = rowValuesSum[numCol] + float(rowValues[numCol])
-                    except ValueError:
-                        pass
-            rowValuesSum = [round(sum, nbMaxDigit)
-                            for sum in rowValuesSum]
-        if rowValuesSum and len(rowValuesSum) > 0 :
-            self.foodTable.insertOrCreateRow(_("Total"), rowValuesSum, tag='totalRow')
-
-    def sumComponentsValues(self, listComponentsCodes):
-        """ Return a list of sum values for a list of components """
-        totalComponentsValues = None
-        database = self.mainWindow.getDatabase()
-        assert (database is not None), "CalculatorFrame/updateEnergyTable() : no open database !"
-        # Get food names and quantities from foodTable
-        listNamesQties = self.foodTable.getStableColumnsValues(excludeRowWithTitle=_("Total"))
-        if len(listNamesQties) > 0 :
-            componentsValuesAllFood = []
-            for foodName, lQuantity in listNamesQties:
-                energeticValues = database.getComponentsValues4Food(foodName, lQuantity[0],
-                                                                    listComponentsCodes)
-                componentsValuesAllFood.append(energeticValues)
-            # Sum Values for each asked components
-            totalComponentsValues = [0.0 for component in listComponentsCodes]
-            for componentsValues in componentsValuesAllFood:
-                indexComponent = 0
-                for indexComponent in range(len(componentsValues)):
-                    totalComponentsValues[indexComponent] = totalComponentsValues[indexComponent] + \
-                        float(componentsValues[indexComponent])
-                    indexComponent = indexComponent + 1
-        return totalComponentsValues
+        listComponentsCodes = [self.listComponents[numSelectedComponent][0]
+                                for numSelectedComponent in self.selectedComponents]
+        listStableRows = self.foodTable.getStableColumnsValues(excludeRowWithTitle=_("Total"))
+        if len(listStableRows) > 0 :
+            listNamesQties = [[foodName, float(lQuantity[0])] for foodName, lQuantity in listStableRows]
+            database = self.mainWindow.getDatabase()
+            sumQuantities, listComponentsValues = database.sumComponents4FoodListFormated(
+                                                                        listNamesQties, listComponentsCodes)
+            columnsValues = [sumQuantities] + listComponentsValues
+            self.foodTable.insertOrCreateRow(_("Total"), columnsValues, tag='totalRow')
 
     def updateEnergyTable(self):
         """ Update energy table according foodstuffs entered in foodTable """
         # Get sum values for energetic components
-        totalComponentsValues = self.sumComponentsValues(self.EnergeticComponentsCodes)
-        if totalComponentsValues :
-            # Compute Energy given by each component
-            indexComponent = 0
-            # Sum every energies given by energetic components for ration computing after
+        listStableRows = self.foodTable.getStableColumnsValues(excludeRowWithTitle=_("Total"))
+        if len(listStableRows) > 0 :
+            listNamesQties = [[foodName, float(lQuantity[0])] for foodName, lQuantity in listStableRows]
+            database = self.mainWindow.getDatabase()
+            sumQuantities, totalComponentsValues = database.sumComponents4FoodList(listNamesQties,
+                                                             self.EnergeticComponentsCodes)
+            # Sort Component according the order of self.EnergeticComponentsCodes
+            totalComponentsValuesSorted = []
+            for codeComponent in self.EnergeticComponentsCodes:
+                for comp in totalComponentsValues:
+                    if codeComponent == comp[0]:
+                        totalComponentsValuesSorted.append(comp)
+            totalComponentsValues = totalComponentsValuesSorted
             sumEnergy = 0.0
-            for indexComponent in range(len(totalComponentsValues)):
-                sumEnergy = sumEnergy + totalComponentsValues[indexComponent] * \
-                            self.EnergySuppliedByComponents[indexComponent]
+            for totalCompValue, energyByComponent in zip(totalComponentsValues,
+                                                         self.EnergySuppliedByComponents):
+                sumEnergy = sumEnergy + totalCompValue[1] * energyByComponent
+
             # Compute ratio and energetic values to display
             supplyEnergyValues = []
             supplyEnergyRatio = []
             for indexComponent in range(len(totalComponentsValues)):
-                energyByComponent = totalComponentsValues[indexComponent] * \
+                energyByComponent = totalComponentsValues[indexComponent][1] * \
                                 self.EnergySuppliedByComponents[indexComponent]
-                supplyEnergyValues.append(self.formatFloatValue.format(energyByComponent) + " kcal")
-                supplyEnergyRatio.append(str(round(energyByComponent *  100.0 / sumEnergy)) + " %")
+                qualifValue = ""
+                if totalComponentsValues[indexComponent][2] == "<":
+                    qualifValue = "< "
+                supplyEnergyValues.append(qualifValue +
+                                      self.formatFloatValue.format(energyByComponent) + " kcal")
+                if sumEnergy < float(self.configApp.get("Limits", "near0")):
+                    valuePercent = 0.0
+                else:
+                    valuePercent = round(energyByComponent *  100.0 / sumEnergy)
+                supplyEnergyRatio.append(str(valuePercent) + " %")
         else: # if len(listNamesQties) > 0
             supplyEnergyValues = self.emptyComponents
             supplyEnergyRatio = self.emptyComponents
@@ -511,21 +549,23 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Update water frame elements according foodstuffs entered in foodTable """
         waterInFood = '-'
         waterNeeded = '-'
-        waterEnergyCodes = [self.WaterCode, self.EnergyTotalKcalCode]
+        listComponentsCodes = [self.WaterCode, self.EnergyTotalKcalCode]
         bgWaterInFood = self.bgValueComp
 
         # Get sum values for energetic components
-        totalComponentsValues = self.sumComponentsValues(waterEnergyCodes)
-        if totalComponentsValues :
-            waterInFoodFloat = totalComponentsValues[0]
-            waterInFood = self.formatFloatValue.format(waterInFoodFloat) + " ml"
-            waterNeededFloat = totalComponentsValues[1] * self.warterMlFor1kcal
+        listStableRows = self.foodTable.getStableColumnsValues(excludeRowWithTitle=_("Total"))
+        if len(listStableRows) > 0 :
+            listNamesQties = [[foodName, float(lQuantity[0])] for foodName, lQuantity in listStableRows]
+            database = self.mainWindow.getDatabase()
+            sumQuantities, totalComponentsValues = database.sumComponents4FoodList(listNamesQties,
+                                                                                   listComponentsCodes)
+            waterInFood = self.formatFloatValue.format(totalComponentsValues[0][1]) + " ml"
+            waterNeededFloat = totalComponentsValues[1][1] * self.warterMlFor1kcal
             waterNeeded = self.formatFloatValue.format(waterNeededFloat) + " ml"
-            if waterInFoodFloat < waterNeededFloat:
+            if totalComponentsValues[0][1] < waterNeededFloat:
                 bgWaterInFood = self.configApp.get('Colors', 'colorWaterNOK')
             else:
-                    bgWaterInFood = self.configApp.get('Colors', 'colorWaterOK')
-
+                bgWaterInFood = self.configApp.get('Colors', 'colorWaterOK')
         self.labelWaterSupplied.configure(text=waterInFood, bg=bgWaterInFood)
         self.labelWaterNeeded.configure(text=waterNeeded)
 
@@ -545,4 +585,3 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         # User messages
         message = _("Foodstuff") + " " + foodName + " " + _("selected and copied")
         self.mainWindow.setStatusText(message)
-        self.logger.info(message)

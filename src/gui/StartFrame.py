@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : StartFrame
 Author : Thierry Maillard (TMD)
-Date  : 12/3/2016 - 31/3/2016
+Date  : 12/3/2016 - 18/6/2016
 
 Role : Define start frame content.
 ************************************************************************************
@@ -26,26 +26,38 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Initialize welcome Frame """
         super(StartFrame, self).__init__(master, mainWindow, dirProject, logoFrame)
 
-        databaseFrame = Frame(self)
-        databaseFrame.pack(side=TOP, padx=5, pady=5)
+        Label(self, text=_(self.configApp.get('Version', 'CiqualNote'))).pack(side=TOP)
+        centerFrame = Frame(self)
+        centerFrame.pack(side=TOP)
+        buttonFrame = Frame(centerFrame)
+        buttonFrame.pack(side=LEFT)
+        databaseFrame = LabelFrame(centerFrame, text=_('Choose a database to use'))
+        databaseFrame.pack(side=LEFT)
 
-        Label(databaseFrame, text=_('Choose a database to use')).grid(row=0, column=1)
-        self.databaseListbox = Listbox(databaseFrame)
+        # Databases list frame definition
+        self.databaseListbox = Listbox(databaseFrame, width=40, height=4)
         self.updateDatabaseListbox()
-        self.databaseListbox.grid(row=1, column=1)
+        self.databaseListbox.grid(row=0, columnspan=2)
+        scrollbarRight = Scrollbar(databaseFrame, orient=VERTICAL,
+                                   command=self.databaseListbox.yview)
+        scrollbarRight.grid(row=0, column=2, sticky=W+N+S)
+        self.databaseListbox.config(yscrollcommand=scrollbarRight.set)
         CallTypWindow.createToolTip(self.databaseListbox,
                                     _("Select a database\nand click startbutton"),
                                     self.delaymsTooltips)
-
         self.databaseListbox.bind('<ButtonRelease-1>', self.clicListBoxItem)
-        self.startButton = Button(databaseFrame, text=_('Start'),
-                                  command=self.start, state=DISABLED)
-        self.startButton.grid(row=2, column=1, sticky=EW)
-        Button(databaseFrame, text=_('New'),
-               command=self.newDB).grid(row=1, column=0, sticky=W)
-        self.deleteButton = Button(databaseFrame, text=_('Delete'),
+
+        Button(buttonFrame, text=_('New'), command=self.newDB).pack(side=TOP)
+        self.deleteButton = Button(buttonFrame, text=_('Delete'),
                                    command=self.deleteDB, state=DISABLED)
-        self.deleteButton.grid(row=1, column=3, sticky=W)
+        self.deleteButton.pack(side=TOP)
+
+        self.startButton = self.mainWindow.createButtonImage(centerFrame,
+                                                             imageRessourceName='btn_start',
+                                                             text4Image=_("Start"))
+        self.startButton.configure(command=self.start)
+
+        self.startButton.pack(side=LEFT)
 
     def clicListBoxItem(self, evt):
         """ Activate New and Delete button when a database is chosen """
@@ -68,13 +80,14 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             extDB = self.configApp.get('Resources', 'DatabaseExt')
             dbName = dbName + extDB
             databasePath = os.path.join(self.databaseDirPath, dbName)
-            database = Database.Database(self.configApp, self.ressourcePath, databasePath, False, self.localDirPath)
+            database = Database.Database(self.configApp, self.ressourcePath, databasePath, False,
+                                         self.localDirPath)
             self.mainWindow.setDatabase(database)
             self.mainWindow.enableTabCalculator(True)
             message = _("Start calculator with database") + ' ' + dbName
             self.mainWindow.setStatusText(message)
         else:
-            messagebox.showwarning(_("Database"), _("Please select a database !"))
+            self.mainWindow.setStatusText(_("Please select a database") + " !", True)
 
     def newDB(self):
         """ Create a new database """
@@ -98,9 +111,9 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 database.close()
                 self.mainWindow.setStatusText(_("Database initialised") + " : " + dbName)
                 self.updateDatabaseListbox()
+
             except ValueError as exc:
-                message = _("Error") + " : " + str(exc) + " !"
-                self.mainWindow.setStatusText(message, True)
+                self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
     def deleteDB(self):
         """ Delete a database """
@@ -118,12 +131,14 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     os.remove(databasePath)
                     self.updateDatabaseListbox()
                     self.mainWindow.setStatusText(_("Database") + " : " + dbName + " " + _("deleted"))
-                    self.startButton.configure(state=DISABLED)
+                    # Python error because DISABLED icon is not define
+                    #self.startButton.configure(state=DISABLED)
                 except OSError as exc:
                     message = _("Error") + " : " + str(exc) + " !"
                     self.mainWindow.setStatusText(message, True)
         else:
-            messagebox.showwarning(_("Database"), _("Please select a database !"))
+            self.mainWindow.setStatusText(_("Please select a database") + " !", True)
+        print("sortie de deleteDB")
 
     def updateDatabaseListbox(self):
         """ update databaseListbox with names in ressouces dir """

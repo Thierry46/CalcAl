@@ -84,7 +84,11 @@ def main(argv=None):
 
     # This sets the locale for all categories to the user’s default setting
     # locale.setlocale(locale.LC_ALL, "") doesn't detect locale on windows
-    # locale.getdefaultlocale() seems to detec better...
+    # locale.getdefaultlocale() seems to detect better...
+    # Decimal separator is still . (point)
+    # Nowdays, french users don't see any advantage to use , (comma)
+    # else it would be possible by using locale fucnction instead float(), str(), format()
+    # see : https://docs.python.org/3/library/locale.html#locale.format
     currentLocale = locale.getdefaultlocale()
     if not currentLocale:
         print("Can't determine locale to know what langage is used by your computer")

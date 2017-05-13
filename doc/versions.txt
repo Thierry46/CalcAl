@@ -1,0 +1,59 @@
+CalcAl - versions summary
+==========================
+
+CalcAl_v0.25 : 18/6/2016 :
+- 2563 lines py code
+- Bypass for python error message when start button icon is disabled
+- Module database : implement design pattern factory to structure this module
+New class : DatabaseReaderFactory.py + CiqualReader.py
+
+CalcAl_v0.24 : 3/6/2016 :
+- 2463 lines py code
+- Solve pb of décimal séparateur when copying in clipboard.
+    Use locale.localeconv()['decimal_point'] in TableTreeView.py
+    to know local usage for this system.
+- In search frame, display first results when too many ar found.
+- Correct bug CalculatorFrame/Energy %  when food gives no energy (water)
+- Dialog box when creating a group.
+- CalculatorFrame : Put a food in table when hitting return in quantity
+- set binding Ctrl-C, Command-C and double clic for food tables in
+    CalculatorFrame and SearchFrame
+- set binding Ctrl-C, Command-C for energy table to copy values in clipboard
+
+CalcAl_v0.23 : 29/5/2016 :
+- Compulsory mention of Ciqual in Start Frame and About box
+- Add database menu
+- In startframe, list of database showing 4 element and a scrollbar added.
+- Correct bug in search frame for the order of components titles diferent from
+    order of values.
+- Icon for start button
+
+CalcAl_v0.22 : 22/5/2016 :
+- 2179 lines py code
+- Allow . ou , as decimal separator for quantity.
+- TableTreeView : Correct change2Numeric() when value contains "< "
+- SearchFoodFrame :
+    - Display foods and components with TreeView widget for search results
+    - Erase filter line if operator is erased.
+    - improve look of the frame
+- Copy to clipboard for table content.
+
+CalcAl_v0.21 : 21/5/2016 :
+- 2054 lines py code
+- Tables headers are actives
+	- for values header, sort columns by values ascending or descending order
+	- for key header, select or deselect al rows
+- All Components values are qualified : Number, Traces, -, < Number
+    Sums are made according rules in config file to maintain values qualification.
+
+CalcAl_v0.20 : 15/5/2016 :
+- 1927 lines py code
+- Tables implemented with Tkinter TreeView widget
+- Better windows layout and resizing
+- Reduce number code lines of 300 lines for same functionalities
+
+CalcAl_v0.19 : 7/5/2016 :
+- 2212 lines py code
+- Tables implemented with grid layout
+- Test on touchable Windows 8 PC and Mac with small screen
+	

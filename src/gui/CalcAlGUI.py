@@ -61,7 +61,7 @@ class CalcAlGUI(Tk):
                           self.configApp.get('Resources', 'DatabaseDir'))
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
         self.database = None
-        self.logger.info("Démarrage de l'IHM.")
+        self.logger.info(_("Starting GUI") + "...")
 
         # Adapt to screen size
         heightBigScreenInPixel = int(self.configApp.get('Limits', 'heightBigScreenInPixel'))
@@ -83,9 +83,9 @@ class CalcAlGUI(Tk):
         self.note.bind_all("<<NotebookTabChanged>>", self.tabChangedEvent)
 
         # Create panels contents
-        startFrame = StartFrame.StartFrame(self.note, self,
+        self.startFrame = StartFrame.StartFrame(self.note, self,
                                            dirProject, 'logoStartFrame')
-        self.note.add(startFrame, text = _("Welcome"))
+        self.note.add(self.startFrame, text = _("Welcome"))
         self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self,
                                                           dirProject, 'logoCalculator')
         self.note.add(self.calculatorFrame, text = _("Calculator"), state="disabled")
@@ -105,6 +105,10 @@ class CalcAlGUI(Tk):
         self.statusLabel.pack(side=LEFT)
         self.statusLabel.pack(side=TOP)
         statusFrame.pack(side=TOP)
+
+    def getStartFrame(self):
+        """Return start frame"""
+        return self.startFrame
 
     def getCalculatorFrame(self):
         """Return calculator frame"""
@@ -144,6 +148,7 @@ class CalcAlGUI(Tk):
         if newTab != self.currentTab:
             self.currentTab = newTab
             self.logger.info(_("Tab") + " " + self.currentTab + " " + _("selected") + ".")
+            self.menuCalcAl.enableDatabaseMenu(event.widget.index("current") == 0)
             self.menuCalcAl.enableSelectionMenu(event.widget.index("current") == 1)
 
     def setDatabase(self, database):
@@ -168,16 +173,18 @@ class CalcAlGUI(Tk):
             self.database = None
             self.setTitle(None)
 
-    def enableTabCalculator(self, isEnable):
+    def enableTabCalculator(self, isEnable, init=True):
         """ Activate or desactivate calculator tab """
         if isEnable:
             stateTab = 'normal'
+            self.menuCalcAl.enableDatabaseMenu(False)
         else:
             stateTab='disabled'
         self.note.tab(1, state=stateTab)
         self.menuCalcAl.enableSelectionMenu(isEnable)
         if isEnable:
-            self.calculatorFrame.init()
+            if init:
+                self.calculatorFrame.init()
             self.note.select(1)
 
     def enableTabSearch(self, isEnable=True):
@@ -202,7 +209,7 @@ class CalcAlGUI(Tk):
         helv36 = font.Font(family="Helvetica", size=36, weight="bold")
         Label(window, text=appName, font=helv36, fg="red").pack(side=TOP)
 
-        version = "Version : " + self.configApp.get('Version', 'Number') + ' - ' + \
+        version = _("Version") + " : " + self.configApp.get('Version', 'Number') + ' - ' + \
         self.configApp.get('Version', 'Date')
         Label(window, text=version).pack(side=TOP)
 
@@ -211,8 +218,9 @@ class CalcAlGUI(Tk):
                                            text4Image=self.configApp.get('Version', 'Author'))
         labelLogo.pack(side=TOP)
 
-        versionPython = "Python : " + platform.python_version() + \
-                        ", Tk : " + str(TkVersion)
+        Label(window, text=_(self.configApp.get('Version', 'CiqualNote'))).pack(side=TOP)
+
+        versionPython = "Python : " + platform.python_version() + ", Tk : " + str(TkVersion)
         Label(window, text=versionPython).pack(side=TOP)
         osMachine = _("On") + " : " + platform.system() + ", " + platform.release()
         Label(window, text=osMachine).pack(side=TOP)
@@ -223,8 +231,15 @@ class CalcAlGUI(Tk):
         if text4Image:
             compoundValue = 'top'
         imageMessagePath = os.path.join(self.imagesDirPath,
-        self.configApp.get('Resources', imageRessourceName))
+                                        self.configApp.get('Resources', imageRessourceName))
         imgobj = PhotoImage(file=imageMessagePath)
         buttonImage = ttk.Button(parent, image=imgobj, compound=compoundValue, text=text4Image)
         buttonImage.img = imgobj # store a reference to the image as an attribute of the widget
         return buttonImage
+
+    def copyInClipboard(self, text):
+        """Copy text in clipboard"""
+        self.clipboard_clear()
+        self.clipboard_append(text)
+        self.setStatusText(str(len(text)) + " " + _("characters copied and available in clipboard"))
+
