@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 ************************************************************************************
-programme : CalcAlGUI
+programme : CalcAlGUIMenu
 Auteur : Thierry Maillard (TMD)
-Date : 12/3/2016
+Date : 12/3/2016 - 7/7/2016
 
 Role : Menu bar for CalcAl Food Calculator project.
 
@@ -29,13 +29,15 @@ along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 """
 import logging
 import os.path
+import shutil
 
 from tkinter import *
+from tkinter import filedialog
 
 class CalcAlGUIMenu(Menu):
     """ Menu definition class """
 
-    def __init__(self, master, dirProject):
+    def __init__(self, master):
         """ Constructor : Define menu bar GUIs widgets """
         Menu.__init__(self, master)
         self.master = master
@@ -45,8 +47,14 @@ class CalcAlGUIMenu(Menu):
         self.databaseMenu = Menu(self, tearoff=0)
         self.databaseMenu.add_command(label=_("New"),
                                       command=self.master.getStartFrame().newDB)
+        self.databaseMenu.add_command(label=_("Info"),
+                                      state=DISABLED,
+                                      command=self.master.getStartFrame().infoDB)
         self.databaseMenu.add_command(label=_("Delete"),
+                                      state=DISABLED,
                                       command=self.master.getStartFrame().deleteDB)
+        self.databaseMenu.add_command(label=_("Join"),
+                                      command=self.master.getStartFrame().joinDB)
         self.add_cascade(label=_("Database"), menu=self.databaseMenu)
 
 
@@ -66,7 +74,15 @@ class CalcAlGUIMenu(Menu):
         self.selectionMenu.add_command(label=_("Clipboard"),
                                        state=DISABLED,
                                        command=self.master.getCalculatorFrame().copyInClipboard)
+        self.selectionMenu.add_command(label=_("Info"),
+                                       state=DISABLED,
+                                       command=self.master.getCalculatorFrame().infoFood)
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
+
+        self.pluginsMenu = Menu(self, tearoff=0)
+        self.pluginsMenu.add_command(label=_("Ciqual Reader"),
+        command=self.installCiqualReader)
+        self.add_cascade(label=_("Plugins"), menu=self.pluginsMenu)
 
         otherMenu = Menu(self, tearoff=0)
         otherMenu.add_command(label=_("About"), command=self.master.about)
@@ -99,7 +115,7 @@ class CalcAlGUIMenu(Menu):
             etat = NORMAL
         else:
             etat = DISABLED
-        for itemMenu in range(5):
+        for itemMenu in range(6):
             self.databaseMenu.entryconfigure(itemMenu, state=etat)
 
     def enableSelectionMenu(self, isEnabled):
@@ -108,6 +124,27 @@ class CalcAlGUIMenu(Menu):
             etat = NORMAL
         else:
             etat = DISABLED
-        for itemMenu in range(5):
+        for itemMenu in range(6):
             self.selectionMenu.entryconfigure(itemMenu, state=etat)
+
+    def installCiqualReader(self):
+        """ Download Ciqual reader """
+        try:
+            pluginDir = os.path.join(self.master.getDirProject(),
+                                     self.configApp.get("Resources", "ReadersDir"))
+            pluginName = "CiqualReader.py"
+            pluginPath = os.path.join(pluginDir, pluginName)
+            if os.path.isfile(pluginPath):
+                raise ValueError(_("Plugin") + " " + pluginName + " " +
+                                 _("has already been installed"))
+            filename = filedialog.askopenfilename(filetypes=(("Py File", "*.py"),
+                                                             ("All Files","*.*")),
+                                                  title = _("Choose a file"))
+            if not filename:
+                raise ValueError(_("Installation canceled"))
+            shutil.copy2(filename, pluginPath)
+            self.master.setStatusText(_("Plugin") + " " + pluginName + " " + _("installed"))
+        except ValueError as exc:
+            self.master.setStatusText(_("Error") + " : " + str(exc) + " !", True)
+
 

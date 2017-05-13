@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Database
 Author : Thierry Maillard (TMD)
-Date  : 23/3/2016 - 8/5/2016
+Date  : 23/3/2016 - 23/8/2016
 
 Role : Define a database and method to create, consult and save it.
 ************************************************************************************
@@ -12,22 +12,20 @@ import logging
 import os.path
 import sqlite3
 import re
-import locale
-import getpass
+import time
 
 from database import DatabaseReaderFactory
 
 class Database():
     """ Define a database """
 
-    def __init__(self, configApp, ressourcePath, databasePath, initDB, localDirPath):
+    def __init__(self, configApp, dirProject):
         """ Initialize a database 
-            ressourcePath : path to database and image data
+            dirProject : project directory
             If initDB : import data in a new dataBase
             """
         self.configApp = configApp
-        self.ressourcePath = ressourcePath
-        self.databasePath = databasePath
+        self.dirProject = dirProject
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
         self.formatFloatValue = "{0:." + self.configApp.get('Limits', 'nbMaxDigit') + "f}"
         # table for qualification reduction rules
@@ -35,21 +33,18 @@ class Database():
         self.QRules0 = self.configApp.get('QualifValue', 'QRules0').split(";")
         self.QRulesO = self.configApp.get('QualifValue', 'QRulesO').split(";")
 
+    def initDBFromFile(self, databasePath, databaseType, initFile):
+        """ Create a new database databasePath by reading a file initFile """
+        self.open(databasePath)
+        databaseReader = DatabaseReaderFactory.DatabaseReaderFactory.getInstance(self.configApp,
+                                     self.dirProject, databaseType, self.connDB, self.dbname)
+        databaseReader.initDBFromFile(initFile)
+
+    def open(self, databasePath):
+        """ Open or create a sqlite database """
         self.connDB = sqlite3.connect(databasePath)
         self.dbname = os.path.basename(databasePath)
         self.logger.info("Database : " + databasePath + " opened.")
-
-        if initDB:
-            databaseReader = DatabaseReaderFactory.DatabaseReaderFactory.getInstance(self.configApp,
-                                                                                     localDirPath,
-                                                                                     "CIQUAL",
-                                                                                     self.connDB,
-                                                                                     self.dbname)
-            source = self.configApp.get('Resources', 'CiqualCSVFile')
-            pathZipFileInit = os.path.join(self.ressourcePath,
-                                           self.configApp.get('Resources', 'CiqualCSVFile')) + \
-                              ".zip"
-            databaseReader.initDBFromFile(pathZipFileInit)
 
     def close(self):
          """ Close database """
@@ -57,7 +52,6 @@ class Database():
             self.connDB.close()
             self.connDB = None
             self.logger.info("Database : " + self.getDbname() + " closed.")
-
 
     def getDbname(self):
         return self.dbname
@@ -102,10 +96,15 @@ class Database():
         return existname
 
     def getComponentsValuesRaw4Food(self, foodName, quantity, listComponentsCodes):
-        """ Return for 1 given foodname
-            a list of (constituant codes, value multipled by quantity, qualifValue)
-            sorted according components shortcut"""
+        """ Return, for a given foodname and a listComponentsCodes, a list of
+            (constituant codes, value multipled by quantity, qualifValue)
+            27-28/7/2016 : v0.28 : Unknown constituant values not stored in database
+                return defalt value [constituantCode, 0.0, "-"] if
+                a component is not found for this foodname
+                Constituants are now sorted according order of listComponentsCodes
+            """
         listComponentsValues = []
+        listComponentsValuesAll = []
         if len(listComponentsCodes) > 0:
             cursor = self.connDB.cursor()
             # Get values for all asked componentsCodes
@@ -117,12 +116,26 @@ class Database():
                                AND  constituantsNames.code = constituantsValues.constituantCode
                                AND products.name=?
                                AND constituantCode IN (""" + \
-                       ",".join([str(code) for code in listComponentsCodes]) + \
-                       ") ORDER BY shortcut",
+                       ",".join([str(code) for code in listComponentsCodes]) + ")",
                        (foodName,))
             listComponentsValues = cursor.fetchall()
             cursor.close()
-        return listComponentsValues
+
+            # 27/7/2016 : v0.28 : add default constituant values to results
+            # sorted by listComponentsCodes order
+            for constituantCode in listComponentsCodes:
+                values4thisComponent = [values for values in listComponentsValues
+                                            if constituantCode == values[0]]
+                nbValues = len(values4thisComponent)
+                assert nbValues <= 1, "getComponentsValuesRaw4Food() find more than 1 record (" + \
+                                      str(nbValues) + ") in table constituantsValues " + \
+                                      "for constituantCode=" + \
+                                      str(constituantCode)  + " and for foodName=" + foodName
+                if nbValues > 0:
+                    listComponentsValuesAll.append(values4thisComponent[0])
+                else:
+                    listComponentsValuesAll.append([constituantCode, 0.0, "-"])
+        return listComponentsValuesAll
 
     def getComponentsValues4Food(self, foodName, quantity, listComponentsCodes):
         """ Return components values multipled by quantity for a given foodName"""
@@ -254,13 +267,52 @@ class Database():
         cursor.close()
         return listMinMax
 
+    def getProductComponents4Filters(self, listFilters, listSelectedComponentsCodes):
+        """ v0.28 : Return the total number of products that match the filter
+            and a list of products names and their constituants values
+            that match the given filters for the first nbMaxResultSearch items"""
+        productNameAllOk = set()
+        listProductListName = []
+        nbMaxResultSearch = int(self.configApp.get('Limits', 'nbMaxResultSearch'))
+
+        if len(listFilters) == 0:
+            raise ValueError(_("Please select at least one operator in a filter line"))
+
+        for constituantCode, selectedOperator, level in listFilters:
+            # Build condition for extraction of products from BD
+            condition = " AND constituantCode=" + str(constituantCode) + \
+                " AND value" + selectedOperator + str(level)
+            listProductListName.append(set(self.getProductNamesCondition(condition)))
+
+        # Intersection of all listProductListName sets
+        if len(listProductListName) > 0 and len(listProductListName[0]) > 0:
+            productNameAllOk = listProductListName[0]
+            index = 1
+            while index < len(listProductListName):
+                productNameAllOk = productNameAllOk.intersection(listProductListName[index])
+                index = index + 1
+
+        # Get components values for all results product
+        nbFoundProducts = len(productNameAllOk)
+        counter = 0
+        listComponentsValues= []
+        for foodName in productNameAllOk:
+            componentsValues = self.getComponentsValues4Food(foodName, 100.0,
+                                                             listSelectedComponentsCodes)
+            listComponentsValues.append([foodName, componentsValues])
+            counter = counter + 1
+            if counter >= nbMaxResultSearch:
+                break
+
+        return nbFoundProducts, listComponentsValues
+
     def getProductNamesCondition(self, condition):
-        """ Return a list of products  names that mach the given condition on their values """
+        """ Return a list of products names that mach the given condition on their values """
         listeFoodstuffNames=[]
         cursor = self.connDB.cursor()
         cursor.execute("""SELECT name FROM products
             INNER JOIN constituantsValues
-            where constituantsValues.productCode = products.code""" + condition)
+            WHERE constituantsValues.productCode = products.code""" + condition)
         listenames = cursor.fetchall()
         cursor.close()
         if len(listenames) > 0:
@@ -282,9 +334,9 @@ class Database():
             with self.connDB:
                 cursor = self.connDB.cursor()
                 # Set the new productCode
-                cursor.execute("SELECT max(code) from products")
-                newProductCode = max(cursor.fetchone()[0] + 1,
-                                    int(self.configApp.get('Limits', 'minCompositionProductCode')))
+                cursor.execute("SELECT min(code) from products")
+                newProductCode = min(cursor.fetchone()[0] - 1,
+                                    int(self.configApp.get('Limits', 'startGroupProductCodes'))-1)
 
                 # Get the codes for all existing components
                 cursor.execute("SELECT DISTINCT code from constituantsNames")
@@ -305,13 +357,13 @@ class Database():
                 fieldsCompositionProducts = []
                 for element in listNamesQty:
                     cursor.execute("SELECT code FROM products WHERE name=?", (element[0],))
+                    results = cursor.fetchone()
                     quantityPercent = element[1] * 100.0 / totalQuantity
-                    fieldsCompositionProducts.append([newProductCode, cursor.fetchone()[0],
-                                                      quantityPercent])
+                    fieldsCompositionProducts.append([newProductCode, results[0], quantityPercent])
 
                 # Save in compositionProducts table details of new product
                 cursor.executemany("""
-                        INSERT INTO compositionProducts(productCode, productCodeCiqual,
+                        INSERT INTO compositionProducts(productCode, productCodePart,
                                                         quantityPercent)
                         VALUES(?, ?, ?)
                         """, fieldsCompositionProducts)
@@ -323,9 +375,9 @@ class Database():
                     """, fieldsComposants)
 
                 # Insert new composed product in products table
-                source = self.configApp.get('Resources', 'CiqualCSVFile')
-                dateSource = self.configApp.get('Resources', 'CiqualCSVFileDate')
-                urlSource = self.configApp.get('Resources', 'CiqualUrl')
+                source = "Group"
+                dateSource = time.strftime("%G")
+                urlSource = "Group"
                 cursor.execute("""
                     INSERT INTO products(familyName, code, name, source, dateSource, urlSource)
                     VALUES(?, ?, ?, ?, ?, ?)
@@ -346,13 +398,13 @@ class Database():
         cursor = self.connDB.cursor()
         cursor.execute("SELECT code FROM products WHERE name=?", (productName,))
         productCode = cursor.fetchone()[0]
-        if productCode < int(self.configApp.get('Limits', 'minCompositionProductCode')) :
+        if productCode >= int(self.configApp.get('Limits', 'startGroupProductCodes')) :
             raise ValueError(_("Can't ungroup") + " " + productName + " : " + _("not a group"))
         # Get members of this group
         cursor.execute("""SELECT name, quantityPercent
                             FROM compositionProducts
                             INNER JOIN products
-                            WHERE productCodeCiqual=code and productCode=?""",
+                            WHERE productCodePart=code and productCode=?""",
                        (productCode,))
         for nameQty in cursor.fetchall():
             quantityPart = round(nameQty[1] * quantity / 100.0, 1)
@@ -360,3 +412,132 @@ class Database():
 
         cursor.close()
         return listNamesQty
+
+    def getInfoDatabase(self):
+        """ Return a dictionnary of counters for elements in this database
+            V0.30 : 21-22/8/2016 """
+        startGroupProductCodes = int(self.configApp.get('Limits', 'startGroupProductCodes'))
+        dictCounters = dict()
+        dictCounters["dbName"] = self.getDbname()
+        cursor = self.connDB.cursor()
+        cursor.execute("SELECT COUNT(*) FROM products")
+        dictCounters["nbProducts"] = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(DISTINCT familyName) FROM products")
+        dictCounters["nbFamily"] = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM products WHERE code < ?",
+                       (startGroupProductCodes,))
+        dictCounters["nbGroup"] = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM constituantsNames")
+        dictCounters["nbConstituants"] = cursor.fetchone()[0]
+        cursor.close()
+        return dictCounters
+
+    def getInfoFood(self, foodName):
+        """ Return a dictionnary of info for a given foodname in this database
+        V0.30 : 22/8/2016 """
+        dictInfoFood = dict()
+        dictInfoFood["isGroup"] = False
+        cursor = self.connDB.cursor()
+
+        # Get info about product or group
+        cursor.execute("""SELECT name, code, familyName, source, dateSource, urlSource
+                            FROM products WHERE name=?""",
+                       (foodName,))
+        result = cursor.fetchone()
+        dictInfoFood["name"] = result[0]
+        dictInfoFood["code"] = result[1]
+        dictInfoFood["familyName"] = result[2]
+        dictInfoFood["source"] = result[3]
+        dictInfoFood["dateSource"] = result[4]
+        dictInfoFood["urlSource"] = result[5]
+        if dictInfoFood["code"] < int(self.configApp.get('Limits', 'startGroupProductCodes')):
+            dictInfoFood["isGroup"] = True
+
+        # Get info on its components
+        cursor.execute("SELECT COUNT(*) FROM constituantsValues WHERE productCode = ?",
+                       (dictInfoFood["code"],))
+        dictInfoFood["nbConstituants"] = cursor.fetchone()[0]
+
+        # Get info on members of this group
+        if dictInfoFood["isGroup"]:
+            cursor.execute("SELECT COUNT(*) FROM compositionProducts WHERE productCode = ?",
+                       (dictInfoFood["code"],))
+            dictInfoFood["nbGroupsMembers"] = cursor.fetchone()[0]
+            if dictInfoFood["nbGroupsMembers"] > 0:
+                listGroup = []
+                cursor.execute("""SELECT name, quantityPercent
+                                  FROM compositionProducts, products
+                                  WHERE productCode=? and code=productCodePart""",
+                               (dictInfoFood["code"],))
+                for namePercent in cursor.fetchall():
+                    dictGroup = dict()
+                    dictGroup["namePart"] = namePercent[0]
+                    dictGroup["percentPart"] = namePercent[1]
+                    listGroup.append(dictGroup)
+                dictInfoFood["groups"] =listGroup
+
+        cursor.close()
+        return dictInfoFood
+
+    def deleteUserProduct(self, foodName):
+        """ Delete a given user foodname in this database
+        V0.30 : 23/8/2016 """
+        cursor = self.connDB.cursor()
+
+        # Get foodName code
+        cursor.execute("SELECT code FROM products WHERE name=?", (foodName,))
+        code = cursor.fetchone()[0]
+
+        # Only user foodstufs can be deleted
+        if code >= int(self.configApp.get('Limits', 'startGroupProductCodes')):
+            raise ValueError(_("Can't delete") + " " + foodName[:30] + " : " +
+                             _("Not created by user"))
+
+        # Can't delete an element if it is used by an other
+        cursor.execute("""SELECT name
+                          FROM compositionProducts, products
+                          WHERE productCodePart=? and code=productCode""",
+                       (code,))
+        results = cursor.fetchone()
+        if results:
+            nameParentElement = results[0]
+            raise ValueError(_("Can't delete") + " " + foodName[:30] + " : " +
+                             _("used by") + " " + nameParentElement)
+
+        # Delete elements values
+        cursor.execute("DELETE FROM constituantsValues WHERE productCode=?",
+                       (code,))
+        cursor.execute("DELETE FROM compositionProducts WHERE productCode=?",
+                       (code,))
+        cursor.execute("DELETE FROM products WHERE code=?",
+                       (code,))
+
+        # Commit to be seen by other database connexion
+        self.connDB.commit()
+        cursor.close()
+
+    def joinDatabase(self, dbNameSecondary):
+        """ Join this database to an other : dbNameSecondary
+            intersection, current = master database has the priority
+            in v0.30 : groups created by user are not merged"""
+        cursor = self.connDB.cursor()
+        cursor.execute("ATTACH DATABASE ? AS secondDB", (dbNameSecondary,))
+        cursor.execute("""INSERT INTO main.products
+                          SELECT * FROM secondDB.products
+                            WHERE secondDB.products.code > 0 AND
+                                secondDB.products.code NOT IN (
+                                SELECT main.products.code FROM main.products)""")
+        cursor.execute("""INSERT INTO main.constituantsValues
+                          SELECT * FROM secondDB.constituantsValues
+                            WHERE secondDB.constituantsValues.productCode > 0 AND
+                                  secondDB.constituantsValues.productCode NOT IN (
+                                  SELECT main.constituantsValues.productCode
+                                  FROM main.constituantsValues)""")
+        cursor.execute("""INSERT INTO main.constituantsNames
+                            SELECT * FROM secondDB.constituantsNames
+                            WHERE secondDB.constituantsNames.code NOT IN (
+                                SELECT main.constituantsNames.code
+                                FROM main.constituantsNames)""")
+        self.connDB.commit()
+        cursor.close()
+

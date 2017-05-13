@@ -1,0 +1,91 @@
+############################################################################
+# File : componants_shortcuts.txt
+# Project : CalcAl
+# Author : Thierry Maillard
+# Role : Associate Ciqual Components to shortcuts
+# Reference : CIQUAL Tables https://pro.anses.fr/tableciqual
+# Language : English
+# Date : 25/8/2016
+# Format :
+#   - # Start a comment line
+#   - Component Ciqual code = shortcut
+# Notes :
+# - Ciqual code are extracted from 1st line of CIQUAL Table file
+#   without component code
+# - encoding : UTF8
+############################################################################
+
+# Conversion table :
+10110 = Sodium
+10120 = Magnesium
+10150 = Phosphorus
+10190 = Potassium
+10200 = Calcium
+10251 = Manganèse
+10260 = Iron
+10290 = Copper
+10300 = Zinc
+10340 = Selenium
+10530 = Iodine
+25000 = Proteins
+25003 = Natural Proteins
+31000 = Carbohydrates
+32000 = Sugars
+327 = Energy
+328 = Energy
+33110 = Starch
+332 = Energy+fibre
+333 = Energy+fibre
+34000 = Polyols
+34100 = Fibres
+400 = Water
+40000 = Lipids
+40302 = FA Saturated
+40303 = FA Monounsaturated
+40304 = FA Polyunsaturated
+40400 = FA Butyric
+40600 = FA caproic
+40800 = FA caprylic
+41000 = FA caprc
+41200 = FA lauric
+41400 = FA myristic
+41600 = FA palmitic
+41800 = FA stearic
+41819 = FA oleic
+41826 = FA linoleic
+41833 = FA A-linolenic
+42046 = FA arachidonic
+42053 = FA EPA
+42263 = FA DHA
+51200 = Retinol
+51330 = Beta-Caroten
+52100 = Vitamin D
+53100 = Vitamin E
+54101 = Vitamin K1
+54104 = Vitamin K2
+55100 = Vitamin C
+56100 = Vitamin B1
+56200 = Vitamin B2
+56310 = Vitamin B3
+56400 = Vitamin B5
+56500 = Vitamin B6
+56600 = Vitamin B12
+56700 = Vitamin B9
+60000 = Alcool
+65000 = Organ. Acid
+75100 = Cholesterol
+
+# Codes added for USDA specifics components
+100000 = Ashes
+100001 = Folate, total
+100002 = Folic, acid
+100003 = Food Folate
+100004 = Folate, équiv. folate diet.
+100005 = Choline, total
+100006 = Vitamin A
+100007 = Vitamin A Retinol équiv.
+100008 = Alpha-Caroten
+100009 = Beta-Cryptoxanthin
+100010 = Lycopene
+100011 = Lutein+zeazanthin
+100012 = Vitamin K

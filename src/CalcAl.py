@@ -4,7 +4,7 @@
 ************************************************************************************
 program : CalcAl
 Author : Thierry Maillard (TMD)
-Date : 10/3/2016 - 8/5/2016
+Date : 10/3/2016 - 31/7/2016
 
 Object : Food Calculator based on CIQUAL Tables.
     https://pro.anses.fr/tableciqual
@@ -47,6 +47,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import imp # To test if a module is available
 
+from database import DatabaseManager
 from gui import CalcAlGUI
 
 ##################################################
@@ -82,21 +83,35 @@ def main(argv=None):
             isModeDebug = True
             print("Debug mode : verbose.")
 
+    # Set locale by getting User language and encoding
     # This sets the locale for all categories to the user’s default setting
-    # locale.setlocale(locale.LC_ALL, "") doesn't detect locale on windows
-    # locale.getdefaultlocale() seems to detect better...
     # Decimal separator is still . (point)
     # Nowdays, french users don't see any advantage to use , (comma)
     # else it would be possible by using locale fucnction instead float(), str(), format()
     # see : https://docs.python.org/3/library/locale.html#locale.format
-    currentLocale = locale.getdefaultlocale()
-    if not currentLocale:
-        print("Can't determine locale to know what langage is used by your computer")
-        print("Please set LANG environnement variable")
-        print("Example on Windows : set LANG=fr_FR.cp1252")
-        print("Example on Mac, Linux, Unix : export LANG=fr_FR.cp1252")
+    msgLocale = """Can't determine what langage is used by your computer
+        Please set LANG environnement variable in launching script.
+        Example on Windows :
+            set LANG=fr_FR.UTF-8 or set LANG=en_US.UTF-8
+        Example on Mac, Linux, Unix :
+            export LC_ALL="en_US.UTF-8";export LANG="en_US.UTF-8"
+        """
+    try:
+        currentLocale = locale.getdefaultlocale()
+        if not currentLocale:
+            raise ValueError("locale.getdefaultlocale() returns None")
+        print("locale.getdefaultlocale()=", currentLocale)
+    except locale.Error as exc:
+        print(str(exc), "\n", msgLocale)
         sys.exit(1)
-    locale.setlocale(locale.LC_ALL, currentLocale)
+    except ValueError as exc:
+        print(str(exc), "\n", msgLocale)
+        sys.exit(1)
+
+    # https://docs.python.org/3/library/locale.html
+    # Ref : chapt. 23.2.1. Background, details, hints, tips and caveats
+    locale.setlocale(locale.LC_ALL, '')
+    print("locale.getlocale()=", locale.getlocale())
 
     # Read configuration properties
     fileConfigApp = os.path.join(dirProject, 'CalcAl.ini')
@@ -107,6 +122,7 @@ def main(argv=None):
     pathname = os.path.dirname(sys.argv[0])
     localeDir = configApp.get('Resources', 'LocaleDir')
     localeDirPath = os.path.join(dirProject, localeDir)
+    # This installs the function _() in Python’s builtins namespace
     gettext.install("messages", localeDirPath)
 
     # Détermination mode de fonctionnement
@@ -124,8 +140,11 @@ def main(argv=None):
 
     logger.info("Satrting " + progName + " : " + idProg)
 
+    # Init database manager
+    databaseManager = DatabaseManager.DatabaseManager(configApp, dirProject)
+
     # Launch GUI
-    CalcAlGUI.CalcAlGUI(configApp, dirProject).mainloop()
+    CalcAlGUI.CalcAlGUI(configApp, dirProject, databaseManager).mainloop()
 
     logger.info("End of " + progName + " : " + idProg)
     logging.shutdown() # Terminaison système de logging

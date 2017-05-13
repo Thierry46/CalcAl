@@ -20,9 +20,9 @@ from database import Database
 class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Welcome frame used to choose database to use """
 
-    def __init__(self, master, mainWindow, ressourcePath, logoFrame):
+    def __init__(self, master, mainWindow, logoFrame):
         """ Initialize welcome Frame """
-        super(SearchFoodFrame, self).__init__(master, mainWindow, ressourcePath, logoFrame)
+        super(SearchFoodFrame, self).__init__(master, mainWindow, logoFrame)
         self.numberFilter = int(self.configApp.get('Search', 'numberFilter'))
         self.nbMaxResultSearch = int(self.configApp.get('Limits', 'nbMaxResultSearch'))
         maxWidthComponent = int(self.configApp.get('Search', 'maxWidthComponent'))
@@ -140,7 +140,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """Initialyse filters combobox"""
         self.reset()
 
-        database = self.mainWindow.getDatabase()
+        database = self.databaseManager.getDatabase()
         assert (database is not None), "SearchFoodFrame/init() : no open database !"
 
         self.listComponents = database.getMinMaxForConstituants()
@@ -157,18 +157,19 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def search(self):
         """ Search products that match filters in DB """
-        productNameAllOk = set()
-        listProductListName = []
+        # Search message
+        self.mainWindow.setStatusText(_("Searching in database") + "...")
+
         listSelectedComponentsCodes = []
         listTitle4Components = []
-        isAtLeast1Filter = False
 
         # Clean result table
         self.searchResultTable.deleteAllRows()
         self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
-        database = self.mainWindow.getDatabase()
+        database = self.databaseManager.getDatabase()
 
         try:
+            listFilters = []
             for numLine in range(self.numberFilter):
                selectedOperator = self.listOperatorCombobox[numLine].get()
                if len(selectedOperator) > 0:
@@ -187,7 +188,8 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         raise ValueError(_("Level must be greater than zero for filter number") +
                                          " : " + str(numLine+1))
                     # Get constituantCode
-                    indexChoosenComponent = self.listConboboxComponents[numLine]['values'].index(selectedComponent)
+                    indexChoosenComponent = \
+                        self.listConboboxComponents[numLine]['values'].index(selectedComponent)
                     constituantCode = self.listComponents[indexChoosenComponent][0]
                     if constituantCode not in listSelectedComponentsCodes:
                         listSelectedComponentsCodes.append(constituantCode)
@@ -195,42 +197,23 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         constituantUnit = self.listComponents[indexChoosenComponent][2]
                         listTitle4Components.append(constituantName + " (" + constituantUnit + ")")
 
-                    # Build condition for extraction of products from BD
-                    condition = " AND constituantCode=" + str(constituantCode) + \
-                                " AND value" + selectedOperator + str(level)
-                    listProductListName.append(set(database.getProductNamesCondition(condition)))
+                    # Append current filter to the list
+                    listFilters.append([constituantCode, selectedOperator, level])
 
-            if (not isAtLeast1Filter):
-                raise ValueError(_("Please select at least one operator in a filter line"))
-
-            # Intersection of all listProductListName sets
-            if len(listProductListName) > 0 and len(listProductListName[0]) > 0:
-                productNameAllOk = listProductListName[0]
-                index = 1
-                while index < len(listProductListName):
-                    productNameAllOk = productNameAllOk.intersection(listProductListName[index])
-                    index = index + 1
-
-            # Update table header line with selected components names
-            # 28/5/2016 : Sort listTitle4Components to match component order given by
-            # database.getComponentsValues4Food() function
-            listTitle4Components.sort()
+            # Update table header line with components names selected in filters
             self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
 
-            # Get components values for all results product
-            counter = 0
-            listComponentsValues= []
-            for foodName in productNameAllOk:
-                componentsValues = database.getComponentsValues4Food(foodName, 100.0,
-                                                                     listSelectedComponentsCodes)
+            # Get components values for product selected by filters
+            nbFoundProducts, listComponentsValues = \
+                    database.getProductComponents4Filters(listFilters,
+                                                          listSelectedComponentsCodes)
+
+            # Update table content with results
+            for foodName, componentsValues in listComponentsValues:
                 self.searchResultTable.insertOrCreateRow(foodName, componentsValues,
-                                                          seeItem=False)
-                counter = counter + 1
-                if counter >= self.nbMaxResultSearch:
-                    break
+                                                         seeItem=False)
 
             # Check number of results
-            nbFoundProducts = len(productNameAllOk)
             if (nbFoundProducts > self.nbMaxResultSearch):
                 self.mainWindow.setStatusText(_("Too many results") +" : " +
                                               str(self.nbMaxResultSearch) +

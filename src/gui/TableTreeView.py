@@ -170,7 +170,8 @@ class TableTreeView(Frame):
         numRow = 0
         for rowItem in self.treeview.get_children():
             listRowValues = list(self.treeview.item(rowItem, option='values')[:self.numStableCol])
-            listRowValues = listRowValues + variablesColValues[numRow]
+            if variablesColValues:
+                listRowValues = listRowValues + variablesColValues[numRow]
             self.treeview.item(rowItem, values=listRowValues)
             numRow = numRow + 1
 
