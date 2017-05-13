@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : DatabaseManager
 Author : Thierry Maillard (TMD)
-Date  : 31/7/2016 - 2/10/2016
+Date  : 31/7/2016 - 7/1/2017
 
 Role : Manage database operations for CalcAl software.
 ************************************************************************************
@@ -48,6 +48,7 @@ class DatabaseManager():
         databasePath = os.path.join(self.baseDirPath, dbName)
         database = Database.Database(self.configApp, self.dirProject)
         database.open(databasePath)
+        database.correctEnergyKcal() # V0.47 : Energies correction
         self.currentDatabase = database
         self.logger.info("DatabaseManager/openDatabase() : database " + dbName + " opened")
 
@@ -83,16 +84,20 @@ class DatabaseManager():
             if self.existsDatabase(dbName):
                 databasePath = self.buildDbNamePath(dbName)
                 os.remove(databasePath)
+                self.logger.info("DatabaseManager/deleteDatabase() : database deleted : " + dbName)
             else:
                 raise ValueError(_("The database") + " " + dbName + " " +
                                  _("doesn't exist") + " !")
-
         else:
             raise ValueError(_("The database") + " " + dbName + " " +
                              _("can't be deleted"))
 
-    def joinDatabase(self, dbNameMaster, dbNameSecondary, dbNameResult):
-        """ Join 2 databases """
+    def joinDatabase(self, dbNameMaster, dbNameSecondary, dbNameResult, isUpdate):
+        """ Join 2 databases
+            dbNameMaster : main database name that will be copied in dbNameResultbefore modification
+            dbNameSecondary : database used to modify main database
+            dbNameResult : result database
+            isUpdate : True if products of main database must be updated """
         # Duplicate master Database to result database
         databaseMasterPath = self.buildDbNamePath(dbNameMaster)
         databaseResultPath = self.buildDbNamePath(dbNameResult)
@@ -102,5 +107,5 @@ class DatabaseManager():
         databaseResult = Database.Database(self.configApp, self.dirProject)
         databaseResult.open(databaseResultPath)
         databaseSecondaryPath = self.buildDbNamePath(dbNameSecondary)
-        databaseResult.joinDatabase(databaseSecondaryPath)
+        databaseResult.joinDatabase(databaseSecondaryPath, isUpdate)
         databaseResult.close()

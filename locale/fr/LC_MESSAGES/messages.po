@@ -1,5 +1,5 @@
 # messages.po : French translation file for CalcAl project labels.
-# Date : 10/3/2016 - 1/12/2016
+# Date : 10/3/2016 - 7/1/2017
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
 # Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
@@ -94,8 +94,8 @@ msgstr "Onglet"
 msgid "selected"
 msgstr "activé"
 
-msgid "Based on Nutrial components database Ciqual 2013"
-msgstr "Basé sur les composants nutritionnels de la base Ciqual 2013"
+msgid "Based on Nutrial components databases Ciqual 2013 and 2016"
+msgstr "Basé sur les composants nutritionnels des bases Ciqual 2013 et 2016"
 
 ########################
 # CalcAlGUIMenu
@@ -305,11 +305,23 @@ msgstr "Valeur incorecte"
 msgid "Choose a file"
 msgstr "Choisissez un fichier"
 
-msgid "Download a database with your WEB browser"
-msgstr "Téléchargez une base de données avec votre navigateur"
+msgid "Download init file"
+msgstr "Téléchargez un fichier d'initialisation"
 
 msgid "Copy WEB link in clipboard"
 msgstr "Copier le lien WEB dans le presse-papier"
+
+msgid "Download a source file"
+msgstr "Téléchargez un fichier source"
+
+msgid "Open your web browser\nand download from"
+msgstr "Ouvrez votre navigateur internet\net téléchargez le fichier depuis"
+
+msgid "URL is in your clipboard\nready to be pasted in address bar"
+msgstr "L'adresse est prête à être collée\ndans la barre d'adresse"
+
+msgid "File to download on your computer"
+msgstr "Fichier à télécharger sur votre ordinateur"
 
 ##############################
 # DatabaseJoinDialog windows
@@ -319,6 +331,12 @@ msgstr "Choisissez une base secondaire"
 
 msgid "Enter a result database name"
 msgstr "Entrez le nom de la base de données résultat"
+
+msgid "Add only"
+msgstr "Ajout seulement"
+
+msgid "Update and add"
+msgstr "Mise à jour et ajout"
 
 ########################
 # Calculator frame
@@ -518,11 +536,8 @@ msgstr "Enregistrement de la portion annulé"
 msgid "Portion saved in database"
 msgstr "Ration sauvée dans la base de données"
 
-msgid "Duration to eat"
-msgstr "Durée pour absorber"
-
-msgid "this portion (days)"
-msgstr "la portion (jours)"
+msgid "Portion duration (days)"
+msgstr "Durée portion (jours)"
 
 msgid "Components selected"
 msgstr "Composants selectionnés"
@@ -673,7 +688,7 @@ msgid "used by"
 msgstr "utilisé par"
 
 msgid "Invalid pathology name : use more than one letter"
-msgstr "Nom d'aliment invalide : utilisez plus d'une lettre"
+msgstr "Nom de pathologie invalide : utilisez plus d'une lettre"
 
 msgid "No component given for that pathology"
 msgstr "Aucun composant fourni pour cette pathologie"
@@ -693,6 +708,14 @@ msgstr "Les dates sont incorrectes dans les portions suivantes"
 msgid "dates corrected in portions table"
 msgstr "dates corrigées dans la table des portions"
 
+msgid "Conflict for products with same name and diferent codes"
+msgstr "Conflit pour des produits avec le même nom et des codes différents"
+
+msgid "ignore products from second database"
+msgstr "produits de la deuxième base ignorés"
+
+msgid "Energies recalculated by CalcAl"
+msgstr "Energies recalculées par CalcAl"
 
 ########################
 # DatabaseReaderFactory
@@ -713,8 +736,11 @@ msgid "or"
 msgstr "ou"
 
 ########################
-# Ciqual_2013_Reader
+# Ciqual_Reader
 ########################
+msgid "Ciqual version not supported"
+msgstr "Version Ciqual non autorisée"
+
 msgid "Only .zip or .csv files allowed"
 msgstr "Seul les fichiers .zip ou .csv sont acceptés"
 
@@ -901,7 +927,7 @@ msgid "Save pathology"
 msgstr "Sauver la pathologie"
 
 msgid "Select composants in calculator"
-msgstr "Activer les composants dans le calculator"
+msgstr "Activer les composants dans le calculateur"
 
 msgid "Clear pathology"
 msgstr "Effacer la pathologie"
@@ -1028,3 +1054,7 @@ msgstr "Le patient a été créé dans la base"
 
 msgid "Patient deleted in database"
 msgstr "Le patient a été supprimé de la base"
+
+msgid "Type new patient code or select an existant"
+msgstr "Tapez un nouveau code patient ou sélectionnez un existant"
+

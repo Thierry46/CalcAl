@@ -25,13 +25,11 @@ Copyright (c) 2016 - Thierry Maillard
    You should have received a copy of the GNU General Public License
    along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 """
-import pytest
-from pytest import approx
-
 import configparser
 import os.path
-import gettext
-import platform
+
+import pytest
+from pytest import approx
 
 from model import Component
 from database import DatabaseManager
@@ -41,7 +39,7 @@ import CalcAl
 # Code to execute before and at the end of all test
 @pytest.fixture(scope="session")
 def initEnv():
-    # Code to be executed when called by test function
+    """ Code to be executed when called by test function """
     fileConfigApp = 'CalcAl.ini'
     configApp = configparser.RawConfigParser()
     configApp.read(fileConfigApp, encoding="utf-8")

@@ -1,13 +1,83 @@
 CalcAl - versions summary
 ==========================
 
-Problem to solve : On Mac OSX Sierra
-2016-11-18 17:22:15.145 Python[2389:114966] CALayer position contains NaN: [nan 0]
-Bug implementation Tkinter 8.5 with this new OS
-Wait for new OS release.
+CalcAl_v0.47 : 7/1/2017 : Energies recalculated when missing
+- 8509 lines py code (include 1364 lines pytest)
+- Pylint : code has been rated at 9.77/10
+	- Add new function : Database/correctEnergyKcal() to correct databases
+		when energies are missing.
+	- Remove absolute path in package_mac.sh and setup_model.py
+
+CalcAl_v0.46 : 27/12/2016 : correct encoding and accent problems
+	- in CiqualReader.py  : change encoding when reading ciqual ref file :
+		iso8859-1 -> cp1252
+	- Bug implementation Tkinter 8.5 with new OS X.12.1 corrected in OS X.12.2
+		2016-11-18 17:22:15.145 Python[2389:114966] CALayer position contains NaN: [nan 0]
+		when placing mouse cursor on an empty scrollbar.
+	- Correct Tk 8.5.18 corrects accents problems causing exception
+		http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.5.18.0/ActiveTcl8.5.18.0.298892-macosx10.5-i386-x86_64-threaded.dmg
+		This version Tk 8.5.18 corrects accents problems causing exception :
+		libc++abi.dylib: terminating with uncaught exception of type NSException
+		Install :
+		Download .dmg, double clic on it
+		Right-clic on the package + Open + admin password + Continue + Accept licence +
+		admin password + install Software + Yes + No + Installation Succes + Close
+	- Correct problem in database/Database.py/getProductsNamesContainingPart() :
+		capitalise only first car in global search for selecting food with wildcards
+
+CalcAl_v0.45 : 19/12/2016 : Ciqual 2016
+- 8415 lines py code (include 1364 lines pytest)
+- Pylint : code has been rated at 9.78/10
+- Create resources/database/ciqual_2016_constituants.txt table to get components codes
+- Add new components codes in locale/*/componants_shortcuts.txt to get shorctcuts for
+	new components : Salt and Chloride
+- Ciqual_2013_Reader -> Ciqual_Reader for reading Ciqual 2013 and 2016 init file
+- Modify database/joinDatabase to add or update components from second DB
+	and to deal with product of same name but different code in the 2 databases
+- Correct bug in Energy table when database does not contain alcool component
+	ie : USDA SR28 database
+- Log message when deleting a database.
+- Correct Bug in getEnergyRatio() when adding food without energy defined
+	or no energy supplied like for water.
+- Correct Bug in EnergyFrame : don’t update when erasing a food in calculator frame.
+
+CalcAl_v0.44 : 3/12/2016 : Test on Pocket PC Windows 7 + Quality
+- 8277 lines py code (include 1364 lines pytest)
+- Pylint : code has been rated at 9.73/10
+- portability on Windows 7 :
+	User home detection : package pwd not available
+	homeUser = os.path.expanduser("~")
+- Adapt Windows size to tiny computer (Pocket PC)
+- Correct Pylint warnings
+
+CalcAl_v0.43 : 2/12/2016 : Quality review
+- 7980 lines py code (include 1379 lines pytest)
+- Pylint : code has been rated at 9.63/10
+- Solve problem update() of observer overriding tkinter update() method
+Pylint warning : Arguments number differs from overridden 'update' method (arguments-differ)
+- Solve Pylint warning :
+	Wildcard import tkinter (wildcard-import)
+	Wildcard import tkinter.ttk (wildcard-import)
+- Solve bug missing argument in Module model.CalculatorFrameModel
+************* Module model.CalculatorFrameModel
+E:166,18: No value for argument 'message' in constructor call (no-value-for-parameter)
+E:208,18: No value for argument 'message' in constructor call (no-value-for-parameter)
+W:213,12: Unused variable 'name' (unused-variable)
+W:213,18: Unused variable 'quantity' (unused-variable)
+W:395,12: Unused variable 'name' (unused-variable)
+W:395,18: Unused variable 'quantity' (unused-variable)
+W:429,12: Unused variable 'name' (unused-variable)
+W:429,18: Unused variable 'quantity' (unused-variable)
+C: 41, 0: standard import "import logging" comes before "from model import Foodstuff" (wrong-import-order)
+- CalculatorFrame : Solve bug when deleting a group : definition Frame not updated :
+	family combobox and food name combobox.
+- PatientFrame : add new tooltips
+- When deleting a pathologies, deletes all records related to this pathology in
+	patientPathologies table
 
 CalcAl_v0.42 : 1/12/2016 : Patient frame
-- 8042 lines py code (include 1380 lines pytest)
+- 7927 lines py code (include 1380 lines pytest)
+- Pylint : code has been rated at 9.55/10
 - Correct error button label in Pathology Frame
 - Create new tables
 - Get existing patient from portions table to initialise patients
@@ -15,8 +85,8 @@ CalcAl_v0.42 : 1/12/2016 : Patient frame
 - Clear not error messages automatically after a delay
 - New banner for frame patient designed by Perrine
 - Disable pathologie definition if multiple pathologies selection
-- Use quality checker Pylint and correct problems
-python3 -m pylint --disable=invalid-name,unused-wildcard-import,undefined-variable,too-many-locals,too-many-branches,too-many-arguments,too-many-public-methods,too-many-statements,too-few-public-methods,too-many-instance-attributes,too-many-ancestors,too-many-nested-blocks,bad-continuation,line-too-long,unused-argument,bad-continuation *.py */*.py > ../qualite/resu_pylint.txt
+- Use quality checker Pylint and correct some problems
+python3 -m pylint --disable=invalid-name,unused-wildcard-import,undefined-variable,too-many-locals,too-many-branches,too-many-arguments,too-many-public-methods,too-many-statements,too-few-public-methods,too-many-instance-attributes,too-many-ancestors,too-many-nested-blocks,bad-continuation,line-too-long,unused-argument,bad-continuation *.py */*.py > doc/resu_pylint.txt
 
 CalcAl_v0.41 : 25/11/2016 : nbDays stored in portions table
 - 7253 lines py code (include 1380 lines pytest)

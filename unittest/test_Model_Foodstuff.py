@@ -25,23 +25,20 @@ Copyright (c) 2016 - Thierry Maillard
    You should have received a copy of the GNU General Public License
    along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 """
+import configparser
+import os.path
+
 import pytest
 from pytest import approx
 
-import configparser
-import os.path
-import gettext
-import platform
-
 from model import Foodstuff
 from database import DatabaseManager
-from util import CalcalExceptions
 import CalcAl
 
 # Code to execute before and at the end of all test
 @pytest.fixture(scope="session")
 def initEnv():
-    # Code to be executed when called by test function
+    """ Code to be executed when called by test function """
     fileConfigApp = 'CalcAl.ini'
     configApp = configparser.RawConfigParser()
     configApp.read(fileConfigApp, encoding="utf-8")
@@ -75,7 +72,7 @@ def test_init():
     assert foodstuff.getData("source") == "CIQUAL2013-Donneescsv.csv"
     assert foodstuff.getData("dateSource") == "2013"
     assert foodstuff.getData("urlSource") == "https://pro.anses.fr/tableciqual"
-    assert foodstuff.getData("isGroup") == False
+    assert not foodstuff.getData("isGroup")
     assert len(foodstuff.dictComponents) == 0
     assert foodstuff.getData("quantity") == approx(quantity)
 

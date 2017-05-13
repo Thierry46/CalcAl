@@ -25,13 +25,11 @@ Copyright (c) 2015 - Thierry Maillard
    You should have received a copy of the GNU General Public License
    along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 """
-import pytest
-from pytest import approx
-
 import configparser
 import os.path
-import pwd
-import gettext
+
+import pytest
+from pytest import approx
 
 import CalcAl
 from model import CalculatorFrameModel
@@ -41,7 +39,7 @@ from util import CalcalExceptions
 # Code to execute before and at the end of all test
 @pytest.fixture(scope="session")
 def initEnv():
-    # Code to be executed when called by test function
+    """ Code to be executed when called by test function """
     fileConfigApp = 'CalcAl.ini'
     configApp = configparser.RawConfigParser()
     configApp.read(fileConfigApp, encoding="utf-8")
@@ -60,7 +58,6 @@ def test_initGetterNone():
     """ Test constructor and getter, no database loaded """
     # Call init fixture
     configApp, databaseManager = initEnv()
-    database = databaseManager.getDatabase()
 
     calculatorFrameModel = CalculatorFrameModel.CalculatorFrameModel(configApp)
     assert len(calculatorFrameModel.getAllExistingComponents()) == 0
@@ -137,13 +134,13 @@ def test_addFoodInTable_Error():
     # Add a foodstuff with empty name
     foodname1 = ""
     quantity1 = str(200.)
-    with pytest.raises(CalcalExceptions.CalcalValueError) as e:
+    with pytest.raises(CalcalExceptions.CalcalValueError):
         calculatorFrameModel.addFoodInTable([[foodname1, quantity1]])
 
     # Add a foodstuff with empty name
     foodname1 = "Jus de fruits (aliment moyen)"
     quantity1 = "a,"
-    with pytest.raises(CalcalExceptions.CalcalValueError) as e:
+    with pytest.raises(CalcalExceptions.CalcalValueError):
         calculatorFrameModel.addFoodInTable([[foodname1, quantity1]])
 
     # Close demo database
@@ -582,4 +579,3 @@ def test_getWaterEnergy():
 
     # Close demo database
     databaseManager.closeDatabase()
-

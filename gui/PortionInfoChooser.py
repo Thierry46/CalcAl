@@ -25,8 +25,7 @@ along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
 import datetime
-
-from tkinter import *
+import tkinter
 from tkinter import messagebox
 from tkinter.ttk import Combobox
 
@@ -47,22 +46,23 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
         delaymsTooltips = int(self.configApp.get('Limits', 'delaymsTooltips'))
 
         # Filters frame
-        filtersFrame = LabelFrame(master, text=_("Filters"))
-        filtersFrame.pack(side=TOP)
-        Label(filtersFrame, text=_("Portion name") + " :").grid(row=0, column=0, sticky=W)
-        self.nameVar = StringVar()
+        filtersFrame = tkinter.LabelFrame(master, text=_("Filters"))
+        filtersFrame.pack(side=tkinter.TOP)
+        tkinter.Label(filtersFrame, text=_("Portion name") + " :").grid(row=0, column=0,
+                                                                        sticky=tkinter.W)
+        self.nameVar = tkinter.StringVar()
         self.nameVar.trace_variable("w", self.updatePortionListBox)
-        nameEntry = Entry(filtersFrame, textvariable=self.nameVar)
-        nameEntry.grid(row=0, column=2, sticky=W)
+        nameEntry = tkinter.Entry(filtersFrame, textvariable=self.nameVar)
+        nameEntry.grid(row=0, column=2, sticky=tkinter.W)
         nameEntry.focus_set()
 
-        Label(filtersFrame, text=_("Date")).grid(row=1, column=0, sticky=W)
-        Button(filtersFrame, text=_("Today"),
-               command=self.setTodayDate).grid(row=1, column=1, sticky=W)
-        self.dateVar = StringVar()
+        tkinter.Label(filtersFrame, text=_("Date")).grid(row=1, column=0, sticky=tkinter.W)
+        tkinter.Button(filtersFrame, text=_("Today"),
+               command=self.setTodayDate).grid(row=1, column=1, sticky=tkinter.W)
+        self.dateVar = tkinter.StringVar()
         self.dateVar.trace_variable("w", self.updatePortionListBox)
-        dateEntry = Entry(filtersFrame, textvariable=self.dateVar)
-        dateEntry.grid(row=1, column=2, sticky=W)
+        dateEntry = tkinter.Entry(filtersFrame, textvariable=self.dateVar)
+        dateEntry.grid(row=1, column=2, sticky=tkinter.W)
         CallTypWindow.createToolTip(dateEntry,
                                     _("Allowed formats for dates")+":\n"+\
                                     _("DD/MM/YYYY") + ", " +  _("DD/MM/YY") + ", " + \
@@ -70,50 +70,55 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
                                     delaymsTooltips)
 
 
-        Label(filtersFrame, text=_("Patient code") + " :").grid(row=2, column=0, sticky=W)
+        tkinter.Label(filtersFrame, text=_("Patient code") + " :").grid(row=2, column=0,
+                                                                        sticky=tkinter.W)
         listPatientCodes = [""] + self.parent.getPatientFrameModel().getAllPatientCodes()
         self.patientCodeCombobox = Combobox(filtersFrame, exportselection=0,
                                             state="readonly", width=20,
                                             values=listPatientCodes)
         self.patientCodeCombobox.bind('<<ComboboxSelected>>', self.updatePortionListBox)
-        self.patientCodeCombobox.grid(row=2, column=2, sticky=W)
+        self.patientCodeCombobox.grid(row=2, column=2, sticky=tkinter.W)
 
 
-        Button(filtersFrame, text=_("Erase filters"),
-               command=self.eraseFilters).grid(row=3, column=1, sticky=W)
+        tkinter.Button(filtersFrame, text=_("Erase filters"),
+               command=self.eraseFilters).grid(row=3, column=1, sticky=tkinter.W)
 
         # Portion listbox frame
-        idListFrame = Frame(master)
-        idListFrame.pack(side=TOP)
-        Label(idListFrame, text=_("Filtered existing portions")).grid(row=0, columnspan=2)
-        self.portionListBox = Listbox(idListFrame,
+        idListFrame = tkinter.Frame(master)
+        idListFrame.pack(side=tkinter.TOP)
+        tkinter.Label(idListFrame, text=_("Filtered existing portions")).grid(row=0, columnspan=2)
+        self.portionListBox = tkinter.Listbox(idListFrame,
                                       background=self.configApp.get('Colors', 'colorFamilyList'),
                                       height=10, width=35)
         self.portionListBox.grid(row=1, columnspan=2)
-        scrollbarRight = Scrollbar(idListFrame, orient=VERTICAL,
+        scrollbarRight = tkinter.Scrollbar(idListFrame, orient=tkinter.VERTICAL,
                                    command=self.portionListBox.yview)
-        scrollbarRight.grid(row=1, column=2, sticky=W+N+S)
+        scrollbarRight.grid(row=1, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.portionListBox.config(yscrollcommand=scrollbarRight.set)
         self.portionListBox.bind('<ButtonRelease-1>', self.clicExistingPortion)
         self.updatePortionListBox()
 
         # Otherfield frame
-        otherfieldFrame = Frame(master)
-        otherfieldFrame.pack(side=TOP)
-        Label(otherfieldFrame, text=_("Portion type") + " :").grid(row=0, column=0, sticky=W)
-        portionTypeFrame = Frame(otherfieldFrame)
-        portionTypeFrame.grid(row=0, column=1, sticky=EW)
-        self.portionTypeVar = StringVar()
-        Radiobutton(portionTypeFrame, text=_("Ration"),
-                    variable=self.portionTypeVar, value=_("Ration")).pack(side=LEFT)
-        Radiobutton(portionTypeFrame, text=_("Ingesta"),
-                    variable=self.portionTypeVar, value=_("Ingesta")).pack(side=LEFT)
+        otherfieldFrame = tkinter.Frame(master)
+        otherfieldFrame.pack(side=tkinter.TOP)
+        tkinter.Label(otherfieldFrame, text=_("Portion type") + " :").grid(row=0, column=0,
+                                                                           sticky=tkinter.W)
+        portionTypeFrame = tkinter.Frame(otherfieldFrame)
+        portionTypeFrame.grid(row=0, column=1, sticky=tkinter.EW)
+        self.portionTypeVar = tkinter.StringVar()
+        tkinter.Radiobutton(portionTypeFrame, text=_("Ration"),
+                            variable=self.portionTypeVar,
+                            value=_("Ration")).pack(side=tkinter.LEFT)
+        tkinter.Radiobutton(portionTypeFrame, text=_("Ingesta"),
+                            variable=self.portionTypeVar,
+                            value=_("Ingesta")).pack(side=tkinter.LEFT)
 
-        Label(otherfieldFrame, text=_("Period Of day") + " :").grid(row=1, column=0, sticky=EW)
+        tkinter.Label(otherfieldFrame, text=_("Period Of day") + " :").grid(row=1, column=0,
+                                                                            sticky=tkinter.EW)
         periodValues = [_("Morning"), _("Noon"), _("Evening"), _("Day"), _("Other")]
         self.periodCombobox = Combobox(otherfieldFrame, exportselection=0, values=periodValues,
                                        state="readonly", width=10)
-        self.periodCombobox.grid(row=1, column=1, sticky=EW)
+        self.periodCombobox.grid(row=1, column=1, sticky=tkinter.EW)
 
         return nameEntry # initial focus
 
@@ -151,13 +156,13 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
 
     def updatePortionListBox(self, *args):
         """ Update portionListBox filtering with id frame fields content """
-        self.portionListBox.delete(0, END)
+        self.portionListBox.delete(0, tkinter.END)
         userIdFilters = [self.nameVar.get(), self.dateVar.get(), self.patientCodeCombobox.get()]
         portionIdFiltered = self.database.getPortionsFiltred(userIdFilters)
         portionListSeparatorSeparator = ' ' + \
             self.configApp.get('Other', 'portionListSeparatorSeparator') + ' '
         for portionId in portionIdFiltered:
-            self.portionListBox.insert(END, portionListSeparatorSeparator.join(portionId))
+            self.portionListBox.insert(tkinter.END, portionListSeparatorSeparator.join(portionId))
 
     def validate(self):
         """ Check Data entered by user

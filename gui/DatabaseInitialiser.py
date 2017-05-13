@@ -3,14 +3,13 @@
 ************************************************************************************
 Name : DatabaseInitialiser
 Role : Window used to initialize Database
-Date  : 30/5/2016 - 30/7/2016
+Date  : 30/5/2016 - 19/12/2016
 ************************************************************************************
 """
 import tkinter
 from tkinter import messagebox
 from tkinter import filedialog
 
-from . import CallTypWindow
 from . import TkSimpleDialog
 
 class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
@@ -24,9 +23,7 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
 
     def body(self, master):
         """ Body content of this dialog """
-        allDatabase = ["Ciqual_2013", "USDA_28"]
-        allDatabaseToolTip = self.configApp.get('Ciqual', 'Tooltip') + "\n" + \
-                              self.configApp.get('USDA', 'Tooltip')
+        allDatabase = ["Ciqual_2013", "Ciqual_2016", "USDA_28"]
 
         tkinter.Label(master, text=_("Enter a new database name") + " :").grid(row=0, column=0,
                                                                                sticky=tkinter.W)
@@ -39,8 +36,6 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
                                                                    sticky=tkinter.W)
         databaseTypeFrame = tkinter.Frame(master)
         databaseTypeFrame.grid(row=1, column=1, sticky=tkinter.EW)
-        CallTypWindow.createToolTip(databaseTypeFrame, allDatabaseToolTip,
-                                    self.delaymsTooltips * 2)
 
         self.databaseType = tkinter.StringVar()
         self.databaseType.set(allDatabase[0]) # initialize
@@ -49,7 +44,7 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
                                 variable=self.databaseType, value=typeDB) .pack(side=tkinter.LEFT)
 
         tkinter.Label(master,
-                      text=_("Download a database with your WEB browser") +
+                      text=_("Download init file") +
                       " :").grid(row=2, column=0, sticky=tkinter.W)
         tkinter.Button(master, text=_("Copy WEB link in clipboard"),
                        command=self.copylink).grid(row=2, column=1, sticky=tkinter.W)
@@ -58,7 +53,7 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
                                         command=self.chooseInitFile)
         btnFileChooser.grid(row=3, column=0, sticky=tkinter.W)
         self.initFilnameVar = tkinter.StringVar()
-        initFileEntry = tkinter.Entry(master, textvariable=self.initFilnameVar, width=70)
+        initFileEntry = tkinter.Entry(master, textvariable=self.initFilnameVar, width=60)
         initFileEntry.grid(row=3, column=1, sticky=tkinter.W)
 
         return dbNameEntry # initial focus
@@ -76,11 +71,19 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
     def copylink(self):
         """ Copy right link according database type in the clipboard """
         link = "?"
-        if self.databaseType.get() == "Ciqual_2013":
+        type = self.databaseType.get()
+        if type.startswith("Ciqual"):
             link = self.configApp.get('Ciqual', 'CiqualUrl')
-        if self.databaseType.get() == "USDA_28":
+            fileInfo = self.configApp.get('Ciqual', 'fileInfo')
+        if type == "USDA_28":
             link = self.configApp.get('USDA', 'USDAUrl')
+            fileInfo = self.configApp.get('USDA', 'fileInfo')
         self.parent.getMainWindow().copyInClipboard(link)
+        title = _("Download a source file") + " " + type
+        message = _("Open your web browser\nand download from") + "\n" + link
+        message += "\n\n" + _("URL is in your clipboard\nready to be pasted in address bar") + "."
+        message += "\n\n" + _("File to download on your computer") + " :\n" + fileInfo
+        messagebox.showinfo(title=title, message=message)
 
     def validate(self):
         """ Check Data entered by user

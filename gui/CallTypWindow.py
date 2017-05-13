@@ -10,7 +10,7 @@ Usage :
 Ref : http://www.voidspace.org.uk/python/weblog/arch_d7_2006_07_01.shtml
 Author : Michael Foord
 Modified : 26/4/2016 - 27/4/2016 : TMD
-   - Adapt to python 3 : from Tkinter import * -> from tkinter import *
+   - Adapt to python 3
    - Correction : self.widget.bbox("insert") -> self.widget.bbox("active")
    - Hide tooltip after a delay in ms
        - Add parameter delayms : Delay after what tooltip is hidden

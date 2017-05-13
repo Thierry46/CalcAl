@@ -6,7 +6,7 @@ Role : Family and food name chooser
 Date  : 30/5/2016
 ************************************************************************************
 """
-from tkinter import *
+import tkinter
 from tkinter import messagebox
 from . import TkSimpleDialog
 
@@ -20,28 +20,28 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
 
     def body(self, master):
         """ Body content of this dialog """
-        Label(master, text=_("Family") + " :").pack(side=TOP)
-        self.familyVar = StringVar()
+        tkinter.Label(master, text=_("Family") + " :").pack(side=tkinter.TOP)
+        self.familyVar = tkinter.StringVar()
         self.familyVar.trace_variable("w", self.updateFamilyList)
-        familyEntry = Entry(master, textvariable=self.familyVar)
-        familyEntry.pack(side=TOP)
+        familyEntry = tkinter.Entry(master, textvariable=self.familyVar)
+        familyEntry.pack(side=tkinter.TOP)
         familyEntry.focus_set()
-        familyListFrame = Frame(master)
-        familyListFrame.pack(side=TOP)
-        self.familyList = Listbox(familyListFrame,
+        familyListFrame = tkinter.Frame(master)
+        familyListFrame.pack(side=tkinter.TOP)
+        self.familyList = tkinter.Listbox(familyListFrame,
                                   background=self.configApp.get('Colors', 'colorFamilyList'),
                                   height=10, width=30)
         self.familyList.grid(row=0, columnspan=2)
-        scrollbarRight = Scrollbar(familyListFrame, orient=VERTICAL,
+        scrollbarRight = tkinter.Scrollbar(familyListFrame, orient=tkinter.VERTICAL,
                                    command=self.familyList.yview)
-        scrollbarRight.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarRight.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.familyList.config(yscrollcommand=scrollbarRight.set)
         self.familyList.bind('<ButtonRelease-1>', self.clicFamily)
         self.updateFamilyList()
 
-        Label(master, text=_("Name") + " :").pack(side=TOP)
-        self.nameVar = StringVar()
-        Entry(master, textvariable=self.nameVar).pack(side=TOP)
+        tkinter.Label(master, text=_("Name") + " :").pack(side=tkinter.TOP)
+        self.nameVar = tkinter.StringVar()
+        tkinter.Entry(master, textvariable=self.nameVar).pack(side=tkinter.TOP)
         return familyEntry # initial focus
 
     def clicFamily(self, evt):
@@ -53,7 +53,7 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
 
     def updateFamilyList(self, *args):
         """ Update familyList filtering with self.familyVar Entry content """
-        self.familyList.delete(0, END)
+        self.familyList.delete(0, tkinter.END)
         stringInFamily = self.familyVar.get()
         if stringInFamily == "":
             familyNamesFiltered = self.familyNames
@@ -61,7 +61,7 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
             familyNamesFiltered = [name for name in self.familyNames
                                    if stringInFamily.upper() in name.upper()]
         for family in familyNamesFiltered:
-            self.familyList.insert(END, family)
+            self.familyList.insert(tkinter.END, family)
 
     def validate(self):
         """ Check Data entered by user

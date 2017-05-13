@@ -4,7 +4,7 @@
 ************************************************************************************
 program : CalcAl
 Author : Thierry Maillard (TMD)
-Date : 10/3/2016 - 14/10/2016
+Date : 10/3/2016 - 3/12/2016
 
 Object : Food Calculator based on CIQUAL Tables.
     https://pro.anses.fr/tableciqual
@@ -40,12 +40,11 @@ along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 import sys
 import getopt
 import gettext
-import os
-import os.path
 import configparser
 import platform
 import locale
-import pwd
+import os
+import os.path
 import shutil
 import logging
 from logging.handlers import RotatingFileHandler
@@ -114,7 +113,7 @@ def main(argv=None):
         sys.exit(1)
 
     # Get user workdir for loging system
-    homeUser = pwd.getpwuid(os.getuid()).pw_dir
+    homeUser = os.path.expanduser("~")
     if platform.system() == 'Darwin': # On Mac
         homeUser = os.path.join(homeUser, "Documents")
     homeCalcAl = os.path.join(homeUser, configApp.get('Resources', 'AppDataDir'))

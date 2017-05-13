@@ -12,7 +12,7 @@
 # Notes :
 # - Ciqual code are extracted from 1st line of CIQUAL Table file
 #   without component code
-# - encoding : UTF8
+# - encoding : UTF-8
 ############################################################################
 
 # Conversion table :
@@ -74,6 +74,10 @@
 60000 = Alcool
 65000 = Acides organ.
 75100 = Cholestérol
+
+# Codes added for new Ciqual 2016 components
+101000 = Sel
+101001 = Chlorure
 
 # Codes added for USDA specifics components
 100000 = Cendres

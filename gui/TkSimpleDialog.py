@@ -7,9 +7,9 @@ Source : http://effbot.org/tkinterbook/tkinter-dialog-windows.htm
 Modified by TMD : 30/5/2016 - 1/6/2016
 ************************************************************************************
 """
-from tkinter import *
+import tkinter
 
-class TkSimpleDialog(Toplevel):
+class TkSimpleDialog(tkinter.Toplevel):
     """ Modal dialog box base constructor (should be overridden) """
     def __init__(self, parent, title=None):
         """ Construct this modal frame """
@@ -21,7 +21,7 @@ class TkSimpleDialog(Toplevel):
 
         if title:
             self.title(title)
-        body = Frame(self)
+        body = tkinter.Frame(self)
         self.initial_focus = self.body(body)
         body.pack(padx=5, pady=5)
         self.buttonbox(self)
@@ -46,12 +46,12 @@ class TkSimpleDialog(Toplevel):
         """ add standard button box. override if you don't want the
             standard buttons """
 
-        box = Frame(master)
+        box = tkinter.Frame(master)
 
-        w = Button(box, text=_("OK"), width=10, command=self.ok, default=ACTIVE)
-        w.pack(side=LEFT, padx=5, pady=5)
-        w = Button(box, text=_("Cancel"), width=10, command=self.cancel)
-        w.pack(side=LEFT, padx=5, pady=5)
+        w = tkinter.Button(box, text=_("OK"), width=10, command=self.ok, default=tkinter.ACTIVE)
+        w.pack(side=tkinter.LEFT, padx=5, pady=5)
+        w = tkinter.Button(box, text=_("Cancel"), width=10, command=self.cancel)
+        w.pack(side=tkinter.LEFT, padx=5, pady=5)
 
         self.bind("<Return>", self.ok)
         self.bind("<Escape>", self.cancel)

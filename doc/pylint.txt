@@ -1,0 +1,14 @@
+Pylint :
+Ref : http://www.pylint.org
+Install : 
+su admin
+sudo -H python3 -m pip install --upgrade pip
+sudo -H python3 -m pip install pylint
+Usage : python3 -m pylint xxx.py
+Successfully installed astroid-1.4.8 isort-4.2.5 lazy-object-proxy-1.2.2 mccabe-0.5.2 pylint-1.6.4 wrapt-1.10.8
+
+Désactiver un message : invalid-name (C0103)
+python3 -m pylint --disable=invalid-name extractionWeb.py 
+
+cd /Users/thierry/Documents/dietetique/CalcAl
+python3 -m pylint --disable=invalid-name,unused-wildcard-import,undefined-variable,too-many-locals,too-many-branches,too-many-arguments,too-many-public-methods,too-many-statements,too-few-public-methods,too-many-instance-attributes,too-many-ancestors,too-many-nested-blocks,bad-continuation,line-too-long,unused-argument,bad-continuation *.py */*.py > ../qualite/resu_pylint.txt

@@ -18,6 +18,9 @@ Ref : Design Patterns: Elements of Reusable Object-Oriented Software
 Erich Gamma, Richard Helm, Ralph Johnson et John Vlissides
 Préface Grady Booch
 https://en.wikipedia.org/wiki/Design_Patterns
+
+2/12/2016 : Replace update name with updateObserver to avoid conflicts with
+    tkinter update method.
 ************************************************************************************
 """
 
@@ -37,15 +40,15 @@ class Observable(object):
         """ Remove observer from the list of observer of this observable """
         self.obs.remove(observer)
 
-    def notifyObservers(self, arg = None):
+    def notifyObservers(self, arg=None):
         """If 'changed' indicates that this object
         has changed, notify all its observers, then
         call clearChanged(). Each observer has its
-        update() called with two arguments: this
+        updateObserver() called with two arguments: this
         observable object and the generic 'arg'."""
         if self.changed:
             for observer in self.obs:
-                observer.update(self, arg)
+                observer.updateObserver(self, arg)
             self.clearChanged()
 
     def deleteObservers(self):

@@ -3,7 +3,7 @@
 ************************************************************************************
 programme : CalcAlGUIMenu
 Auteur : Thierry Maillard (TMD)
-Date : 12/3/2016 - 11/10/2016
+Date : 12/3/2016 - 17/12/2016
 
 Role : Menu bar for CalcAl Food Calculator project.
 
@@ -91,7 +91,7 @@ class CalcAlGUIMenu(tkinter.Menu):
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
 
         self.pluginsMenu = tkinter.Menu(self, tearoff=0)
-        listPlugins = ["Ciqual_2013_Reader", "USDA_28_Reader"]
+        listPlugins = ["Ciqual_Reader", "USDA_28_Reader"]
         for plugin in listPlugins:
             self.pluginsMenu.add_command(label=plugin,
                                          command=lambda plug=plugin: self.installReader(plug+".py"))
@@ -107,7 +107,7 @@ class CalcAlGUIMenu(tkinter.Menu):
                                   onvalue=True, offvalue=False)
         self.add_cascade(label="?", menu=otherMenu)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the calculator frame model object is modified.
             anable or disable selection menu items according number of items in tablefood """
         if observable == self.calculatorFrameModel:

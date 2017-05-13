@@ -7,12 +7,11 @@ Date  : 12/11/2016
 ************************************************************************************
 """
 import logging
-
-from tkinter import *
+import tkinter
 
 from util import CalcalExceptions
 
-class WaterEnergyFrame(LabelFrame):
+class WaterEnergyFrame(tkinter.LabelFrame):
     """ Dialog box used to get information from user to save a portion """
     def __init__(self, parent, mainWindow, calculatorFrameModel, configApp):
         super(WaterEnergyFrame, self).__init__(parent, text=_("Water needed"))
@@ -25,16 +24,16 @@ class WaterEnergyFrame(LabelFrame):
         bgNameTable = self.configApp.get('Colors', 'colorNameTableFood')
         bgValueComp = self.configApp.get('Colors', 'colorComponantValueTableFood')
         waterUnknownValue = self.configApp.get('Water', 'WaterUnknownValue')
-        Label(self, text=_("Water supplied by food") + " : ",
-              bg=bgNameTable).grid(row=0, column=0, sticky=E)
-        self.labelWaterSupplied = Label(self, text=waterUnknownValue, bg=bgValueComp)
-        self.labelWaterSupplied.grid(row=0, column=1, sticky=E)
-        Label(self, text=_("Water needed") + " : ",
-              bg=bgNameTable).grid(row=1, column=0, sticky=E)
-        self.labelWaterNeeded = Label(self, text=waterUnknownValue, bg=bgValueComp)
-        self.labelWaterNeeded.grid(row=1, column=1, sticky=E)
+        tkinter.Label(self, text=_("Water supplied by food") + " : ",
+                      bg=bgNameTable).grid(row=0, column=0, sticky=tkinter.E)
+        self.labelWaterSupplied = tkinter.Label(self, text=waterUnknownValue, bg=bgValueComp)
+        self.labelWaterSupplied.grid(row=0, column=1, sticky=tkinter.E)
+        tkinter.Label(self, text=_("Water needed") + " : ",
+              bg=bgNameTable).grid(row=1, column=0, sticky=tkinter.E)
+        self.labelWaterNeeded = tkinter.Label(self, text=waterUnknownValue, bg=bgValueComp)
+        self.labelWaterNeeded.grid(row=1, column=1, sticky=tkinter.E)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         if observable == self.calculatorFrameModel:
             self.logger.debug("WaterEnergyFrame received from its model : " + event)

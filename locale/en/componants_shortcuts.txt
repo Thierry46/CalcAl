@@ -75,6 +75,10 @@
 65000 = Organ. Acid
 75100 = Cholesterol
 
+# Codes added for new Ciqual 2016 components
+101000 = Salt
+101001 = Chloride
+
 # Codes added for USDA specifics components
 100000 = Ashes
 100001 = Folate, total

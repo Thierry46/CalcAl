@@ -3,14 +3,14 @@
 ************************************************************************************
 Class  : SearchFoodFrame
 Author : Thierry Maillard (TMD)
-Date  : 27/4/2016 - 15/9/2016
+Date  : 27/4/2016 - 4/12/2016
 
 Role : Define search food frame content.
 ************************************************************************************
 """
 import queue
 
-from tkinter import *
+import tkinter
 from tkinter.ttk import Combobox
 
 from model import SearchThreadedTask
@@ -34,27 +34,27 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.listComponents = []
         self.queue = None
 
-        topFrame = Frame(self)
-        topFrame.pack(side=TOP)
-        filtersFrame = LabelFrame(topFrame, text=_("Filters definition"))
-        filtersFrame.pack(side=LEFT, padx=5, pady=5)
+        topFrame = tkinter.Frame(self)
+        topFrame.pack(side=tkinter.TOP)
+        filtersFrame = tkinter.LabelFrame(topFrame, text=_("Filters definition"))
+        filtersFrame.pack(side=tkinter.LEFT, padx=5, pady=5)
         CallTypWindow.createToolTip(filtersFrame,
                                     _("Set logical expressions on filters lines")+"\n"+\
                                     _("Filter line are combined with logical AND")+"\n"+\
                                     _("To deselect a filter line, set its operator to empty value"),
                                     self.delaymsTooltips * 3)
 
-        buttonFiltersFrame = Frame(topFrame)
-        buttonFiltersFrame.pack(side=LEFT, padx=5, pady=5)
-        resultsFrame = LabelFrame(self, text=_("Foodstufs matching filters (values for 100g)"))
-        resultsFrame.pack(side=TOP, fill=BOTH, expand=YES, padx=5, pady=2)
+        buttonFiltersFrame = tkinter.Frame(topFrame)
+        buttonFiltersFrame.pack(side=tkinter.LEFT, padx=5, pady=5)
+        resultsFrame = tkinter.LabelFrame(self, text=_("Foodstufs matching filters (values for 100g)"))
+        resultsFrame.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, padx=5, pady=2)
         resultsFrame.grid_rowconfigure(0, weight=1)
         resultsFrame.grid_columnconfigure(0, weight=1)
 
         # filtersFrame components definition
         listLabel = [_("Components"), _("Operator"), _("Levels")]
         for numCol in range(len(listLabel)):
-            Label(filtersFrame, text=listLabel[numCol]).grid(row=0, column=numCol)
+            tkinter.Label(filtersFrame, text=listLabel[numCol]).grid(row=0, column=numCol)
 
         self.listConboboxComponents = []
         self.listOperatorCombobox = []
@@ -73,7 +73,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.listOperatorCombobox.append(operatorCombobox)
             self.listOperatorCombobox[numLine].grid(row=numLine+1, column=1)
 
-            self.listUserValueEntry.append(Entry(filtersFrame, width=10))
+            self.listUserValueEntry.append(tkinter.Entry(filtersFrame, width=10))
             self.listUserValueEntry[numLine].grid(row=numLine+1, column=2)
 
         # buttonFiltersFrame
@@ -81,23 +81,26 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                            imageRessourceName='btn_search',
                                                            text4Image=_("Search in data"))
         self.btnSearch.configure(command=self.search)
-        self.btnSearch.pack(side=TOP)
-        Button(buttonFiltersFrame, text=_("Reset filters"),
-               command=self.reset).pack(side=TOP)
-        Button(buttonFiltersFrame, text=_("Clipboard"),
-                command=self.copyInClipboard).pack(side=TOP)
+        self.btnSearch.pack(side=tkinter.TOP)
+        tkinter.Button(buttonFiltersFrame, text=_("Reset filters"),
+               command=self.reset).pack(side=tkinter.TOP)
+        tkinter.Button(buttonFiltersFrame, text=_("Clipboard"),
+                command=self.copyInClipboard).pack(side=tkinter.TOP)
 
         # resultsFrame components definition
         firstColumns = [_("Name")]
+        heigthFoodTable = int(self.configApp.get('Size', 'searchResultTableNumberVisibleRows'))
+        if self.mainWindow.isTinyScreen():
+            heigthFoodTable -= 3
         self.searchResultTable = TableTreeView.TableTreeView(resultsFrame, firstColumns,
-                        int(self.configApp.get('Size', 'searchResultTableNumberVisibleRows')),
+                        heigthFoodTable,
                         int(self.configApp.get('Size', 'searchResultTableFistColWidth')),
                         int(self.configApp.get('Size', 'searchResultTableOtherColWidth')),
                         int(self.configApp.get('Size', 'searchResultTableColMinWdth')),
                         selectmode="extended")
         self.searchResultTable.setColor('normalRow', self.configApp.get('Colors',
                                                                         'colorSearchTable'))
-        self.searchResultTable.pack(side=TOP, fill=BOTH, expand=YES)
+        self.searchResultTable.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
         self.searchResultTable.setBinding('<Double-Button-1>', self.putInCalculator)
         self.searchResultTable.setBinding('<Command-c>', self.copyInClipboard)
         self.searchResultTable.setBinding('<Control-c>', self.copyInClipboard)
@@ -111,7 +114,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         _("Ctrl-C to put in clipboard"),
                         2 * self.delaymsTooltips)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         if observable == self.calculatorFrameModel:
             self.logger.debug("SearchFoodFrame received from model : " + event)
@@ -239,7 +242,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             error = msg.endswith("!")
             self.mainWindow.setStatusText(msg, error)
             if not msg.startswith(self.endMarker) and not error:
-                # Listen agai to thread
+                # Listen again to thread
                 self.master.after(100, self.process_queue)
         except queue.Empty:
             self.master.after(100, self.process_queue)

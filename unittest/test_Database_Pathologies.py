@@ -26,25 +26,20 @@
     You should have received a copy of the GNU General Public License
     along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
     """
-import pytest
-from pytest import approx
-
 import configparser
 import os
 import os.path
-import pwd
-import gettext
 import shutil
 
+import pytest
+
 import CalcAl
-from database import Database
 from database import DatabaseManager
-from util import CalcalExceptions
 
 # Code to execute before and at the end of all test
 @pytest.fixture(scope="session")
 def initEnv():
-    # Code to be executed when called by test function
+    """ Code to be executed when called by test function """
     fileConfigApp = 'CalcAl.ini'
     configApp = configparser.RawConfigParser()
     configApp.read(fileConfigApp, encoding="utf-8")
@@ -77,7 +72,7 @@ def test_emptyPatholology():
     database = databaseManager.getDatabase()
 
     assert database.getDefinedPathologiesNames() == []
-    
+
     # Close demo database
     databaseManager.closeDatabase()
 
@@ -138,17 +133,17 @@ def test_1PatholologyError():
     description = "Probleme pancréas"
     reference = "TMD Bof Bof"
     listConstituantsCodes = [400, 328]
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         database.savePathology(name, description, reference, listConstituantsCodes)
 
     name = "diabete type A"
     description = "Probleme pancréas"
     reference = "TMD Bof Bof"
     listConstituantsCodes = []
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         database.savePathology(name, description, reference, listConstituantsCodes)
 
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         database.getComponentsCodes4Pathologies([])
 
     # Unknown constituant
@@ -163,7 +158,7 @@ def test_1PatholologyError():
     with pytest.raises(ValueError) as e:
         database.getComponentsCodes4Pathologies([name])
 
-    listCompRead = database.deletePathology(name)
+    database.deletePathology(name)
 
     # Close demo database
     databaseManager.closeDatabase()
@@ -199,4 +194,3 @@ def test_2Patholology():
     database.deletePathology(name2)
     # Close demo database
     databaseManager.closeDatabase()
-
