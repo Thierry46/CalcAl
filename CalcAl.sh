@@ -7,5 +7,5 @@
 # Modif .... :
 
 echo "Start CalcAl ..."
-echo "python3 src/CalcAl.py"
-python3 src/CalcAl.py $1
+echo "python3 CalcAl.py"
+python3 CalcAl.py $1
