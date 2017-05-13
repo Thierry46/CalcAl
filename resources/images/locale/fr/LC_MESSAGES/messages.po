@@ -1,0 +1,1063 @@
+# messages.po : French translation file for CalcAl project labels.
+# Date : 10/3/2016 - 1/2/2017
+# Copyleft (CL) 2016 - Thierry Maillard
+# This file is distributed under the same license as the CalcAl package.
+# Thierry Maillard <Thierry.Maillard500@orange.fr>, 2017.
+#
+# Conversion in .mo format to be used by gettext :
+# cd locale/fr/LC_MESSAGES
+# msgfmt messages.po
+#
+# Installation of gettext package on Linux or Mac :
+# Download :http://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
+# tar -xvzf gettext-latest.tar.gz
+# cd gettext-0.19.7
+# ./configure
+# make
+# sudo make install
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CalcAl\n"
+"Report-Msgid-Bugs-To: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
+"POT-Creation-Date: 2016-03-10 17:46+0200\n"
+"PO-Revision-Date: 016-03-10 18:15+0100\n"
+"Last-Translator: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
+"Language-Team: Fr <Thierry.Maillard500@orange.fr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+###############
+# CalcAl
+###############
+msgid "Error : 0 parameter allowed"
+msgstr "Erreur : aucun paramètre autorisé"
+
+msgid "Directory created"
+msgstr "Répertoire créé"
+
+msgid "Starting"
+msgstr "Démarrage"
+
+msgid "Thanks to you"
+msgstr "Merci à vous"
+
+msgid "for using this software"
+msgstr "d'utiliser ce logiciel"
+
+msgid "End of"
+msgstr "Fin de"
+
+msgid "Messages now logged in"
+msgstr "Les messages sont enregistrés dans"
+
+msgid "To contact authors"
+msgstr "Pour contacter les auteurs"
+
+msgid "Detected language and encoding on this computer"
+msgstr "Langue et encodage détectés sur cet ordinateur"
+
+msgid "Demo DB copied"
+msgstr "Base demo copiée"
+
+###############
+# CalcAlGUI
+###############
+msgid "Starting GUI"
+msgstr "Démarrage de l'IHM"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "On"
+msgstr "Sur"
+
+msgid "characters copied and available in clipboard"
+msgstr "caractères copiés et disponibles dans le presse-papier"
+
+msgid "Welcome"
+msgstr "Bienvenue"
+
+msgid "Calculator"
+msgstr "Calculateur"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Patients"
+msgstr "Patients"
+
+msgid "Tab"
+msgstr "Onglet"
+
+msgid "selected"
+msgstr "activé"
+
+msgid "Based on Nutrial components databases Ciqual 2013 and 2016"
+msgstr "Basé sur les composants nutritionnels des bases Ciqual 2013 et 2016"
+
+########################
+# CalcAlGUIMenu
+########################
+msgid "Selection"
+msgstr "Sélection"
+
+msgid "Modify"
+msgstr "Modifier"
+
+msgid "Group"
+msgstr "Grouper"
+
+msgid "Ungroup"
+msgstr "Dégrouper"
+
+msgid "Delete in database"
+msgstr "Supprimer de la base "
+
+msgid "Erase line"
+msgstr "Effacer la ligne"
+
+msgid "Plugins"
+msgstr "Modules"
+
+msgid "Download Ciqual reader"
+msgstr "Téléchargez le lecteur Ciqual"
+
+msgid "Installation canceled"
+msgstr "Installation annulée"
+
+msgid "Plugin"
+msgstr "Module"
+
+msgid "has already been installed"
+msgstr "déjà installé"
+
+msgid "installed"
+msgstr "installé"
+
+########################
+# Start frame
+########################
+msgid "Based on Nutrial components database  Ciqual 2013"
+msgstr "Basé sur les données de la table de composition nutritionnelle des aliments Ciqual 2013"
+
+msgid "Choose a database to use"
+msgstr "Choisissez une base de données à utiliser"
+
+msgid "New"
+msgstr "Nouvelle"
+
+msgid "Start"
+msgstr "Démarrer"
+
+msgid "chosen"
+msgstr "choisie"
+
+msgid "New..."
+msgstr "Nouveau..."
+
+msgid "Ready"
+msgstr "Prêt"
+
+msgid "New menu"
+msgstr "Nouveau menu"
+
+msgid "Enter its name :"
+msgstr "Entrez un nom :"
+
+msgid "Load..."
+msgstr "Charger..."
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "loaded"
+msgstr "chargé"
+
+msgid "saved"
+msgstr "sauvé"
+
+msgid "Start calculator with database"
+msgstr "Démarrage du calculateur avec la base"
+
+msgid "About"
+msgstr "A propos..."
+
+msgid "Help..."
+msgstr "Aide..."
+
+msgid "description"
+msgstr "description"
+
+msgid "Debug logging mode : all messages in file and on console."
+msgstr "Logging dans fichier et sur console en mode DEBUG."
+
+msgid "Logging in file with mode INFO and on console in mode WARNING."
+msgstr "Logging dans fichier en mode INFO et sur console en mode WARNING."
+
+msgid "This software helps to evaluate food suplies."
+msgstr "Cette application aide à calculer les apports nutritionnels d'une série d'aliments."
+
+msgid "Please consult its documentation for more information."
+msgstr "Consultez sa documentation pour plus d'information."
+
+msgid "New database"
+msgstr "Nouvelle base de données"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Database initialised"
+msgstr "Base de données initialisée"
+
+msgid "Database"
+msgstr "Base de données"
+
+msgid "Do you realy want to delete this database ?"
+msgstr "Voulez-vous vraiment détruire cette base de données ?"
+
+msgid "deleted"
+msgstr "détruite"
+
+msgid "Please select a database"
+msgstr "Veuillez sélectionner une base de données"
+
+msgid "Initialize a  database"
+msgstr "Initialisation d'une base de données"
+
+msgid "New database canceled"
+msgstr "Nouvelle base de données annulée"
+
+msgid "Can't create database"
+msgstr "Impossible de créer la base"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "information displayed"
+msgstr "informations affichées"
+
+msgid "about database"
+msgstr "à propos de la base"
+
+msgid "Database name"
+msgstr "Nom de la base de données"
+
+msgid "Number of foodstuffs"
+msgstr "Nombre d'aliments"
+
+msgid "Number of food families"
+msgstr "Nombre de familles d'aliments"
+
+msgid "Number of food groups"
+msgstr "Nombre de groupes d'aliments"
+
+msgid "Number of food constituants"
+msgstr "Nombre de composants"
+
+msgid "At lest 2 database are needed to join them"
+msgstr "Il faut au moins 2 bases de données pour une fusion"
+
+msgid "Join"
+msgstr "Fusionner"
+
+msgid "Please choose master database for joinning"
+msgstr "Veuillez sélectionner la base principale pour la fusion"
+
+msgid "Join a database to"
+msgstr "Fusionner une base de données avec"
+
+msgid "Database joined in"
+msgstr "Bases de données fusionnées dans"
+
+# -- Tooltips --
+msgid "Select a database\nand click startbutton"
+msgstr "Selectionner une base de données\npuis cliquer sur le bouton Démarrer"
+
+##############################
+# DatabaseInitialiser windows
+##############################
+msgid "Enter a new database name"
+msgstr "Entrer le nom de la nouvelle base de données"
+
+msgid "Invalid database name"
+msgstr "Nom de base de données invalide"
+
+msgid "Database type"
+msgstr "Type de base de données"
+
+msgid "Database init file"
+msgstr "Fichier pour init de la base"
+
+msgid "Please give a name for your new database"
+msgstr "Donnez un nom pour votre nouvelle base de données"
+
+msgid "this database already exists"
+msgstr "cette base de données existe déjà"
+
+msgid "Please give a filename containing data to import"
+msgstr "Donnez un nom de fichier contenant les données à importer"
+
+msgid "Bad input"
+msgstr "Valeur incorecte"
+
+msgid "Choose a file"
+msgstr "Choisissez un fichier"
+
+msgid "Download init file"
+msgstr "Téléchargez un fichier d'initialisation"
+
+msgid "Copy WEB link in clipboard"
+msgstr "Copier le lien WEB dans le presse-papier"
+
+msgid "Download a source file"
+msgstr "Téléchargez un fichier source"
+
+msgid "Open your web browser\nand download from"
+msgstr "Ouvrez votre navigateur internet\net téléchargez le fichier depuis"
+
+msgid "URL is in your clipboard\nready to be pasted in address bar"
+msgstr "L'adresse est prête à être collée\ndans la barre d'adresse"
+
+msgid "File to download on your computer"
+msgstr "Fichier à télécharger sur votre ordinateur"
+
+##############################
+# DatabaseJoinDialog windows
+##############################
+msgid "Please choose secondary database"
+msgstr "Choisissez une base secondaire"
+
+msgid "Enter a result database name"
+msgstr "Entrez le nom de la base de données résultat"
+
+msgid "Add only"
+msgstr "Ajout seulement"
+
+msgid "Update and add"
+msgstr "Mise à jour et ajout"
+
+########################
+# Calculator frame
+########################
+msgid "Menu definition"
+msgstr "Définition d'un menu"
+
+msgid "Actions on selection"
+msgstr "Commandes à appliquer à la sélection"
+
+msgid "Menu name"
+msgstr "Nom du menu"
+
+msgid "For who ?"
+msgstr "Pour qui ?"
+
+msgid "Interesting components"
+msgstr "Composants à suivre"
+
+msgid "Search food"
+msgstr "Recherche d'aliment"
+
+msgid "Search by components"
+msgstr "Recherche par composants"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Foodstuff definition"
+msgstr "Définition d'un aliment"
+
+msgid "Family"
+msgstr "Famille"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Quantity (g)"
+msgstr "Quantité (g)"
+
+msgid "Qty (g)"
+msgstr "Qté (g)"
+
+msgid "Too many components selected"
+msgstr "Trop de composants selectionnés"
+
+msgid "Please select one and only one line in food table"
+msgstr "Veuillez sélectionner une ligne et une seule dans la table des aliments"
+
+msgid "Please select at least one line in food table"
+msgstr "Veuillez sélectionner au moins une ligne dans la table des aliments"
+
+msgid "Please select more than one foodstuff in food table"
+msgstr "Veuillez sélectionner plus d'une ligne dans la table des aliments"
+
+msgid "maximum"
+msgstr "maximum"
+
+msgid "Put in the list"
+msgstr "Mettre dans la liste"
+
+msgid "Foodstuff"
+msgstr "Aliment"
+
+msgid "foodstuff"
+msgstr "aliment"
+
+msgid "foodstuffs"
+msgstr "aliments"
+
+msgid "added"
+msgstr "ajouté"
+
+msgid "Food name must not be empty"
+msgstr "Le nom d'aliment ne doit pas être vide"
+
+msgid "Food quantity must be a number"
+msgstr "La quantité d'aliment doit être un nombre"
+
+msgid "Qantity must be greater than zero"
+msgstr "La quantité doit être plus grande que zéro"
+
+msgid "Deleting selected food in table"
+msgstr "Suppression d'aliments dans le tableau"
+
+msgid "Do you really want to delete selection in database ?"
+msgstr "Voulez-vous détruire la selection\ndans la base de données ?"
+
+msgid "List of food"
+msgstr "Liste des aliments"
+
+msgid "Energy given by foods"
+msgstr "Energie apportée par les aliments"
+
+msgid "Components"
+msgstr "Composants"
+
+msgid "By ratio"
+msgstr "En pourcentage"
+
+msgid "By energy"
+msgstr "En énergie"
+
+msgid "By value"
+msgstr "En valeur"
+
+msgid "Water needed"
+msgstr "Besoins en eau"
+
+msgid "Water supplied by food"
+msgstr "Eau apportée par les aliments"
+
+msgid "selected and copied"
+msgstr "selectionné et copié"
+
+msgid "Save group in database"
+msgstr "Sauvegarder ce groupe d'élément dans la base de données"
+
+msgid "Enter the family name of new product"
+msgstr "Entrez le nom de la famille du nouveau produit"
+
+msgid "New product"
+msgstr "Nouveau produit"
+
+msgid "saved in database"
+msgstr "sauvegardé dans la base de données"
+
+msgid "copied in modification area"
+msgstr "copié dans la zone de modification"
+
+msgid "Composed product"
+msgstr "Produit composé"
+
+msgid "ungrouped"
+msgstr "dégroupé"
+
+msgid "Clipboard"
+msgstr "Presse-papier"
+
+msgid "Group recording canceled"
+msgstr "Enregistrement du groupe annulé"
+
+msgid "removed from above table"
+msgstr "effacé de la table au dessus"
+
+msgid "about foodstuff"
+msgstr "à propos de l'aliment"
+
+msgid "about foodstuff group"
+msgstr "à propos du groupe d'aliment"
+
+msgid "Foodstuff group"
+msgstr "Groupe d'aliment"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Source"
+msgstr "Référence"
+
+msgid "Input Date"
+msgstr "Date d'entrée"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Number of constituants"
+msgstr "Nombre de composants"
+
+msgid "Group details"
+msgstr "Composition du groupe"
+
+msgid "Number of items"
+msgstr "Nombre d'éléments"
+
+msgid "Deleting selected user element in database"
+msgstr "Suppression de l'éléments sélectionné dans la base de données"
+
+msgid "User element is deleted"
+msgstr "L'élément est détruit"
+
+msgid "Portions"
+msgstr "Rations et ingestas"
+
+msgid "Save portion"
+msgstr "Sauver la ration"
+
+msgid "No food to save"
+msgstr "Aucun aliment à sauver"
+
+msgid "Save portion in database"
+msgstr "Sauver la ration dans la base"
+
+msgid "Portion recording canceled"
+msgstr "Enregistrement de la portion annulé"
+
+msgid "Portion saved in database"
+msgstr "Ration sauvée dans la base de données"
+
+msgid "Portion duration (days)"
+msgstr "Durée portion (jours)"
+
+msgid "Components selected"
+msgstr "Composants selectionnés"
+
+# -- Tooltips --
+msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
+msgstr "Utiliser les jokers :\n* pour n caractère\n? pour un seul"
+msgid "Ex.:fr*s -> fruits, frais,..."
+msgstr "Ex.:fr*s -> fruits, frais,..."
+msgid "Use ? for character letters like é, â, ô..."
+msgstr "Utiliser ? à la place des caractères accentués : é,â,ô..."
+
+msgid "Click on food name to copy it in definition frame"
+msgstr "Cliquer sur un nom d'aliment pour le copier dans le cadre de définition"
+
+msgid "Use Ctrl and Shift keys"
+msgstr "Utiliser les touches Ctrl et Maj"
+msgid "for multiple selection"
+msgstr "pour la sélection multiple"
+msgid "Clic on header :"
+msgstr "Cliquer sur les entêtes :"
+msgid "- of 1st column to select or unselect all"
+msgstr "- de la première cololonne pour selectionner ou déselectionner tout"
+msgid "- of other column to sort rows"
+msgstr "- des autres colonnes pour trier les lignes"
+
+########################
+# SearchFoodFrame
+########################
+msgid "Filters definition"
+msgstr "Définition des filtres"
+
+msgid "Foodstufs matching filters (values for 100g)"
+msgstr "Aliments correspondants à la sélection (valeurs pour 100g)"
+
+msgid "Operator"
+msgstr "Opérateur"
+
+msgid "Levels"
+msgstr "Seuils"
+
+msgid "Search in data"
+msgstr "Rechercher"
+
+msgid "Reset filters"
+msgstr "Effacement des filtres"
+
+msgid "Please select a component for filter number"
+msgstr "Choisissez un composant pour le filtre numéro"
+
+msgid "Level must be a float number for filter number"
+msgstr "Le seuil doit être un nombre décimal pour le filtre numéro"
+
+msgid "Level must be greater than zero for filter number"
+msgstr "Le seuil doit être supérieur à zéro pour le filtre numéro"
+
+msgid "Send to calculator"
+msgstr "Placer dans le calculateur"
+
+msgid "Please select at least one operator in a filter line"
+msgstr "Sélectionnez au moins un opérator sur une ligne de filtre"
+
+msgid "Too many results"
+msgstr "Trop de résultats"
+
+msgid "on"
+msgstr "sur"
+
+msgid "displayed"
+msgstr "affichés"
+
+msgid "Please improve filters"
+msgstr "Veuillez améliorer les filtres"
+
+msgid "results matching filters"
+msgstr "résultats pour ces filtres"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Searching in database"
+msgstr "Recherche dans la base de données"
+
+
+# -- Tooltips --
+msgid "Set logical expressions on filters lines"
+msgstr "Remplissez les expressions sur les lignes de filtres"
+msgid "Filter line are combined with logical AND"
+msgstr "Les lignes de filtres sont combinées par un ET logique"
+msgid "To deselect a filter line, set its operator to empty value"
+msgstr "Pour déselectionner une ligne de filtre, effacez son opérateur"
+msgid "Click on first column header to select all"
+msgstr "Cliquez sur l'entête de la 1ère colone pour tout sélectionner"
+msgid "Click on a component column header to sort by this component values"
+msgstr "Cliquez sur une entête de colonne composant pour la trier par valeurs"
+msgid "Double-click on a result line to put it in calculator"
+msgstr "Double-cliquez sur un résultat pour le mettre dans le calculateur"
+msgid "Ctrl-C to put in clipboard"
+msgstr "Ctrl-C pour mettre dans le presse-papier"
+msgid "Double-clic to modify"
+msgstr "Double-cliquez pour modifier"
+
+########################
+# TableTreeView
+########################
+msgid "Please select at least one line in table"
+msgstr "Veuillez choisir au moins une ligne dans la liste des aliments"
+
+########################
+# DatabaseManager
+########################
+
+msgid "The database"
+msgstr "La base de données"
+
+msgid "can't be deleted"
+msgstr "ne peux pas être détruite"
+
+msgid "doesn't exist"
+msgstr "n'existe pas"
+
+
+########################
+# Database
+########################
+msgid "Problem with this new composition product (name already exist)"
+msgstr "Problème avec ce nouveau pdoduit de composition (son nom existe déjà)"
+
+msgid "Invalid food name : use more than one letter"
+msgstr "Nom d'aliment invalide : utilisez plus d'une lettre"
+
+msgid "Invalid family name : use more than one letter"
+msgstr "Nom de famille invalide : utilisez plus d'une lettre"
+
+msgid "Can't ungroup"
+msgstr "Impossible de dégrouper"
+
+msgid "not a group"
+msgstr "ce n'est pas un groupe"
+
+msgid "Can't delete"
+msgstr "Impossible de détruire"
+
+msgid "Not created by user"
+msgstr "Non créé par un utilisateur"
+
+msgid "used by"
+msgstr "utilisé par"
+
+msgid "Invalid pathology name : use more than one letter"
+msgstr "Nom de pathologie invalide : utilisez plus d'une lettre"
+
+msgid "No component given for that pathology"
+msgstr "Aucun composant fourni pour cette pathologie"
+
+msgid "No pathology selected"
+msgstr "Aucune pathologie choisie"
+
+msgid "Unknown pathologies selected"
+msgstr "Pathologies choisies inconnues"
+
+msgid "Portion code not found in database"
+msgstr "Code portion introuvable dans la base"
+
+msgid "Dates are invalid in following portions"
+msgstr "Les dates sont incorrectes dans les portions suivantes"
+
+msgid "dates corrected in portions table"
+msgstr "dates corrigées dans la table des portions"
+
+msgid "Conflict for products with same name and diferent codes"
+msgstr "Conflit pour des produits avec le même nom et des codes différents"
+
+msgid "ignore products from second database"
+msgstr "produits de la deuxième base ignorés"
+
+msgid "Energies recalculated by CalcAl"
+msgstr "Energies recalculées par CalcAl"
+
+msgid "results"
+msgstr "resultats"
+
+########################
+# DatabaseReaderFactory
+########################
+msgid "Reader for base"
+msgstr "Le lecteur pour la base"
+
+msgid "not found"
+msgstr "n'a pas été trouvé"
+
+msgid "can not be loaded"
+msgstr "ne peut pas être installé"
+
+msgid "Please contact support team"
+msgstr "Veuillez contacter le support technique"
+
+msgid "or"
+msgstr "ou"
+
+########################
+# Ciqual_Reader
+########################
+msgid "Ciqual version not supported"
+msgstr "Version Ciqual non autorisée"
+
+msgid "Only .zip or .csv files allowed"
+msgstr "Seul les fichiers .zip ou .csv sont acceptés"
+
+msgid "Ciqual file : invalid header field"
+msgstr "Fichier Ciqual : champ d'entête invalide"
+
+msgid "instead of"
+msgstr "au lieu de"
+
+
+########################
+# USDA_28_Reader
+########################
+msgid "Only .zip files allowed"
+msgstr "Seul les fichiers .zip sont acceptés"
+
+##########################
+# TkSimpleDialog
+##########################
+msgid "OK"
+msgstr "OK"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+##########################
+# FamilyNameChooser
+##########################
+msgid "Please give a family"
+msgstr "Veuillez entrer une famille"
+
+msgid "Please give a food name"
+msgstr "Veuillez entrer un nom d'aliment"
+
+msgid "Please give a food name that doesn't exist in database"
+msgstr "Veuillez entrer un nom d'aliment qui n'existe pas dans la base"
+
+##########################
+# PortionInfoChooser
+##########################
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "Portion name"
+msgstr "Nom de la ration"
+
+msgid "Today"
+msgstr "Aujourd'hui"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Patient code"
+msgstr "Code patient"
+
+msgid "Portion type"
+msgstr "Type de portion"
+
+msgid "Period Of day"
+msgstr "Moment de la journée"
+
+msgid "Erase filters"
+msgstr "Effacer les filtres"
+
+msgid "Filtered existing portions"
+msgstr "Portion existantes filtrées"
+
+msgid "Ration"
+msgstr "Ration"
+
+msgid "Ingesta"
+msgstr "Ingesta"
+
+msgid "Morning"
+msgstr "Matin"
+
+msgid "Noon"
+msgstr "Midi"
+
+msgid "Evening"
+msgstr "Soir"
+
+msgid "Day"
+msgstr "Jour"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Please give a portion name"
+msgstr "Veuillez renseigner le nom de la portion"
+
+msgid "Please give a date"
+msgstr "Veuillez renseigner la date"
+
+msgid "Please give a patient code"
+msgstr "Veuillez renseigner le code patient"
+
+msgid "Please give a portion type"
+msgstr "Veuillez renseigner le type de portion"
+
+msgid "Please give a period"
+msgstr "Veuillez renseigner le moment de la journée"
+
+msgid "Add or modify Portion in database"
+msgstr "Ajouter ou modifier une portion dans la base"
+
+msgid "Do you really want to modify this existing portion in database ?"
+msgstr "Voulez-vous vraiment modifier cette portion dans la base ?"
+
+msgid "Please modify portion identificators"
+msgstr "Veuillez modifier les identifiants de la portion"
+
+msgid "Loading values"
+msgstr "Chargement des valeurs"
+
+msgid "Please correct the date displayed"
+msgstr "Veuillez corriger la date affichée"
+
+msgid "Allowed formats for dates"
+msgstr "Formats autorisés pour les dates"
+
+msgid "DD/MM/YYYY"
+msgstr "JJ/MM/AAAA"
+
+msgid "DD/MM/YY"
+msgstr "JJ/MM/AA"
+
+msgid "YYYY/MM/DD"
+msgstr "AAAA/MM/JJ"
+
+##########################
+# PortionFrame
+##########################
+msgid "Portions matching filters"
+msgstr "Rations ou ingestas correspondants aux filtres"
+
+msgid "Selected portion added in calculator"
+msgstr "La ration selectionnée a été ajoutée dans le calculateur"
+
+msgid "All"
+msgstr "Toutes"
+
+msgid "Delete Portion"
+msgstr "Supprimer portion"
+
+msgid "Please select one and only one line in portion table"
+msgstr "Veuillez selectionner une ligne et une seule dans la table des portions"
+
+msgid "Destruction canceled"
+msgstr "Suppression annulée"
+
+msgid "Portion code"
+msgstr "Code ration"
+
+##########################
+# TotalLine
+##########################
+msgid "per day"
+msgstr "par jour"
+
+##########################
+# PathologiesFrame
+##########################
+
+msgid "Pathologies"
+msgstr "Pathologies"
+
+msgid "Defined pathologies"
+msgstr "Pathologies définies"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Pathology name"
+msgstr "Nom de la pathologie"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Reference"
+msgstr "Référence"
+
+msgid "Save pathology"
+msgstr "Sauver la pathologie"
+
+msgid "Select composants in calculator"
+msgstr "Activer les composants dans le calculateur"
+
+msgid "Clear pathology"
+msgstr "Effacer la pathologie"
+
+msgid "Pathology saved in database"
+msgstr "Pathologie sauvée dans la base"
+
+msgid "Pathology deleted in database"
+msgstr "Pathologie détruite dans la base"
+
+msgid "Please select one and only one pathology to delete"
+msgstr "Selectionnez une et une seule pathologie à détruire"
+
+msgid "Please select at least one pathology"
+msgstr "Selectionnez au moins une pathologie"
+
+msgid "Pathology definition"
+msgstr "Définition d'une pathologie"
+
+msgid "Componants\nto folllow\nfor this\npathology"
+msgstr "Composants\nà suivre\npour cette\npathologie"
+
+##########################
+# DateUtil
+##########################
+
+msgid "No separator in the date"
+msgstr "Pas de séparateur dans la date"
+
+msgid "Too many different separators in the date"
+msgstr "trop de séparateurs différents dans la date"
+
+msgid "Date is not valid"
+msgstr "la date n'est pas valide"
+
+##########################
+# PatientFrame
+##########################
+msgid "Patient selection"
+msgstr "Sélection du patient"
+
+msgid "New Patient"
+msgstr "Nouveau patient"
+
+msgid "Birth year"
+msgstr "Année de naissance"
+
+msgid "Gender"
+msgstr "Sexe"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Graph"
+msgstr "tracer"
+
+msgid "Patient monitoring"
+msgstr "Suivi du patient"
+
+# Gender
+msgid "M"
+msgstr "M"
+msgid "F"
+msgstr "F"
+msgid "U"
+msgstr "I"
+
+msgid "Appointment date"
+msgstr "Date du suivi"
+
+msgid "Weight (kg)"
+msgstr "Poids (kg)"
+
+msgid "Hip size"
+msgstr "Tour de hanche"
+
+msgid "Physical activity"
+msgstr "Activité physique"
+
+msgid "New monitoring..."
+msgstr "Nouveau suivi..."
+
+msgid "Notes for this patient"
+msgstr "Notes pour ce patient"
+
+msgid "Show rations"
+msgstr "Afficher les rations"
+
+msgid "Show pathologies"
+msgstr "Afficher les pathologies"
+
+msgid "Patient information"
+msgstr "Données concernant le patient"
+
+msgid "Patient pathologies"
+msgstr "Pathologies de ce patient"
+
+msgid "Monitored parameters"
+msgstr "Paramètres suivis"
+
+msgid "Modify a monitoring..."
+msgstr "Modifier un suivi..."
+
+msgid "Patient displayed"
+msgstr "Patient affiché"
+
+msgid "Patient code must be 3 capital letters followed by 3 digits"
+msgstr "Le code patient doit être 3 majuscules suivies de 3 chiffres"
+
+msgid "Patient info updated in database"
+msgstr "Information patient mises à jour dans la base"
+
+msgid "Patient age must be in"
+msgstr "L'age du patient doit être compris dans"
+
+msgid "Patient gender must be M F or U"
+msgstr "Le sexe du patient doit être M, F ou I"
+
+msgid "Patient size must be in"
+msgstr "La taille du patient doit être comprise entre"
+
+msgid "Patient created in database"
+msgstr "Le patient a été créé dans la base"
+
+msgid "Patient deleted in database"
+msgstr "Le patient a été supprimé de la base"
+
+msgid "Type new patient code or select an existant"
+msgstr "Tapez un nouveau code patient ou sélectionnez un existant"
+
