@@ -1,0 +1,74 @@
+CalcAl - packaging on Mac
+==================
+
+Modif setup.py
+DATA_FILES = ['CalcAl.ini', 'locale', 'resources']
+=========
+
+***********
+TO rebuild package :
+rm -rf build dist
+python3 setup.py py2app
+
+OPTION : —semi-standalone (-s)
+Pour utiliser un package python déjà installé sur l’ordinateur.
+
+***********
+To build the .dmg file
+ref : http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
+
+Create a R/W DMG. It must be larger than the result will be. In this example, the bash variable "size" contains the size in Kb and the contents of the folder in the "source" bash variable will be copied into the DMG:
+Size must be greater than size of app in Ko
+source=/Users/thierry/Documents/dietetique/CalcAl/dist/Calcal.app
+title=CalcAl
+size=2500
+hdiutil create -srcfolder "${source}" -volname "${title}" -fs HFS+ \
+-fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k pack.temp.dmg
+
+Mount the disk image, and store the device name (you might want to use
+sleep for a few seconds after this operation):
+device=$(hdiutil attach -readwrite -noverify -noautoopen "pack.temp.dmg" | \
+egrep '^/dev/' | sed 1q | awk '{print $1}')
+
+Store the background picture (in PNG format) in a folder called ".background" in the DMG,
+and store its name in the "backgroundPictureName" variable.
+backgroundPictureName=/Users/thierry/Documents/dietetique/CalcAl/resources/images/logo_about.png
+
+Create .background directory in the DMG window
+Use AppleScript to set the visual styles (name of .app must be in bash variable "applicationName", use variables for the other properties as needed):
+
+echo '
+tell application "Finder"
+tell disk "'${title}'"
+open
+set current view of container window to icon view
+set toolbar visible of container window to false
+set statusbar visible of container window to false
+set the bounds of container window to {400, 100, 885, 430}
+set theViewOptions to the icon view options of container window
+set arrangement of theViewOptions to not arranged
+set icon size of theViewOptions to 72
+set background picture of theViewOptions to file ".background:'${backgroundPictureName}'"
+make new alias file at container window to POSIX file "/Applications" with properties {name:"Applications"}
+set position of item "'${applicationName}'" of container window to {100, 100}
+set position of item "Applications" of container window to {375, 100}
+update without registering applications
+delay 5
+close
+end tell
+end tell
+' | osascript
+
+Finialize the DMG by setting permissions properly, compressing and releasing it:
+
+finalDMGName=CalcAl.dmg
+chmod -Rf go-w /Volumes/"${title}"
+sync
+sync
+hdiutil detach ${device}
+hdiutil convert "./pack.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${finalDMGName}"
+rm -f ./pack.temp.dmg
+
+OK sauf image de fond pas affiché
+
+Voir script https://github.com/andreyvit/create-dmg

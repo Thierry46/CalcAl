@@ -1,0 +1,68 @@
+############################################################################
+# File : usda_constituants.txt
+# Project : CalcAl
+# Author : Thierry Maillard
+# Role : USDA Database components description
+# Reference : sr28abbr.zip/sr28_doc.pdf p39 (46 with header)
+# Date : 29/7/2016
+# Format :
+#   - # Start a comment line
+#   - Position;Component_Name;Component_Code;Unit_Orig
+
+#  Notes :
+# - Position ; position of the component in a line of USDA Abbreviated File Format
+#   Start at 1
+# - Component_Name : USDA component name found in ref
+# - Component_Code : Code of this component equal to Ciqual component code if exists
+#   used for translation with locale/fr/componants_shortcuts.txt file
+# - Unit_Orig : unit for this component in the original document
+# - encoding : UTF8
+# - To ignore a component in USDA file, don't document it below
+############################################################################
+
+# USDA components description
+3;Water;400;g
+4;Energ_Kcal;328;kcal
+5;Protein;25000;g
+6;Lipid_Tot;40000;g
+7;Ash;100000;g
+8;Carbohydrt;31000;g
+9;Fiber_TD;34100;g
+10;Sugar_Tot;32000;g
+11;Calcium;10200;mg
+12;Iron;10260;mg
+13;Magnesium;10120;mg
+14;Phosphorus;10150;mg
+15;Potassium;10190;mg
+16;Sodium;10110;mg
+17;Zinc;10300;mg
+18;Copper;10290;mg
+19;Manganese;10251;mg
+20;Selenium;10340;μg
+21;Vit_C;55100;mg
+22;Thiamin;56100;mg
+23;Riboflavin;56200;mg
+24;Niacin;56310;mg
+25;Panto_acid;56400;mg
+26;Vit_B6;56500;mg
+27;Folate_Tot;100001;μg
+28;Folic_acid;100002;μg
+29;Food_Folate;100003;μg
+30;Folate_DFE;100004;μg
+31;Choline_Tot;100005;mg
+32;Vit_B12;56600;μg
+33;Vit_A_IU;100006;IU
+34;Vit_A_RAE;100007;μg
+35;Retinol;51200;μg
+36;Alpha_Carot;100008;μg
+37;Beta_Carot;51330;μg
+38;Beta_Crypt;100009;μg
+39;Lycopene;100010;μg
+40;Lut+Zea;100011;μg
+41;Vit_E;53100;mg
+42;Vit_D_mcg;52100;μg
+44;Vit_K;100012;μg
+45;FA_Sat;40302;g
+46;FA_Mono;40303;g
+47;FA_Poly;40304;g
+48;Cholestrl;75100;mg

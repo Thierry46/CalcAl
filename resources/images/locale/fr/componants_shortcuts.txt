@@ -1,0 +1,95 @@
+############################################################################
+# File : componants_shortcuts.txt
+# Project : CalcAl
+# Author : Thierry Maillard
+# Role : Associate Ciqual Components to shortcuts
+# Reference : CIQUAL Tables https://pro.anses.fr/tableciqual
+# Language : French
+# Date : 10/4/2016
+# Format :
+#   - # Start a comment line
+#   - Component Ciqual code = shortcut
+# Notes :
+# - Ciqual code are extracted from 1st line of CIQUAL Table file
+#   without component code
+# - encoding : UTF-8
+############################################################################
+
+# Conversion table :
+10110 = Sodium
+10120 = Magnésium
+10150 = Phosphore
+10190 = Potassium
+10200 = Calcium
+10251 = Manganèse
+10260 = Fer
+10290 = Cuivre
+10300 = Zinc
+10340 = Sélénium
+10530 = Iode
+25000 = Protéines
+25003 = Protéines brutes
+31000 = Glucides
+32000 = Sucres
+327 = Energie
+328 = Energie
+33110 = Amidon
+332 = Energie+fibres
+333 = Energie+fibres
+34000 = Polyols
+34100 = Fibres
+400 = Eau
+40000 = Lipides
+40302 = AG saturés
+40303 = AG monoinsaturés
+40304 = AG polyinsaturés
+40400 = AG butyrique
+40600 = AG caproïque
+40800 = AG caprylique
+41000 = AG caprique
+41200 = AG laurique
+41400 = AG myristique
+41600 = AG palmitique
+41800 = AG stéarique
+41819 = AG oléique
+41826 = AG linoléique
+41833 = AG a-linolénique
+42046 = AG arachidonique
+42053 = AG EPA
+42263 = AG DHA
+51200 = Rétinol
+51330 = Beta-Carotène
+52100 = Vitamine D
+53100 = Vitamine E
+54101 = Vitamine K1
+54104 = Vitamine K2
+55100 = Vitamine C
+56100 = Vitamine B1
+56200 = Vitamine B2
+56310 = Vitamine B3
+56400 = Vitamine B5
+56500 = Vitamine B6
+56600 = Vitamine B12
+56700 = Vitamine B9
+60000 = Alcool
+65000 = Acides organ.
+75100 = Cholestérol
+
+# Codes added for new Ciqual 2016 components
+101000 = Sel
+101001 = Chlorure
+
+# Codes added for USDA specifics components
+100000 = Cendres
+100001 = Folate, total
+100002 = Folique, acide
+100003 = Folate, alimentaire
+100004 = Folate, équiv. folate diet.
+100005 = Choline, total
+100006 = Vitamine A
+100007 = Vitamine A Retinol équiv.
+100008 = Alpha-Carotène
+100009 = Beta-Cryptoxanthin
+100010 = Lycopene
+100011 = Lutein+zeazanthin
+100012 = Vitamine K
