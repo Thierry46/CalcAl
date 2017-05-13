@@ -3,7 +3,7 @@
 # Object ... : Package CalcAl on mac and produce a .dmg file ready to istall by user
 # Author ... : MAILLARD Thierry (TMD)
 # Ref ...... : http://stackoverflow.com/questions/96882/how-do-i-create-a-nice-looking-dmg-for-mac-os-x-using-command-line-tools
-# Date ..... : 16/10/2015 - 17/11/2016
+# Date ..... : 16/10/2015 - 7/1/2017
 # Modif .... :
 
 # Get Version of app from CalcAl.ini and modify setup_model.py to create setup.py
@@ -12,7 +12,6 @@ version=$(grep "${idVersion}" CalcAl.ini | sed "s/${idVersion}//1")
 echo "Update version number : ${version} in setup.py"
 sed "s/VERSION_NUMBER/${version}/1" setup_model.py > setup.py
 
-cd /Users/thierry/Documents/dietetique/CalcAl
 echo "Build Mac app in dist directory"
 rm -rf build dist __pycache__ */__pycache__ resources/databases/test
 python3 setup.py py2app
@@ -23,7 +22,7 @@ source="dist/Calcal.app"
 # It must be larger than the result will be.
 # In this example, the bash variable "size" contains the size in Kb
 # Size must be greater than size of app in Ko
-size=2500
+size=3000
 hdiutil create -srcfolder "${source}" -volname "${title}" -fs HFS+ \
         -fsargs "-c c=64,a=16,e=16" -format UDRW -size ${size}k pack.temp.dmg
 

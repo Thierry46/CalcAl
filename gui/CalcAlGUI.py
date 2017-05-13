@@ -4,7 +4,7 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2016 - 30/11/2016
+Date : 7/5/2016 - 4/12/2016
 
 Role : GUI for CalcAl Food Calculator project.
 
@@ -33,7 +33,6 @@ import os.path
 import platform
 
 import tkinter
-#from tkinter import *
 from tkinter import ttk
 from tkinter import font
 
@@ -70,11 +69,13 @@ class CalcAlGUI(tkinter.Tk):
 
         # Adapt to screen size
         heightBigScreenInPixel = int(self.configApp.get('Limits', 'heightBigScreenInPixel'))
+        heightSmallScreenInPixel = int(self.configApp.get('Limits', 'heightSmallScreenInPixel'))
         screenheight = self.winfo_screenheight()
         self.bigScreen = (screenheight > heightBigScreenInPixel)
-        self.logger.debug("heightBigScreenInPixel=" + str(heightBigScreenInPixel) +
-                          ", screenheight=" + str(screenheight) +
-                          ", bigScreen=" + str(self.bigScreen))
+        self.tinyScreen = (screenheight < heightSmallScreenInPixel)
+        self.logger.debug("screenheight=" + str(screenheight) +
+                          ", bigScreen=" + str(self.bigScreen) +
+                          ", tinyScreen=" + str(self.tinyScreen))
 
         # Set handler called when closing main window
         self.protocol("WM_DELETE_WINDOW", self.onClosing)
@@ -263,17 +264,22 @@ class CalcAlGUI(tkinter.Tk):
         """ Return True if a big screen is detected > config('Limits', 'heightBigScreenInPixel') """
         return self.bigScreen
 
+    def isTinyScreen(self):
+        """ Return True if a tiny screen is detected
+            < config('Limits', 'heightSmallScreenInPixel') """
+        return self.tinyScreen
+
     def about(self):
         """ Display about box """
-        window = Toplevel(self.master)
+        window = tkinter.Toplevel(self.master)
 
         appName = self.configApp.get('Version', 'AppName')
         helv36 = font.Font(family="Helvetica", size=36, weight="bold")
-        Label(window, text=appName, font=helv36, fg="red").pack(side=tkinter.TOP)
+        tkinter.Label(window, text=appName, font=helv36, fg="red").pack(side=tkinter.TOP)
 
         version = _("Version") + " : " + self.configApp.get('Version', 'Number') + ' - ' + \
         self.configApp.get('Version', 'Date')
-        Label(window, text=version).pack(side=tkinter.TOP)
+        tkinter.Label(window, text=version).pack(side=tkinter.TOP)
 
         labelLogo = self.createButtonImage(window,
                                            imageRessourceName='logoAboutBox',
@@ -282,26 +288,30 @@ class CalcAlGUI(tkinter.Tk):
 
         emails = self.configApp.get('Version', 'EmailSupport1')  + ", " +\
                  self.configApp.get('Version', 'EmailSupport2')
-        Label(window, text=emails).pack(side=tkinter.TOP)
-        Label(window, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=tkinter.TOP)
+        tkinter.Label(window, text=emails).pack(side=tkinter.TOP)
+        tkinter.Label(window, text=_(self.configApp.get('Ciqual',
+                                                        'CiqualNote'))).pack(side=tkinter.TOP)
 
-        versionPython = "Python : " + platform.python_version() + ", Tk : " + str(TkVersion)
-        Label(window, text=versionPython).pack(side=tkinter.TOP)
+        versionPython = "Python : " + platform.python_version() + ", Tk : " + str(tkinter.TkVersion)
+        tkinter.Label(window, text=versionPython).pack(side=tkinter.TOP)
         osMachine = _("On") + " : " + platform.system() + ", " + platform.release()
-        Label(window, text=osMachine).pack(side=tkinter.TOP)
+        tkinter.Label(window, text=osMachine).pack(side=tkinter.TOP)
 
     def createButtonImage(self, parent, imageRessourceName=None, text4Image=None):
         """ Create a button or label with an image and a text dipayed """
         compoundValue = 'image'
         if text4Image:
             compoundValue = 'top'
-        imagePath = os.path.join(self.dirProject,
+        if imageRessourceName is not None:
+            imagePath = os.path.join(self.dirProject,
                                  self.configApp.get('Resources', 'ResourcesDir'),
                                  self.configApp.get('Resources', 'ImagesDir'),
                                  self.configApp.get('Resources', imageRessourceName))
-        imgobj = tkinter.PhotoImage(file=imagePath)
-        buttonImage = ttk.Button(parent, image=imgobj, compound=compoundValue, text=text4Image)
-        buttonImage.img = imgobj # store a reference to the image as an attribute of the widget
+            imgobj = tkinter.PhotoImage(file=imagePath)
+            buttonImage = ttk.Button(parent, image=imgobj, compound=compoundValue, text=text4Image)
+            buttonImage.img = imgobj # store a reference to the image as an attribute of the widget
+        else:
+            buttonImage = ttk.Button(parent, text=text4Image)
         return buttonImage
 
     def copyInClipboard(self, text):

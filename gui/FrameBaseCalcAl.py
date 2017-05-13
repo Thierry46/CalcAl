@@ -3,7 +3,7 @@
 ************************************************************************************
 Classe : FrameBaseCalcAl
 Auteur : Thierry Maillard (TMD)
-Date : 12/3/2016 - 28/6/2016
+Date : 12/3/2016 - 4/12/2016
 
 Rôle : Define base frame for all notebook panels.
 ************************************************************************************
@@ -33,13 +33,15 @@ class FrameBaseCalcAl(tkinter.Frame):
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
         self.delaymsTooltips = int(self.configApp.get('Limits', 'delaymsTooltips'))
 
-        # Logo in top frame
-        imageFrame = tkinter.Frame(self)
-        imageFrame.pack(side=tkinter.TOP)
-        self.buttonTopImage = self.mainWindow.createButtonImage(imageFrame, imageRessourceName,
+        # V0.44 : Don't display banner on Frames only screen is tiny (pocket PC)
+        if not self.mainWindow.isTinyScreen():
+            # Logo in top frame
+            imageFrame = tkinter.Frame(self)
+            imageFrame.pack(side=tkinter.TOP)
+            self.buttonTopImage = self.mainWindow.createButtonImage(imageFrame, imageRessourceName,
                                                                 text4Image)
-        self.buttonTopImage.configure(command=self.mainWindow.about)
-        self.buttonTopImage.pack(side=tkinter.TOP)
+            self.buttonTopImage.configure(command=self.mainWindow.about)
+            self.buttonTopImage.pack(side=tkinter.TOP)
 
     def getMainWindow(self):
         """ Return mainWindow """

@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Database
 Author : Thierry Maillard (TMD)
-Date  : 23/3/2016 - 1/12/2016
+Date  : 23/3/2016 - 7/1/2017
 
 Role : Define a database and method to create, consult and save it.
 ************************************************************************************
@@ -117,11 +117,15 @@ class Database():
             partWildcard may contain wilcards handle by sqlite3 like * or ?
             The asterisk sign represents zero or multiple numbers or characters.
             The ? represents a single number or character.
-            Case is ignored"""
+            1st letter case is ignored
+            27/12/2016 : Pb capitalising all letters when there is accent."""
         cursor = self.connDB.cursor()
-        partWildcard = "*" + partWildcard + "*"
-        cursor.execute("SELECT name FROM products WHERE UPPER(name) GLOB ? ORDER BY name",
-                       (partWildcard.upper(),))
+        partWildcardLower = "*" + partWildcard + "*"
+        partWildcardCap = "*" + partWildcard.capitalize() + "*"
+        cursor.execute("""SELECT name FROM products
+        				WHERE name GLOB ? OR name GLOB ?
+        				ORDER BY name""",
+                       (partWildcardLower, partWildcardCap))
         listeFoodstuffName = [name[0] for name in cursor.fetchall()]
         cursor.close()
         self.logger.info(str(len(listeFoodstuffName)) + " products names available for " +
@@ -338,12 +342,17 @@ class Database():
 
     def getInfoComponent(self, codeProduct, codeComponent):
         """ Return a dictionnary of info for a given product component in this database
-            V0.36 : 26/10/2016 """
+            V0.36 : 26/10/2016
+            V0.45 : Return empty values if component is not found in table """
         self.logger.debug("Database : getInfoComponent for codeProduct=" + str(codeProduct) +
                           ", codeComponent=" + str(codeComponent))
         dictComponent = dict()
         dictComponent["productCode"] = codeProduct
         dictComponent["constituantCode"] = codeComponent
+        dictComponent["name"] = ""
+        dictComponent["shortcut"] = ""
+        dictComponent["value"] = 0.0
+        dictComponent["qualifValue"] = '-'
 
         cursor = self.connDB.cursor()
         # Get info about component for a product
@@ -352,21 +361,19 @@ class Database():
                         WHERE code=?""",
                        (codeComponent,))
         result = cursor.fetchone()
-        dictComponent["name"] = result[0]
-        dictComponent["shortcut"] = result[1]
+        if result is not None:
+            dictComponent["name"] = result[0]
+            dictComponent["shortcut"] = result[1]
 
-        # Get values
-        cursor.execute("""SELECT  value, qualifValue
+            # Get values
+            cursor.execute("""SELECT value, qualifValue
                           FROM constituantsValues, constituantsNames
                           WHERE productCode=? AND constituantCode=?""",
-                       (codeProduct, codeComponent))
-        result = cursor.fetchone()
-        if result:
-            dictComponent["value"] = result[0]
-            dictComponent["qualifValue"] = result[1]
-        else:
-            dictComponent["value"] = 0.0
-            dictComponent["qualifValue"] = '-'
+                           (codeProduct, codeComponent))
+            result = cursor.fetchone()
+            if result:
+                dictComponent["value"] = result[0]
+                dictComponent["qualifValue"] = result[1]
         cursor.close()
         return dictComponent
 
@@ -411,24 +418,66 @@ class Database():
         self.connDB.commit()
         cursor.close()
 
-    def joinDatabase(self, dbNameSecondary):
+    def joinDatabase(self, dbNameSecondary, isUpdate):
         """ Join this database to an other : dbNameSecondary
-            intersection, current = master database has the priority
+            intersection, current = main database has the priority
+            dbNameSecondary : database used to modify main database
+            isUpdate : True if products of main database must be updated
             in v0.30 : groups created by user are not merged"""
-        self.logger.debug("Database : joinDatabase with " + dbNameSecondary)
+        self.logger.debug("Database/joinDatabase with " + dbNameSecondary +
+                          " mode update=" + str(isUpdate))
+
         cursor = self.connDB.cursor()
         cursor.execute("ATTACH DATABASE ? AS secondDB", (dbNameSecondary,))
+
+        # V0.45 : When updating a database : delete all information present in 2nd database
+        #   theese information are added after
+        if isUpdate:
+            self.logger.debug("Database/joinDatabase delete all information to be updated")
+            cursor.execute("""DELETE FROM main.products
+                                WHERE main.products.code > 0 AND
+                                    main.products.code IN
+                                    (SELECT secondDB.products.code FROM secondDB.products)""")
+            cursor.execute("""DELETE FROM main.constituantsValues
+                                WHERE main.constituantsValues.productCode > 0 AND
+                                    main.constituantsValues.productCode IN
+                                    (SELECT secondDB.products.code FROM secondDB.products)""")
+
+        self.logger.debug("Database/joinDatabase add all information from " + dbNameSecondary)
+
+        # V0.45 : UNIQ contrainst on name in products table
+        #   Select for elimination products in double :
+        #   with same name and  different code
+        cursor.execute("""SELECT main.products.name, secondDB.products.code
+            FROM main.products, secondDB.products
+            WHERE main.products.code > 0 AND
+                  main.products.name = secondDB.products.name AND
+                  main.products.code != secondDB.products.code  """)
+        results = cursor.fetchall()
+        if results is not None:
+            namesDoubleProducts = [result[0] for result in results]
+            codesDoubleProducts = ",".join([str(result[1]) for result in results])
+            self.logger.warning("Database/joinDatabase() : " +
+                                _("Conflict for products with same name and diferent codes") +
+                                " : " + str(namesDoubleProducts) + "\n" +
+                                _("ignore products from second database") + " " +
+                                dbNameSecondary)
+
         cursor.execute("""INSERT INTO main.products
                           SELECT * FROM secondDB.products
                             WHERE secondDB.products.code > 0 AND
                                 secondDB.products.code NOT IN (
-                                SELECT main.products.code FROM main.products)""")
+                                SELECT main.products.code FROM main.products) AND
+                                secondDB.products.code NOT IN
+                                    (""" + codesDoubleProducts +")")
         cursor.execute("""INSERT INTO main.constituantsValues
                           SELECT * FROM secondDB.constituantsValues
                             WHERE secondDB.constituantsValues.productCode > 0 AND
                                   secondDB.constituantsValues.productCode NOT IN (
                                   SELECT main.constituantsValues.productCode
-                                  FROM main.constituantsValues)""")
+                                        FROM main.constituantsValues) AND
+                                  secondDB.constituantsValues.productCode NOT IN
+                                        (""" + codesDoubleProducts +")")
         cursor.execute("""INSERT INTO main.constituantsNames
                             SELECT * FROM secondDB.constituantsNames
                             WHERE secondDB.constituantsNames.code NOT IN (
@@ -533,7 +582,8 @@ class Database():
             for code in CodePatents:
                 cursor.execute("INSERT INTO patientInfo(code) VALUES(?)", (code[0],))
                 nbInsertedPatient += 1
-            self.logger.warning(str(nbInsertedPatient) + " " +_("patient get from portion table"))
+            if nbInsertedPatient > 0:
+                self.logger.warning(str(nbInsertedPatient) + " " +_("patient get from portion table"))
 
         self.connDB.commit()
         cursor.close()
@@ -743,7 +793,7 @@ class Database():
         self.logger.debug("Database/getDefinedPathologiesNames : " + str(listNames))
         return listNames
 
-    def deletePathology(self, name):
+    def deletePathology(self, name, forPatient=False):
         """ Delete the name pathology in this database
         V0.40 : 22/11/2016 """
         self.logger.debug("Database/deletePathology for name " + name)
@@ -752,6 +802,8 @@ class Database():
         # Delete elements values
         cursor.execute("DELETE FROM pathologiesConstituants WHERE pathologyName=?", (name,))
         cursor.execute("DELETE FROM pathologies WHERE name=?", (name,))
+        if forPatient:
+            cursor.execute("DELETE FROM patientPathologies WHERE pathologyName=?", (name,))
 
         # Commit to be seen by other database connexion
         self.connDB.commit()
@@ -904,3 +956,97 @@ class Database():
         cursor.execute("DELETE FROM portions WHERE patient=?", (patientCode,))
         self.connDB.commit()
         cursor.close()
+
+    def correctEnergyKcal(self):
+        """ V0.47 : correct problem in Ciqual 2016 table
+            Compute energy in kcal for products in database without energy provided """
+
+        # Get energy codes useful to compute missing energies
+        energyTotalKcalCode = self.configApp.get('Energy', 'EnergyTotalKcalCode')
+        energyTotalKJCode = self.configApp.get('Energy', 'EnergyTotalKJCode')
+        CoefKcal2Kj = float(self.configApp.get('Energy', 'CoefKcal2Kj'))
+        listComp = self.configApp.get('Energy', 'EnergeticComponentsCodes')
+        energeticComponentsCodes = [int(code) for code in listComp.split(";")]
+        energyCodesStr = listComp.replace(";", ",")
+        # Suppress sugar components already included in glucide
+        sugarCode = self.configApp.get('Energy', 'SugarCode')
+        energyCodesStr = energyCodesStr.replace(sugarCode, '')
+        energyCodesStr = energyCodesStr.replace(',,', ',')
+        if energyCodesStr.endswith(','):
+            energyCodesStr = energyCodesStr[:-1]
+        listEnergy = self.configApp.get('Energy', 'EnergySuppliedByComponents')
+        energySuppliedByComponents = [float(value) for value in listEnergy.split(";")]
+        assert len(energeticComponentsCodes) == len(energySuppliedByComponents), \
+            "Pb .ini : Energy keys EnergeticComponentsCodes and EnergeticComponentsCodes " + \
+            "have the same length !"
+        dictCoefEnergy = dict()
+        for numComp, code in enumerate(energeticComponentsCodes):
+            dictCoefEnergy[code] = energySuppliedByComponents[numComp]
+
+        # Select all products and their energetics components
+        # from database when their energy in kcal is not supplies
+        cursor = self.connDB.cursor()
+        cursor.execute("""
+                SELECT productCode, constituantCode, value
+                  FROM constituantsValues
+                  WHERE productCode IN (
+                    SELECT code FROM products WHERE code NOT IN (
+                        SELECT code FROM products, constituantsValues
+                            WHERE code = productCode AND constituantCode=?))
+                    AND constituantCode IN (""" + energyCodesStr + ") ORDER BY productCode",
+                       (energyTotalKcalCode,))
+        results = cursor.fetchall()
+
+        # Compute energy in kcal and kJ for each products found
+        listCorrectedEnergies = []
+        listCodesProducts = []
+        productCodePrev = 0
+        energy = 0.0
+        nbProducts = 0
+        for result in results:
+            productCode, constituantCode, value = result
+            if productCode != productCodePrev: # Change of products
+                nbProducts += 1
+                if productCodePrev != 0: # Register computed energy
+                    listCorrectedEnergies.append((productCodePrev,
+                                                      int(energyTotalKcalCode),
+                                                      energy, 'N'))
+                    listCorrectedEnergies.append((productCodePrev,
+                                                    int(energyTotalKJCode),
+                                                    energy * CoefKcal2Kj, 'N'))
+                    listCodesProducts.append(str(productCodePrev))
+                productCodePrev = productCode
+                energy = 0.0
+            energy += value * dictCoefEnergy[constituantCode]
+        if productCodePrev != 0:
+            listCorrectedEnergies.append((productCodePrev,
+                                              int(energyTotalKcalCode),
+                                              energy, 'N'))
+            listCorrectedEnergies.append((productCodePrev,
+                                            int(energyTotalKJCode),
+                                            energy * CoefKcal2Kj, 'N'))
+            listCodesProducts.append(str(productCodePrev))
+
+        # Message to user
+        if len(listCorrectedEnergies) == 0:
+            self.logger.debug("Database/correctEnergyKcal() : All energies are OK")
+        else:
+            self.logger.warning("Database/correctEnergyKcal() : Energies kcal modification for " +
+                                str(nbProducts) + " products !")
+
+        # Create all missing enegy in kcal components in constituantsValues table
+        cursor.executemany("""
+            INSERT INTO constituantsValues(productCode, constituantCode, value, qualifValue)
+                VALUES(?, ?, ?, ?)
+            """, listCorrectedEnergies)
+
+        # Update product table source code to indicate that Energy is corrected
+        listCodesProductsStr = ",".join(listCodesProducts)
+        cursor.execute("""SELECT code, source
+                            FROM products
+                            WHERE code IN (""" + listCodesProductsStr + ")")
+        results = cursor.fetchall()
+        listCodesProductsSourceM = [[source + " (" + _("Energies recalculated by CalcAl") + " !)", code]
+                                    for code, source in results]
+        cursor.executemany("UPDATE products SET source=? WHERE code=?",
+                           listCodesProductsSourceM)

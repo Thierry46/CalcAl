@@ -3,17 +3,17 @@
 ************************************************************************************
 Name : EnergyFrame
 Role : Frame to display energy given by food table
-Date  : 11/11/2016
+Date  : 11/11/2016 - 19/12/2016
 ************************************************************************************
 """
 import logging
 
-from tkinter import *
+import tkinter
 
 from util import CalcalExceptions
 from . import TableTreeView
 
-class EnergyFrame(LabelFrame):
+class EnergyFrame(tkinter.LabelFrame):
     """ Frame to display energy given by food table """
     def __init__(self, parent, mainWindow, calculatorFrameModel, configApp):
         super(EnergyFrame, self).__init__(parent, text=_("Energy given by foods"))
@@ -41,7 +41,7 @@ class EnergyFrame(LabelFrame):
                                  int(self.configApp.get('Size', 'energyTableColMinWdth')),
                                  selectmode="extended")
         self.energyTable.setColor('normalRow', self.bgValueComp)
-        self.energyTable.pack(side=TOP)
+        self.energyTable.pack(side=tkinter.TOP)
         self.energyTable.setBinding('<Command-c>', self.copyEnergyInClipboard)
         self.energyTable.setBinding('<Control-c>', self.copyEnergyInClipboard)
 
@@ -54,7 +54,7 @@ class EnergyFrame(LabelFrame):
             message = _("Error") + " : " + str(exc) + " !"
         self.mainWindow.setStatusText(message, True)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         if observable == self.calculatorFrameModel:
             self.logger.debug("EnergyFrame received from its model : " + event)
@@ -64,6 +64,8 @@ class EnergyFrame(LabelFrame):
                 elif event == "CHANGE_FOOD":
                     self.updateEnergyTable()
                 elif event == "DELETE_FOOD":
+                    self.updateEnergyTable()
+                elif event == "ERASE_FOOD":
                     self.updateEnergyTable()
                 elif event == "DISPLAY_PORTION":
                     self.updateEnergyTable()

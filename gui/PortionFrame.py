@@ -8,8 +8,9 @@ Date   : 25/9/2016 - 13/11/2016
 Role : Define portion frame content.
 ************************************************************************************
 """
-from tkinter import *
+import tkinter
 from tkinter.ttk import Combobox
+from tkinter import messagebox
 
 from util import CalcalExceptions
 from . import CallTypWindow
@@ -29,53 +30,53 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.patientFrameModel.addObserver(self)
 
         # Filters frame
-        filtersFrame = LabelFrame(self, text=_("Filters"))
-        filtersFrame.pack(side=TOP)
-        Label(filtersFrame, text=_("Portion name")).grid(row=0, column=0, sticky=E)
-        self.nameVar = StringVar()
+        filtersFrame = tkinter.LabelFrame(self, text=_("Filters"))
+        filtersFrame.pack(side=tkinter.TOP)
+        tkinter.Label(filtersFrame, text=_("Portion name")).grid(row=0, column=0, sticky=tkinter.E)
+        self.nameVar = tkinter.StringVar()
         self.nameVar.trace_variable("w", self.updateSearchResultTable)
-        nameEntry = Entry(filtersFrame, textvariable=self.nameVar)
-        nameEntry.grid(row=0, column=1, sticky=W)
+        nameEntry = tkinter.Entry(filtersFrame, textvariable=self.nameVar)
+        nameEntry.grid(row=0, column=1, sticky=tkinter.W)
         nameEntry.focus_set()
 
-        Label(filtersFrame, text=_("Date")).grid(row=1, column=0, sticky=E)
-        self.dateVar = StringVar()
+        tkinter.Label(filtersFrame, text=_("Date")).grid(row=1, column=0, sticky=tkinter.E)
+        self.dateVar = tkinter.StringVar()
         self.dateVar.trace_variable("w", self.updateSearchResultTable)
-        Entry(filtersFrame, textvariable=self.dateVar).grid(row=1, column=1, sticky=W)
+        tkinter.Entry(filtersFrame, textvariable=self.dateVar).grid(row=1, column=1, sticky=tkinter.W)
 
-        Label(filtersFrame, text=_("Patient code")).grid(row=2, column=0, sticky=E)
+        tkinter.Label(filtersFrame, text=_("Patient code")).grid(row=2, column=0, sticky=tkinter.E)
         self.patientCodeCombobox = Combobox(filtersFrame, exportselection=0,
                                             state="readonly", width=20)
         self.patientCodeCombobox.bind('<<ComboboxSelected>>', self.updateSearchResultTable)
-        self.patientCodeCombobox.grid(row=2, column=1, sticky=W)
+        self.patientCodeCombobox.grid(row=2, column=1, sticky=tkinter.W)
 
-        Label(filtersFrame, text=_("Portion type")).grid(row=0, column=2, sticky=E)
-        portionTypeFrame = Frame(filtersFrame)
-        portionTypeFrame.grid(row=0, column=3, sticky=EW)
-        self.portionTypeVar = StringVar()
+        tkinter.Label(filtersFrame, text=_("Portion type")).grid(row=0, column=2, sticky=tkinter.E)
+        portionTypeFrame = tkinter.Frame(filtersFrame)
+        portionTypeFrame.grid(row=0, column=3, sticky=tkinter.EW)
+        self.portionTypeVar = tkinter.StringVar()
         self.portionTypeVar.trace_variable("w", self.updateSearchResultTable)
-        Radiobutton(portionTypeFrame, text=_("All"),
-                    variable=self.portionTypeVar, value="").pack(side=LEFT)
-        Radiobutton(portionTypeFrame, text=_("Ration"),
-                    variable=self.portionTypeVar, value=_("Ration")).pack(side=LEFT)
-        Radiobutton(portionTypeFrame, text=_("Ingesta"),
-                    variable=self.portionTypeVar, value=_("Ingesta")).pack(side=LEFT)
+        tkinter.Radiobutton(portionTypeFrame, text=_("All"),
+                    variable=self.portionTypeVar, value="").pack(side=tkinter.LEFT)
+        tkinter.Radiobutton(portionTypeFrame, text=_("Ration"),
+                    variable=self.portionTypeVar, value=_("Ration")).pack(side=tkinter.LEFT)
+        tkinter.Radiobutton(portionTypeFrame, text=_("Ingesta"),
+                    variable=self.portionTypeVar, value=_("Ingesta")).pack(side=tkinter.LEFT)
 
-        Label(filtersFrame, text=_("Period Of day")).grid(row=1, column=2, sticky=E)
+        tkinter.Label(filtersFrame, text=_("Period Of day")).grid(row=1, column=2, sticky=tkinter.E)
         periodValues = ["", _("Morning"), _("Noon"), _("Evening"), _("Day"), _("Other")]
         self.periodCombobox = Combobox(filtersFrame, exportselection=0, values=periodValues,
                                        state="readonly", width=10)
-        self.periodCombobox.grid(row=1, column=3, sticky=W)
+        self.periodCombobox.grid(row=1, column=3, sticky=tkinter.W)
         self.periodCombobox.bind('<<ComboboxSelected>>', self.updateSearchResultTable)
 
-        Button(filtersFrame, text=_("Erase filters"),
+        tkinter.Button(filtersFrame, text=_("Erase filters"),
                command=self.clear).grid(row=3, columnspan=4)
 
         # resultsFrame components definition
-        resultsActionFrame = Frame(self)
-        resultsActionFrame.pack(side=TOP)
-        resultsFrame = LabelFrame(resultsActionFrame, text=_("Portions matching filters"))
-        resultsFrame.pack(side=LEFT)
+        resultsActionFrame = tkinter.Frame(self)
+        resultsActionFrame.pack(side=tkinter.TOP)
+        resultsFrame = tkinter.LabelFrame(resultsActionFrame, text=_("Portions matching filters"))
+        resultsFrame.pack(side=tkinter.LEFT)
         # Code field is necessary because first column of TableTreeView must contain uniq values
         firstColumns = [_("Code"), _("Portion name"), _("Date"), _("Patient code"),
                         _("Portion type"), _("Period Of day")]
@@ -87,7 +88,7 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                      selectmode="extended")
         self.portionResultTable.setColor('normalRow', self.configApp.get('Colors',
                                                                          'colorPortionTable'))
-        self.portionResultTable.pack(side=TOP, fill=BOTH, expand=YES)
+        self.portionResultTable.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
         self.portionResultTable.setBinding('<Double-Button-1>', self.putInCalculator)
         self.portionResultTable.setBinding('<Command-c>', self.copyInClipboard)
         self.portionResultTable.setBinding('<Control-c>', self.copyInClipboard)
@@ -101,16 +102,16 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         _("Ctrl-C to put in clipboard"),
                         2 * self.delaymsTooltips)
         # Command buttons
-        ButtonFrame = Frame(resultsActionFrame)
-        ButtonFrame.pack(side=LEFT)
-        Button(ButtonFrame, text=_("Calculator"),
-               command=self.putInCalculator).pack(side=TOP)
-        Button(ButtonFrame, text=_("Delete Portion"),
-               command=self.deletePortion).pack(side=TOP)
-        Button(ButtonFrame, text=_("Clipboard"),
-               command=self.copyInClipboard).pack(side=TOP)
+        ButtonFrame = tkinter.Frame(resultsActionFrame)
+        ButtonFrame.pack(side=tkinter.LEFT)
+        tkinter.Button(ButtonFrame, text=_("Calculator"),
+               command=self.putInCalculator).pack(side=tkinter.TOP)
+        tkinter.Button(ButtonFrame, text=_("Delete Portion"),
+               command=self.deletePortion).pack(side=tkinter.TOP)
+        tkinter.Button(ButtonFrame, text=_("Clipboard"),
+               command=self.copyInClipboard).pack(side=tkinter.TOP)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         try:
             if observable == self.calculatorFrameModel:

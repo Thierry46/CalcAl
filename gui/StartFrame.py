@@ -3,12 +3,12 @@
 ************************************************************************************
 Class  : StartFrame
 Author : Thierry Maillard (TMD)
-Date  : 12/3/2016 - 29/8/2016
+Date  : 12/3/2016 - 18/12/2016
 
 Role : Define start frame content.
 ************************************************************************************
 """
-from tkinter import *
+import tkinter
 from tkinter import messagebox
 
 import os
@@ -33,21 +33,21 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseDirPath = os.path.join(ressourcePath,
                                             self.configApp.get('Resources', 'DatabaseDir'))
 
-        Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=TOP)
-        centerFrame = Frame(self)
-        centerFrame.pack(side=TOP)
-        buttonFrame = Frame(centerFrame)
-        buttonFrame.pack(side=LEFT)
-        databaseFrame = LabelFrame(centerFrame, text=_('Choose a database to use'))
-        databaseFrame.pack(side=LEFT)
+        tkinter.Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=tkinter.TOP)
+        centerFrame = tkinter.Frame(self)
+        centerFrame.pack(side=tkinter.TOP)
+        buttonFrame = tkinter.Frame(centerFrame)
+        buttonFrame.pack(side=tkinter.LEFT)
+        databaseFrame = tkinter.LabelFrame(centerFrame, text=_('Choose a database to use'))
+        databaseFrame.pack(side=tkinter.LEFT)
 
         # Databases list frame definition
-        self.databaseListbox = Listbox(databaseFrame, width=40, height=4)
+        self.databaseListbox = tkinter.Listbox(databaseFrame, width=40, height=4)
         self.updateDatabaseListbox()
         self.databaseListbox.grid(row=0, columnspan=2)
-        scrollbarRight = Scrollbar(databaseFrame, orient=VERTICAL,
+        scrollbarRight = tkinter.Scrollbar(databaseFrame, orient=tkinter.VERTICAL,
                                    command=self.databaseListbox.yview)
-        scrollbarRight.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarRight.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.databaseListbox.config(yscrollcommand=scrollbarRight.set)
         CallTypWindow.createToolTip(self.databaseListbox,
                                     _("Select a database\nand click startbutton"),
@@ -57,22 +57,23 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseListbox.bind('<Return>', self.start)
         self.databaseListbox.bind('<KP_Enter>', self.start)
 
-        Button(buttonFrame, text=_('New'), command=self.newDB).pack(side=TOP)
-        self.infoButton = Button(buttonFrame, text=_('Info'),
-                                 command=self.infoDB, state=DISABLED)
-        self.infoButton.pack(side=TOP)
-        self.deleteButton = Button(buttonFrame, text=_('Delete'),
-                                   command=self.deleteDB, state=DISABLED)
-        self.deleteButton.pack(side=TOP)
-        self.joinButton = Button(buttonFrame, text=_('Join'), command=self.joinDB, state=DISABLED)
-        self.joinButton.pack(side=TOP)
+        tkinter.Button(buttonFrame, text=_('New'), command=self.newDB).pack(side=tkinter.TOP)
+        self.infoButton = tkinter.Button(buttonFrame, text=_('Info'),
+                                 command=self.infoDB, state=tkinter.DISABLED)
+        self.infoButton.pack(side=tkinter.TOP)
+        self.deleteButton = tkinter.Button(buttonFrame, text=_('Delete'),
+                                   command=self.deleteDB, state=tkinter.DISABLED)
+        self.deleteButton.pack(side=tkinter.TOP)
+        self.joinButton = tkinter.Button(buttonFrame, text=_('Join'), command=self.joinDB,
+                                 state=tkinter.DISABLED)
+        self.joinButton.pack(side=tkinter.TOP)
 
         self.startButton = self.mainWindow.createButtonImage(centerFrame,
                                                              imageRessourceName='btn_start',
                                                              text4Image=_("Start"))
         self.startButton.configure(command=self.start)
 
-        self.startButton.pack(side=LEFT)
+        self.startButton.pack(side=tkinter.LEFT)
 
     def clicListBoxItem(self, evt):
         """ Activate New and Delete button when a database is chosen """
@@ -80,10 +81,10 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         if index:
             dbName = self.databaseListbox.get(index)
             self.logger.info(dbName + " " +  _('chosen'))
-            self.startButton.configure(state=NORMAL)
-            self.deleteButton.configure(state=NORMAL)
-            self.infoButton.configure(state=NORMAL)
-            self.joinButton.configure(state=NORMAL)
+            self.startButton.configure(state=tkinter.NORMAL)
+            self.deleteButton.configure(state=tkinter.NORMAL)
+            self.infoButton.configure(state=tkinter.NORMAL)
+            self.joinButton.configure(state=tkinter.NORMAL)
             self.mainWindow.closeDatabase()
             self.mainWindow.enableTabCalculator(False)
 
@@ -175,7 +176,6 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     self.mainWindow.setStatusText(_("Database") + " : " + dbName + " " +
                                                   _("deleted"))
                     # Python error because DISABLED icon is not define
-                    #self.startButton.configure(state=DISABLED)
             except OSError as exc:
                 message = _("Error") + " : " + str(exc) + " !"
                 self.mainWindow.setStatusText(message, True)
@@ -204,7 +204,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             if results is None:
                 raise ValueError(_("New database canceled"))
             self.mainWindow.closeDatabase()
-            self.databaseManager.joinDatabase(dbNameMaster, results[0], results[1])
+            self.databaseManager.joinDatabase(dbNameMaster, results[0], results[1], results[2])
             self.updateDatabaseListbox()
             self.mainWindow.setStatusText(_("Database joined in") + " " + results[1])
         except ValueError as exc:
@@ -213,6 +213,6 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def updateDatabaseListbox(self):
         """ update databaseListbox with names in ressouces dir """
-        self.databaseListbox.delete(0, END)
+        self.databaseListbox.delete(0, tkinter.END)
         for dbFile in self.databaseManager.getListDatabaseInDir():
-            self.databaseListbox.insert(END, dbFile)
+            self.databaseListbox.insert(tkinter.END, dbFile)

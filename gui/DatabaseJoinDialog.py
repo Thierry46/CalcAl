@@ -2,11 +2,11 @@
 """
 ************************************************************************************
 Name : DatabaseJoinDialog
-Role : Window used to join two Database
-Date  : 26/8/2016
+Role : Window used to join two Databases
+Date  : 26/8/2016 - 18/12/2016
 ************************************************************************************
 """
-from tkinter import *
+import tkinter
 from tkinter import messagebox
 from tkinter.ttk import Combobox
 
@@ -22,22 +22,36 @@ class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
         self.delaymsTooltips = int(self.configApp.get('Limits', 'delaymsTooltips'))
         super(DatabaseJoinDialog, self).__init__(parent, title)
         self.dbNameResult = ""
+        self.isUpdate = False
 
     def body(self, master):
         """ Body content of this dialog """
-        Label(master, text=_("Please choose secondary database") + " :").pack(side=TOP)
+        tkinter.Label(master,
+                      text=_("Please choose secondary database") + " :").pack(side=tkinter.TOP)
         listOtherDatabase = [databaseName
                              for databaseName in self.databaseManager.getListDatabaseInDir()
                              if databaseName != self.dbNameMaster]
         self.secondaryDatabaseCombobox = Combobox(master, exportselection=0,
                                                   state="readonly", values=listOtherDatabase)
         self.secondaryDatabaseCombobox.current(0)
-        self.secondaryDatabaseCombobox.pack(side=TOP)
+        self.secondaryDatabaseCombobox.pack(side=tkinter.TOP)
 
-        Label(master, text=_("Enter a result database name") + " :").pack(side=TOP)
-        self.dbNameResultVar = StringVar()
-        dbNameEntry = Entry(master, textvariable=self.dbNameResultVar)
-        dbNameEntry.pack(side=TOP)
+        tkinter.Label(master, text=_("Enter a result database name") + " :").pack(side=tkinter.TOP)
+        self.dbNameResultVar = tkinter.StringVar()
+        dbNameEntry = tkinter.Entry(master, textvariable=self.dbNameResultVar)
+        dbNameEntry.pack(side=tkinter.TOP)
+
+        # V0.45 : Add or update radio buttons frame
+        operationTypeFrame = tkinter.Frame(master)
+        operationTypeFrame.pack(side=tkinter.TOP)
+        self.operationTypeVar = tkinter.StringVar()
+        tkinter.Radiobutton(operationTypeFrame, text=_("Add only"),
+                            variable=self.operationTypeVar,
+                            value="Add").pack(side=tkinter.LEFT)
+        tkinter.Radiobutton(operationTypeFrame, text=_("Update and add"),
+                            variable=self.operationTypeVar,
+                            value="Update").pack(side=tkinter.LEFT)
+        self.operationTypeVar.set("Add")
         dbNameEntry.focus_set()
 
         return dbNameEntry # initial focus
@@ -56,6 +70,7 @@ class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
             # Check if database exists
             if self.databaseManager.existsDatabase(self.dbNameResult):
                 raise ValueError(_("this database already exists") + " : " + self.dbNameResult)
+            self.isUpdate = self.operationTypeVar.get() == "Update"
             isOK = True
         except ValueError as exc:
             self.bell()
@@ -63,4 +78,4 @@ class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
         return isOK
 
     def apply(self):
-        self.setResult([self.secondaryDatabaseCombobox.get(), self.dbNameResult])
+        self.setResult([self.secondaryDatabaseCombobox.get(), self.dbNameResult, self.isUpdate])

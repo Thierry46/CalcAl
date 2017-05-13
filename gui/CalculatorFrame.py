@@ -3,13 +3,13 @@
 ************************************************************************************
 Class  : CalculatorFrame
 Author : Thierry Maillard (TMD)
-Date  : 31/3/2016 - 29/11/2016
+Date  : 31/3/2016 - 4/12/2016
 
 Role : Define food calculator frame content.
 ************************************************************************************
 """
-from tkinter import *
-from tkinter.ttk import Combobox
+import tkinter
+import tkinter.ttk
 from tkinter import messagebox
 
 from util import CalcalExceptions
@@ -43,115 +43,126 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.listComponents = []
         self.emptyComponents = []
 
-        upperFrame = Frame(self)
-        upperFrame.pack(side=TOP, fill=X)
-        middleFrame = Frame(self)
-        middleFrame.pack(side=TOP, fill=X)
+        upperFrame = tkinter.Frame(self)
+        upperFrame.pack(side=tkinter.TOP, fill=tkinter.X)
+        middleFrame = tkinter.Frame(self)
+        middleFrame.pack(side=tkinter.TOP, fill=tkinter.X)
 
         if self.mainWindow.isBigScreen():
-            buttonSelectionFrame = LabelFrame(self, text=_("Actions on selection"))
-            buttonSelectionFrame.pack(side=TOP)
-        bottomFrame = Frame(self)
-        bottomFrame.pack(side=TOP, fill=X)
+            buttonSelectionFrame = tkinter.LabelFrame(self, text=_("Actions on selection"))
+            buttonSelectionFrame.pack(side=tkinter.TOP)
+        bottomFrame = tkinter.Frame(self)
+        bottomFrame.pack(side=tkinter.TOP, fill=tkinter.X)
 
-        upperLeftFrame = LabelFrame(upperFrame, text=_("Search food"))
-        upperLeftFrame.pack(side=LEFT, padx=5)
-        upperMiddleFrame = Frame(upperFrame)
-        upperMiddleFrame.pack(side=LEFT, padx=5)
-        foodstuffFrame = LabelFrame(upperMiddleFrame, text=_("Foodstuff definition"))
-        foodstuffFrame.pack(side=TOP)
-        upperRightFrame = LabelFrame(upperFrame, text=_("Interesting components"))
-        upperRightFrame.pack(side=LEFT, padx=5)
+        upperLeftFrame = tkinter.LabelFrame(upperFrame, text=_("Search food"))
+        upperLeftFrame.pack(side=tkinter.LEFT, padx=5)
+        upperMiddleFrame = tkinter.Frame(upperFrame)
+        upperMiddleFrame.pack(side=tkinter.LEFT, padx=5)
+        foodstuffFrame = tkinter.LabelFrame(upperMiddleFrame, text=_("Foodstuff definition"))
+        foodstuffFrame.pack(side=tkinter.TOP)
+        upperRightFrame = tkinter.LabelFrame(upperFrame, text=_("Interesting components"))
+        upperRightFrame.pack(side=tkinter.LEFT, padx=5)
 
         # SearchFoodByNameFrame
-        upperLeftFrameUp = Frame(upperLeftFrame)
-        upperLeftFrameUp.pack(side=TOP, fill=BOTH)
-        Label(upperLeftFrameUp, text=_("Name") +  " :").pack(side=LEFT)
-        self.nameToSearch = StringVar()
+        upperLeftFrameUp = tkinter.Frame(upperLeftFrame)
+        upperLeftFrameUp.pack(side=tkinter.TOP, fill=tkinter.BOTH)
+        tkinter.Label(upperLeftFrameUp, text=_("Name") +  " :").pack(side=tkinter.LEFT)
+        self.nameToSearch = tkinter.StringVar()
         self.nameToSearch.trace_variable("w", self.validateNameToSearchEntry)
-        self.nameToSearchEntry = Entry(upperLeftFrameUp, textvariable=self.nameToSearch, width=35)
-        self.nameToSearchEntry.pack(side=LEFT)
+        self.nameToSearchEntry = tkinter.Entry(upperLeftFrameUp, textvariable=self.nameToSearch,
+                                               width=35)
+        self.nameToSearchEntry.pack(side=tkinter.LEFT)
         CallTypWindow.createToolTip(self.nameToSearchEntry,
                   _("Use Wildcards :\n* replaces n chars\n? replaces 1 only")+"\n"+\
                   _("Ex.:fr*s -> fruits, frais,...")+"\n"+\
                   _("Use ? for character letters like é, â, ô..."),
                                     self.delaymsTooltips * 2)
 
-        listNamesFrame = Frame(upperLeftFrame)
-        listNamesFrame.pack(side=TOP, padx=5, pady=5)
+        listNamesFrame = tkinter.Frame(upperLeftFrame)
+        listNamesFrame.pack(side=tkinter.TOP, padx=5, pady=5)
         CallTypWindow.createToolTip(listNamesFrame,
                                     _("Click on food name to copy it in definition frame"),
                                     self.delaymsTooltips)
-        self.foundNamesListbox = Listbox(listNamesFrame, height=7, width=40)
+        heigthFoundNamesListbox = 7
+        if self.mainWindow.isTinyScreen():
+            heigthFoundNamesListbox = 5
+        self.foundNamesListbox = tkinter.Listbox(listNamesFrame,
+                                                 height=heigthFoundNamesListbox, width=40)
         self.foundNamesListbox.grid(row=0, columnspan=2)
-        scrollbarNameRight = Scrollbar(listNamesFrame, orient=VERTICAL,
-                                       command=self.foundNamesListbox.yview)
-        scrollbarNameRight.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarNameRight = tkinter.Scrollbar(listNamesFrame, orient=tkinter.VERTICAL,
+                                               command=self.foundNamesListbox.yview)
+        scrollbarNameRight.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.foundNamesListbox.config(yscrollcommand=scrollbarNameRight.set)
         self.foundNamesListbox.bind('<ButtonRelease-1>', self.clicNamesListbox)
 
 
         # Foodstuff selection frame by family and name
-        Label(foodstuffFrame, text=_("Family")).grid(row=0, column=0, sticky=E)
-        self.familyFoodstuffCombobox = Combobox(foodstuffFrame, exportselection=0,
-                                                state="readonly", width=30)
+        tkinter.Label(foodstuffFrame, text=_("Family")).grid(row=0, column=0, sticky=tkinter.E)
+        self.familyFoodstuffCombobox = tkinter.ttk.Combobox(foodstuffFrame, exportselection=0,
+                                                            state="readonly", width=30)
         self.familyFoodstuffCombobox.bind('<<ComboboxSelected>>', self.updatefoodstuffName)
-        self.familyFoodstuffCombobox.grid(row=0, column=1, sticky=W)
+        self.familyFoodstuffCombobox.grid(row=0, column=1, sticky=tkinter.W)
 
-        Label(foodstuffFrame, text=_("Name")).grid(row=1, column=0, sticky=E)
-        self.foodstuffNameCombobox = Combobox(foodstuffFrame, exportselection=0,
-                                              state="readonly", width=30)
-        self.foodstuffNameCombobox.grid(row=1, column=1, sticky=W)
+        tkinter.Label(foodstuffFrame, text=_("Name")).grid(row=1, column=0, sticky=tkinter.E)
+        self.foodstuffNameCombobox = tkinter.ttk.Combobox(foodstuffFrame, exportselection=0,
+                                                          state="readonly", width=30)
+        self.foodstuffNameCombobox.grid(row=1, column=1, sticky=tkinter.W)
 
-        Label(foodstuffFrame, text=_("Quantity (g)")).grid(row=2, column=0, sticky=E)
-        self.foodstuffQuantity = StringVar()
-        self.foodstuffQuantityEntry = Entry(foodstuffFrame, textvariable=self.foodstuffQuantity,
-                                            width=10)
-        self.foodstuffQuantityEntry.grid(row=2, column=1, sticky=W)
+        tkinter.Label(foodstuffFrame, text=_("Quantity (g)")).grid(row=2, column=0,
+                                                                   sticky=tkinter.E)
+        self.foodstuffQuantity = tkinter.StringVar()
+        self.foodstuffQuantityEntry = tkinter.Entry(foodstuffFrame,
+                                                    textvariable=self.foodstuffQuantity,
+                                                    width=10)
+        self.foodstuffQuantityEntry.grid(row=2, column=1, sticky=tkinter.W)
         self.foodstuffQuantityEntry.bind('<Return>', self.addFoodInTable)
         self.foodstuffQuantityEntry.bind('<KP_Enter>', self.addFoodInTable)
 
         # Button to put defined food in table
+        imageName = 'arrowDown'
+        if self.mainWindow.isTinyScreen():
+            imageName = None
         addFoodButton = self.mainWindow.createButtonImage(upperMiddleFrame,
-                                                          imageRessourceName='arrowDown',
+                                                          imageRessourceName=imageName,
                                                           text4Image=_("Put in the list"))
         addFoodButton.configure(command=self.addFoodInTable)
-        addFoodButton.pack(side=LEFT, padx=5, pady=5)
+        addFoodButton.pack(side=tkinter.LEFT, padx=5, pady=5)
 
         # Combo to choose number of day for all food displayed
-        nbDaysComboboxFrame = Frame(upperMiddleFrame)
-        nbDaysComboboxFrame.pack(side=RIGHT)
-        Label(nbDaysComboboxFrame, text=_("Duration to eat")).pack(side=TOP)
-        Label(nbDaysComboboxFrame, text=_("this portion (days)")).pack(side=TOP)
+        tkinter.Label(upperMiddleFrame,
+                      text=_("Portion duration (days)") + " :").pack(side=tkinter.LEFT)
         maxNbDays2Eat = int(self.configApp.get('Limits', 'maxNbDays2Eat'))
-        self.nbDaysCombobox = Combobox(nbDaysComboboxFrame, exportselection=0,
+        self.nbDaysCombobox = tkinter.ttk.Combobox(upperMiddleFrame, exportselection=0,
                                        state="readonly", width=len(str(maxNbDays2Eat)),
                                        values=list(range(1, maxNbDays2Eat+1)))
         self.nbDaysCombobox.bind('<<ComboboxSelected>>', self.updateNbDays)
-        self.nbDaysCombobox.pack(side=TOP)
+        self.nbDaysCombobox.pack(side=tkinter.LEFT)
 
         # Componants frame
         color = self.configApp.get('Colors', 'componentsListboxColor')
         # exportselection = False :
         # else lost of selection when user selects text in an other Entry component
         # selection in listbox is used in update method to display selected components
-        self.componentsListbox = Listbox(upperRightFrame, selectmode=EXTENDED,
-                                         background=color, height=10, width=18,
+        heightComponentsListbox = 10
+        if self.mainWindow.isTinyScreen():
+            heightComponentsListbox = 7
+        self.componentsListbox = tkinter.Listbox(upperRightFrame, selectmode=tkinter.EXTENDED,
+                                         background=color, height=heightComponentsListbox, width=18,
                                          exportselection=False)
         self.componentsListbox.grid(row=0, columnspan=2)
         CallTypWindow.createToolTip(self.componentsListbox,
                                     _("Use Ctrl and Shift keys") + "\n" + \
                                     _("for multiple selection"),
                                     self.delaymsTooltips)
-        scrollbarRight = Scrollbar(upperRightFrame, orient=VERTICAL,
+        scrollbarRight = tkinter.Scrollbar(upperRightFrame, orient=tkinter.VERTICAL,
                                    command=self.componentsListbox.yview)
-        scrollbarRight.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarRight.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.componentsListbox.config(yscrollcommand=scrollbarRight.set)
         self.componentsListbox.bind('<ButtonRelease-1>', self.clicComponentsListbox)
 
         # Table for foods and their components
-        mealFrame = LabelFrame(middleFrame, text=_("List of food"))
-        mealFrame.pack(side=TOP, fill=BOTH, expand=YES, padx=5, pady=2)
+        mealFrame = tkinter.LabelFrame(middleFrame, text=_("List of food"))
+        mealFrame.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, padx=5, pady=2)
         mealFrame.grid_rowconfigure(0, weight=1)
         mealFrame.grid_columnconfigure(0, weight=1)
         firstColumns = [_("Name"), _("Qty (g)")]
@@ -160,10 +171,10 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                 int(self.configApp.get('Size', 'foodTableFistColWidth')),
                                 int(self.configApp.get('Size', 'foodTableOtherColWidth')),
                                 int(self.configApp.get('Size', 'foodTableColMinWdth')),
-                                selectmode="extended")
+                                selectmode=tkinter.EXTENDED)
         self.foodTable.setColor('normalRow', self.bgValueComp)
         self.foodTable.setColor('totalRow', self.bgLabelFC)
-        self.foodTable.pack(side=TOP, fill=BOTH, expand=YES)
+        self.foodTable.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES)
         self.foodTable.setBinding('<Double-Button-1>', self.copySelectionInDefinitionFrame)
         self.foodTable.setBinding('<Command-c>', self.copyInClipboard)
         self.foodTable.setBinding('<Control-c>', self.copyInClipboard)
@@ -183,60 +194,60 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                imageRessourceName='arrowUp',
                                                text4Image=_("Modify"))
             modifySelection.configure(command=self.copySelectionInDefinitionFrame)
-            modifySelection.pack(side=LEFT)
+            modifySelection.pack(side=tkinter.LEFT)
             groupSelectionButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                  imageRessourceName='groupSelection',
                                                  text4Image=_("Group")+"...")
 
             groupSelectionButton.configure(command=self.groupFood)
-            groupSelectionButton.pack(side=LEFT)
+            groupSelectionButton.pack(side=tkinter.LEFT)
             ungroupSelectionButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                      imageRessourceName='ungroupSelection',
                                                      text4Image=_("Ungroup"))
             ungroupSelectionButton.configure(command=self.ungroupFood)
-            ungroupSelectionButton.pack(side=LEFT)
+            ungroupSelectionButton.pack(side=tkinter.LEFT)
 
             eraseFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                      imageRessourceName='eraseSelection',
                                                      text4Image=_("Erase line"))
             eraseFoodButton.configure(command=lambda inBd=False: self.deleteFood(inBd))
-            eraseFoodButton.pack(side=LEFT)
+            eraseFoodButton.pack(side=tkinter.LEFT)
 
             deleteFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                   imageRessourceName='deleteSelection',
                                                   text4Image=_("Delete in database"))
             deleteFoodButton.configure(command=lambda inBd=True: self.deleteFood(inBd))
-            deleteFoodButton.pack(side=LEFT)
+            deleteFoodButton.pack(side=tkinter.LEFT)
 
             copyInClipboardFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                         imageRessourceName='copy2clipboard',
                                                         text4Image=_("Clipboard"))
             copyInClipboardFoodButton.configure(command=self.copyInClipboard)
-            copyInClipboardFoodButton.pack(side=LEFT)
+            copyInClipboardFoodButton.pack(side=tkinter.LEFT)
 
             infoFoodButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                               imageRessourceName='info',
                                                               text4Image=_("Info"+"..."))
             infoFoodButton.configure(command=self.infoFood)
-            infoFoodButton.pack(side=LEFT)
+            infoFoodButton.pack(side=tkinter.LEFT)
 
             savePortionButton = self.mainWindow.createButtonImage(buttonSelectionFrame,
                                                    imageRessourceName='savePortion',
                                                    text4Image=_("Save portion") + "...")
             savePortionButton.configure(command=self.savePortion)
-            savePortionButton.pack(side=LEFT)
+            savePortionButton.pack(side=tkinter.LEFT)
 
         # Energy table
         EnergyFrame.EnergyFrame(bottomFrame, self.mainWindow,
                                 self.calculatorFrameModel,
-                                self.configApp).pack(side=LEFT)
+                                self.configApp).pack(side=tkinter.LEFT)
 
         # Water frame
         WaterEnergyFrame.WaterEnergyFrame(bottomFrame, self.mainWindow,
                                           self.calculatorFrameModel,
-                                          self.configApp).pack(side=LEFT, padx=5, pady=5)
+                                          self.configApp).pack(side=tkinter.LEFT, padx=5, pady=5)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         if observable == self.calculatorFrameModel:
             self.logger.debug("CalculatorFrame received from its model : " + event)
@@ -248,7 +259,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 elif event == "CHANGE_COMPONENTS":
                     self.changeComponents()
                 elif event == "DELETE_FOOD":
-                    self.changeDeleteFood()
+                    self.changeDeleteFood(updateList=True)
+                elif event == "ERASE_FOOD":
+                    self.changeDeleteFood(updateList=False)
                 elif event == "GROUP_FOOD":
                     self.changeGroupFood()
                 elif event == "UNGROUP_FOOD":
@@ -272,23 +285,16 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """Initialyse calculator"""
         self.logger.debug("CalculatorFrame : init(initDb=" + str(initDb) + ")")
 
-        database = self.databaseManager.getDatabase()
-        assert (database is not None), "CalculatorFrame/init() : no open database !"
-
         if initDb:
             # Update components list
             self.foodTable.deleteAllRows()
-            self.componentsListbox.delete(0, END)
+            self.componentsListbox.delete(0, tkinter.END)
             self.listComponents = self.calculatorFrameModel.getListComponents()
             for component in self.listComponents:
-                self.componentsListbox.insert(END, component[1] + ' (' + component[2] + ')')
+                self.componentsListbox.insert(tkinter.END, component[1] + ' (' + component[2] + ')')
 
             # Update familyFoodstuffCombobox
-            listFamilyFoodstuff = database.getListFamilyFoodstuff()
-            assert (len(listFamilyFoodstuff) > 0), \
-                    "CalculatorFrame/init() : no family in database !"
-            self.familyFoodstuffCombobox['values'] = listFamilyFoodstuff
-            self.familyFoodstuffCombobox.current(0)
+            self.updateFamilyFoodstuffCombobox()
 
         # Empty entry fields and tables
         self.nameToSearch.set("")
@@ -298,12 +304,21 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodstuffQuantity.set("")
         self.nbDaysCombobox.current(0)
 
-        self.componentsListbox.selection_clear(0, END)
+        self.componentsListbox.selection_clear(0, tkinter.END)
         self.foodTable.updateVariablesColumns([], [])
 
         # Limit width size of main window
         self.mainWindow.maxsize(int(self.mainWindow.winfo_width()),
                                 int(self.mainWindow.winfo_screenheight()))
+
+    def updateFamilyFoodstuffCombobox(self):
+        """ Update FamilyFoodstuffCombobox with database """
+        database = self.databaseManager.getDatabase()
+        listFamilyFoodstuff = database.getListFamilyFoodstuff()
+        assert (len(listFamilyFoodstuff) > 0), \
+                "CalculatorFrame/init() : no family in database !"
+        self.familyFoodstuffCombobox['values'] = listFamilyFoodstuff
+        self.familyFoodstuffCombobox.current(0)
 
     def changeFood(self):
         """ Change a line in foodtable """
@@ -369,8 +384,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.mainWindow.setStatusText(str(len(listUserComponentTitle)) + " " +
                                       _("Components displayed"))
 
-    def changeDeleteFood(self):
-        """ Delete foodstuffs in foodtable """
+    def changeDeleteFood(self, updateList):
+        """ Delete foodstuffs in foodtable
+            V0.43 : if updateList, update definition combobox Family and name """
         self.logger.debug("CalculatorFrame : changeDeleteFood()")
 
         self.deleteTotalLines()
@@ -382,6 +398,11 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         # Create new total line
         if self.calculatorFrameModel.getNumberOfFoodStuff() > 0:
             self.updateTotalLines()
+
+        # V0.43 : if updateList, update definition combobox Family and name
+        if updateList:
+            self.updateFamilyFoodstuffCombobox()
+            self.updatefoodstuffName()
 
         if len(listFoodname) < 2:
             foodstuff = _("foodstuff")
@@ -458,7 +479,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodTable.deleteAllRows()
 
         # Erase components to speed operation
-        self.componentsListbox.selection_clear(0, END)
+        self.componentsListbox.selection_clear(0, tkinter.END)
         self.foodTable.updateVariablesColumns([], [])
 
         # Update modified food lines
@@ -478,7 +499,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         # Ask to model what components to select
         listComponentsCodes = self.calculatorFrameModel.getAskedByUserCodes()
         # Select componenents
-        self.componentsListbox.selection_clear(0, END)
+        self.componentsListbox.selection_clear(0, tkinter.END)
         firstIndex = True
         for code in listComponentsCodes:
             index = 0
@@ -505,11 +526,11 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     "CalculatorFrame/validateNameToSearchEntry() : no open database !"
             listFoodName = database.getProductsNamesContainingPart(foodNamePart)
             # Update self.foundNamesListbox with results
-            self.foundNamesListbox.delete(0, END)
+            self.foundNamesListbox.delete(0, tkinter.END)
             for name in listFoodName:
-                self.foundNamesListbox.insert(END, name)
+                self.foundNamesListbox.insert(tkinter.END, name)
         else:
-            self.foundNamesListbox.delete(0, END)
+            self.foundNamesListbox.delete(0, tkinter.END)
 
     def updateNbDays(self, *args):
         """ User changes nb days to eat portion """
@@ -680,7 +701,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 raise ValueError(_("Please select one and only one line in food table"))
             foodName = self.foodTable.getTextForItemIndex(listSelectedRows[0])
             database = self.databaseManager.getDatabase()
-            assert (database is not None), "CalculatorFrame/ungroupFood() : no open database !"
+            assert (database is not None), "CalculatorFrame/infoFood() : no open database !"
             dictInfoFood = database.getInfoFood(foodName)
 
             # Format information

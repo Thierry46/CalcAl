@@ -25,10 +25,9 @@ Copyright (c) 2015 - Thierry Maillard
    You should have received a copy of the GNU General Public License
    along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 """
-import pytest
 import datetime
-import gettext
 import configparser
+import pytest
 
 import CalcAl
 from util import DateUtil
@@ -36,7 +35,7 @@ from util import DateUtil
 # Code to execute before and at the end of all test
 @pytest.fixture(scope="session")
 def initEnv():
-    # Code to be executed when called by test function
+    """ Code to be executed when called by test function """
     fileConfigApp = 'CalcAl.ini'
     configApp = configparser.RawConfigParser()
     configApp.read(fileConfigApp, encoding="utf-8")
@@ -50,7 +49,7 @@ def test_formatDate_OK(dateStr):
     dateFormated = DateUtil.formatDate(dateStr)
     assert dateStr == dateFormated
 
-@pytest.mark.parametrize("dateStr, format", [("2016/11/2", '%Y/%m/%d'),
+@pytest.mark.parametrize("dateStr, formatStr", [("2016/11/2", '%Y/%m/%d'),
                                              ("2016/9/24", '%Y/%m/%d'),
                                              ("6/9/04", '%d/%m/%y'),
                                              ("16/9/24", '%d/%m/%y'),
@@ -62,13 +61,13 @@ def test_formatDate_OK(dateStr):
                                              ("09/04/16", '%d/%m/%y'),
                                              ("09:04:16", '%d:%m:%y'),
                                              ("2016:11:2", '%Y:%m:%d')])
-def test_formatDate_convert_OK(dateStr, format):
+def test_formatDate_convert_OK(dateStr, formatStr):
     # Call init fixture
     initEnv()
 
     dateFormated = DateUtil.formatDate(dateStr)
     assert dateStr != dateFormated
-    assert datetime.datetime.strptime(dateStr, format) == \
+    assert datetime.datetime.strptime(dateStr, formatStr) == \
             datetime.datetime.strptime(dateFormated, '%Y/%m/%d')
 
 @pytest.mark.parametrize("dateStr", ["2016/11 24", "2016:09/24", "choucroute",
@@ -77,5 +76,5 @@ def test_formatDate_Error(dateStr):
     # Call init fixture
     initEnv()
 
-    with pytest.raises(ValueError) as e:
-        dateFormated = DateUtil.formatDate(dateStr)
+    with pytest.raises(ValueError):
+        DateUtil.formatDate(dateStr)

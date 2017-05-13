@@ -8,7 +8,8 @@ Date   : 21/11/2016 - 30/11/2016
 Role : Define Pathology frame content.
 ************************************************************************************
 """
-from tkinter import *
+import tkinter
+from tkinter import messagebox
 
 from util import CalcalExceptions
 
@@ -32,14 +33,15 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         ##########
         # Defined pathologies Frame
-        definedPathologiesFrame = LabelFrame(self, text=_("Defined pathologies"))
-        definedPathologiesFrame.pack(side=LEFT, padx=5)
+        definedPathologiesFrame = tkinter.LabelFrame(self, text=_("Defined pathologies"))
+        definedPathologiesFrame.pack(side=tkinter.LEFT, padx=5)
 
         # Defined pathologies listbox
-        definedPathologiesListboxFrame = Frame(definedPathologiesFrame)
-        definedPathologiesListboxFrame.pack(side=TOP)
+        definedPathologiesListboxFrame = tkinter.Frame(definedPathologiesFrame)
+        definedPathologiesListboxFrame.pack(side=tkinter.TOP)
         color = self.configApp.get('Colors', 'colorPathologiesList')
-        self.pathologiesListbox = Listbox(definedPathologiesListboxFrame, selectmode=EXTENDED,
+        self.pathologiesListbox = tkinter.Listbox(definedPathologiesListboxFrame,
+                                          selectmode=tkinter.EXTENDED,
                                           background=color, height=10, width=40,
                                           exportselection=False)
         self.pathologiesListbox.grid(row=0, columnspan=2)
@@ -47,65 +49,68 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                     _("Use Ctrl and Shift keys") + "\n" + \
                                     _("for multiple selection"),
                                     self.delaymsTooltips)
-        scrollbarRightPathologies = Scrollbar(definedPathologiesListboxFrame, orient=VERTICAL,
+        scrollbarRightPathologies = tkinter.Scrollbar(definedPathologiesListboxFrame,
+                                              orient=tkinter.VERTICAL,
                                               command=self.pathologiesListbox.yview)
-        scrollbarRightPathologies.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarRightPathologies.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.pathologiesListbox.config(yscrollcommand=scrollbarRightPathologies.set)
         self.pathologiesListbox.bind('<ButtonRelease-1>', self.clicPathologiesListbox)
 
         # Command buttons of definedPathologies Frame
-        buttonDefinedPathologiesFrame = Frame(definedPathologiesFrame)
-        buttonDefinedPathologiesFrame.pack(side=TOP)
-        Button(buttonDefinedPathologiesFrame, text=_("Select composants in calculator"),
-               command=self.selectInCalculator).pack(side=TOP)
-        Button(buttonDefinedPathologiesFrame, text=_("Delete"),
-               command=self.deletePathology).pack(side=TOP)
+        buttonDefinedPathologiesFrame = tkinter.Frame(definedPathologiesFrame)
+        buttonDefinedPathologiesFrame.pack(side=tkinter.TOP)
+        tkinter.Button(buttonDefinedPathologiesFrame, text=_("Select composants in calculator"),
+               command=self.selectInCalculator).pack(side=tkinter.TOP)
+        tkinter.Button(buttonDefinedPathologiesFrame, text=_("Delete"),
+               command=self.deletePathology).pack(side=tkinter.TOP)
 
         ##########
         # Pathologies definition Frame
-        pathologyDefinitionFrame = LabelFrame(self, text=_("Pathology definition"))
-        pathologyDefinitionFrame.pack(side=LEFT, padx=5)
+        pathologyDefinitionFrame = tkinter.LabelFrame(self, text=_("Pathology definition"))
+        pathologyDefinitionFrame.pack(side=tkinter.LEFT, padx=5)
 
-        entriesFrame = Frame(pathologyDefinitionFrame)
-        entriesFrame.pack(side=TOP)
-        bottomDefinitionFrame = Frame(pathologyDefinitionFrame)
-        bottomDefinitionFrame.pack(side=TOP, pady=10)
+        entriesFrame = tkinter.Frame(pathologyDefinitionFrame)
+        entriesFrame.pack(side=tkinter.TOP)
+        bottomDefinitionFrame = tkinter.Frame(pathologyDefinitionFrame)
+        bottomDefinitionFrame.pack(side=tkinter.TOP, pady=10)
 
-        Label(entriesFrame, text=_("Pathology name")).grid(row=0, column=0, sticky=E)
-        self.pathologyNameEntryVar = StringVar()
-        self.pathologyNameEntry = Entry(entriesFrame, textvariable=self.pathologyNameEntryVar,
+        tkinter.Label(entriesFrame, text=_("Pathology name")).grid(row=0, column=0,
+                                                                   sticky=tkinter.E)
+        self.pathologyNameEntryVar = tkinter.StringVar()
+        self.pathologyNameEntry = tkinter.Entry(entriesFrame, textvariable=self.pathologyNameEntryVar,
                                         width=35)
-        self.pathologyNameEntry.grid(row=0, column=1, sticky=W)
+        self.pathologyNameEntry.grid(row=0, column=1, sticky=tkinter.W)
 
-        Label(entriesFrame, text=_("Description") + " :").grid(row=1, column=0, sticky=W)
+        tkinter.Label(entriesFrame, text=_("Description") + " :").grid(row=1, column=0,
+                                                                       sticky=tkinter.W)
         colorBG = self.configApp.get('Colors', 'colorPathologyDesctiptionEditor')
-        self.pathologyDescriptionTextEditor = Text(entriesFrame,
-                                                   wrap=NONE,
+        self.pathologyDescriptionTextEditor = tkinter.Text(entriesFrame,
+                                                   wrap=tkinter.NONE,
                                                    height=5, width=60,
                                                    background=colorBG)
         self.pathologyDescriptionTextEditor.grid(row=2, columnspan=2)
-        scrollbarRightDescription = Scrollbar(entriesFrame,
+        scrollbarRightDescription = tkinter.Scrollbar(entriesFrame,
                                               command=self.pathologyDescriptionTextEditor.yview)
-        scrollbarRightDescription.grid(row=2, column=2, sticky=W+N+S)
-        scrollbarBottom = Scrollbar(entriesFrame, orient=HORIZONTAL,
+        scrollbarRightDescription.grid(row=2, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
+        scrollbarBottom = tkinter.Scrollbar(entriesFrame, orient=tkinter.HORIZONTAL,
                                     command=self.pathologyDescriptionTextEditor.xview)
-        scrollbarBottom.grid(row=3, columnspan=2, sticky=N+E+W)
+        scrollbarBottom.grid(row=3, columnspan=2, sticky=tkinter.N+tkinter.E+tkinter.W)
         self.pathologyDescriptionTextEditor.config(yscrollcommand=scrollbarRightDescription.set)
         self.pathologyDescriptionTextEditor.config(xscrollcommand=scrollbarBottom.set)
 
-        Label(entriesFrame, text=_("Reference")).grid(row=4, column=0, sticky=E)
-        self.pathologyReferenceEntryVar = StringVar()
-        self.pathologyReferenceEntry = Entry(entriesFrame,
+        tkinter.Label(entriesFrame, text=_("Reference")).grid(row=4, column=0, sticky=tkinter.E)
+        self.pathologyReferenceEntryVar = tkinter.StringVar()
+        self.pathologyReferenceEntry = tkinter.Entry(entriesFrame,
                                              textvariable=self.pathologyReferenceEntryVar, width=35)
-        self.pathologyReferenceEntry.grid(row=4, column=1, sticky=W)
+        self.pathologyReferenceEntry.grid(row=4, column=1, sticky=tkinter.W)
 
         # Bottom definition frame frame
-        Label(bottomDefinitionFrame,
-              text=_("Componants\nto folllow\nfor this\npathology")).pack(side=LEFT)
-        componentsFrame = Frame(bottomDefinitionFrame)
-        componentsFrame.pack(side=LEFT)
+        tkinter.Label(bottomDefinitionFrame,
+              text=_("Componants\nto folllow\nfor this\npathology")).pack(side=tkinter.LEFT)
+        componentsFrame = tkinter.Frame(bottomDefinitionFrame)
+        componentsFrame.pack(side=tkinter.LEFT)
         color = self.configApp.get('Colors', 'componentsListboxColor')
-        self.componentsListbox = Listbox(componentsFrame, selectmode=EXTENDED,
+        self.componentsListbox = tkinter.Listbox(componentsFrame, selectmode=tkinter.EXTENDED,
                                          background=color, height=10, width=18,
                                          exportselection=False)
         self.componentsListbox.grid(row=0, columnspan=2)
@@ -113,20 +118,20 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                     _("Use Ctrl and Shift keys") + "\n" + \
                                     _("for multiple selection"),
                                     self.delaymsTooltips)
-        scrollbarRightComponents = Scrollbar(componentsFrame, orient=VERTICAL,
+        scrollbarRightComponents = tkinter.Scrollbar(componentsFrame, orient=tkinter.VERTICAL,
                                    command=self.componentsListbox.yview)
-        scrollbarRightComponents.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarRightComponents.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.componentsListbox.config(yscrollcommand=scrollbarRightComponents.set)
 
-        buttonDefinitionFrame = Frame(bottomDefinitionFrame)
-        buttonDefinitionFrame.pack(side=LEFT)
-        Button(buttonDefinitionFrame, text=_("Save pathology"),
-               command=self.savePathology).pack(side=TOP)
-        Button(buttonDefinitionFrame, text=_("Clear pathology"),
-               command=self.clearPathologyDefinition).pack(side=TOP)
+        buttonDefinitionFrame = tkinter.Frame(bottomDefinitionFrame)
+        buttonDefinitionFrame.pack(side=tkinter.LEFT)
+        tkinter.Button(buttonDefinitionFrame, text=_("Save pathology"),
+               command=self.savePathology).pack(side=tkinter.TOP)
+        tkinter.Button(buttonDefinitionFrame, text=_("Clear pathology"),
+               command=self.clearPathologyDefinition).pack(side=tkinter.TOP)
 
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         self.logger.debug("PathologyFrame received from model : " + event)
         try:
@@ -145,26 +150,26 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Initialyse definition frame entries
             Set to empty string id filters fields """
         self.pathologyNameEntryVar.set("")
-        self.pathologyDescriptionTextEditor.delete('1.0', END)
+        self.pathologyDescriptionTextEditor.delete('1.0', tkinter.END)
         self.pathologyReferenceEntryVar.set("")
-        self.componentsListbox.delete(0, END)
+        self.componentsListbox.delete(0, tkinter.END)
 
         # List components
         self.listComponents = self.calculatorFrameModel.getListComponents()
-        self.componentsListbox.delete(0, END)
+        self.componentsListbox.delete(0, tkinter.END)
         for component in self.listComponents:
-            self.componentsListbox.insert(END, component[1] + ' (' + component[2] + ')')
+            self.componentsListbox.insert(tkinter.END, component[1] + ' (' + component[2] + ')')
 
         # List of Defined pathologies
         self.initListPathologies()
 
     def initListPathologies(self):
         """ Init pathologies listBox content """
-        self.pathologiesListbox.delete(0, END)
+        self.pathologiesListbox.delete(0, tkinter.END)
         database = self.databaseManager.getDatabase()
         self.listPathologies = database.getDefinedPathologiesNames()
         for pathology in self.listPathologies:
-            self.pathologiesListbox.insert(END, pathology)
+            self.pathologiesListbox.insert(tkinter.END, pathology)
 
     def savePathology(self):
         """ Save a new pathology in database """
@@ -187,15 +192,15 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def clearPathologyDefinition(self):
         """ Clear definition fields for pathology """
         self.pathologyNameEntryVar.set("")
-        self.pathologyDescriptionTextEditor.delete('1.0', END)
+        self.pathologyDescriptionTextEditor.delete('1.0', tkinter.END)
         self.pathologyReferenceEntryVar.set("")
-        self.componentsListbox.selection_clear(0, END)
+        self.componentsListbox.selection_clear(0, tkinter.END)
 
     def clicPathologiesListbox(self, evt=None):
         """ Update Definition frame with pathology selected by user """
         listIndexSelection = self.pathologiesListbox.curselection()
         if len(listIndexSelection) == 1:
-            self.setStateInputFields(state=NORMAL)
+            self.setStateInputFields(state=tkinter.NORMAL)
             self.clearPathologyDefinition()
             pathologyName = self.pathologiesListbox.get(listIndexSelection[0])
             try:
@@ -205,11 +210,11 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         database.getDefinedPathologiesDetails(pathologyName)
                 # Update definition fields
                 self.pathologyNameEntryVar.set(name)
-                self.pathologyDescriptionTextEditor.delete('1.0', END)
-                self.pathologyDescriptionTextEditor.insert(INSERT, description)
+                self.pathologyDescriptionTextEditor.delete('1.0', tkinter.END)
+                self.pathologyDescriptionTextEditor.insert(tkinter.INSERT, description)
                 self.pathologyReferenceEntryVar.set(reference)
                 # Update components list
-                self.componentsListbox.selection_clear(0, END)
+                self.componentsListbox.selection_clear(0, tkinter.END)
                 firstIndex = True
                 for code in listComponentsCodes:
                     index = 0
@@ -224,8 +229,8 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             except ValueError as exc:
                 self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
         elif len(listIndexSelection) > 1:
-            self.setStateInputFields(state=DISABLED)
-            self.pathologyDescriptionTextEditor.config(state=DISABLED)
+            self.setStateInputFields(state=tkinter.DISABLED)
+            self.pathologyDescriptionTextEditor.config(state=tkinter.DISABLED)
 
     def setStateInputFields(self, state):
         """ Set state for all input fields """
@@ -266,7 +271,7 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                   icon='warning')
             if isDestructionOk:
                 database = self.databaseManager.getDatabase()
-                database.deletePathology(pathologyName)
+                database.deletePathology(pathologyName, forPatient=True)
                 self.clearPathologyDefinition()
                 self.initListPathologies()
                 self.patientFrameModel.initListPathologies()
@@ -277,7 +282,7 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def selectPathologies(self):
         """ Select pathologies asked by patient model """
         listPathologies2Select = self.patientFrameModel.getCurrentPatient().getPathologies()
-        self.pathologiesListbox.selection_clear(0, END)
+        self.pathologiesListbox.selection_clear(0, tkinter.END)
         firstIndex = True
         for pathology2Select in listPathologies2Select:
             index = 0

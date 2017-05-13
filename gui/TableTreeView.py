@@ -30,10 +30,10 @@
 """
 import locale
 
-from tkinter import *
-from tkinter.ttk import *
+import tkinter
+import tkinter.ttk
 
-class TableTreeView(Frame):
+class TableTreeView(tkinter.Frame):
     """ Table widget """
     def __init__(self, master, firstColumnsTitle, nbMinLines,
                  firstColWidth=100, otherColWidth=75, colMinWidth=50,
@@ -51,14 +51,14 @@ class TableTreeView(Frame):
         self.grid_columnconfigure(0, weight=1)
 
         # Create treeview, scrollbars
-        self.treeview = Treeview(self, height=nbMinLines, selectmode=selectmode)
-        vsb = Scrollbar(self, orient=VERTICAL, command=self.treeview.yview)
-        vsb.grid(row=0, column=1, sticky=(N, S))
-        hsb = Scrollbar(self, orient=HORIZONTAL, command=self.treeview.xview)
-        hsb.grid(row=1, column=0, sticky=(E, W))
+        self.treeview = tkinter.ttk.Treeview(self, height=nbMinLines, selectmode=selectmode)
+        vsb = tkinter.Scrollbar(self, orient=tkinter.VERTICAL, command=self.treeview.yview)
+        vsb.grid(row=0, column=1, sticky=(tkinter.N, tkinter.S))
+        hsb = tkinter.Scrollbar(self, orient=tkinter.HORIZONTAL, command=self.treeview.xview)
+        hsb.grid(row=1, column=0, sticky=(tkinter.E, tkinter.W))
         self.treeview.config(yscrollcommand=vsb.set)
         self.treeview.config(xscrollcommand=hsb.set)
-        self.treeview.grid(row=0, sticky=(N, S, W, E))
+        self.treeview.grid(row=0, sticky=(tkinter.N, tkinter.S, tkinter.W, tkinter.E))
         self.grid_rowconfigure(0, weight=1)
 
         # Create header line
@@ -78,10 +78,10 @@ class TableTreeView(Frame):
 
     def setColumnsDefaultProperties(self):
         """ Set Default column properties """
-        self.treeview.column("#0", anchor=W, width=self.firstColWidth,
+        self.treeview.column("#0", anchor=tkinter.W, width=self.firstColWidth,
                              stretch=False, minwidth=self.colMinWidth)
         for columnName in self.treeview['columns']:
-            self.treeview.column(columnName, anchor=E, width=self.otherColWidth,
+            self.treeview.column(columnName, anchor=tkinter.E, width=self.otherColWidth,
                                  stretch=False, minwidth=self.colMinWidth)
 
     def searchItem(self, name):

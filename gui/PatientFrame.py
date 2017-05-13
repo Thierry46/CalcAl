@@ -10,11 +10,11 @@ Role : Define Patient frame content.
 """
 import datetime
 
-from tkinter import *
+import tkinter
 from tkinter.ttk import Combobox
+from tkinter import messagebox
 
 from util import CalcalExceptions
-from database import Database
 from . import CallTypWindow
 from . import FrameBaseCalcAl
 
@@ -30,24 +30,30 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         ##########
         # Patient definition Frame
-        patientMainFrame = LabelFrame(self, text=_("Patient information"), padx=10)
-        patientMainFrame.pack(side=TOP)
-        rightFrame = Frame(patientMainFrame)
-        rightFrame.pack(side=LEFT)
-        patientDefinitionFrame = Frame(rightFrame)
-        patientDefinitionFrame.pack(side=TOP)
+        patientMainFrame = tkinter.LabelFrame(self, text=_("Patient information"), padx=10)
+        patientMainFrame.pack(side=tkinter.TOP)
+        rightFrame = tkinter.Frame(patientMainFrame)
+        rightFrame.pack(side=tkinter.LEFT)
+        patientDefinitionFrame = tkinter.Frame(rightFrame)
+        patientDefinitionFrame.pack(side=tkinter.TOP)
 
-        Label(patientDefinitionFrame, text=_("Patient code") + " :").grid(row=0, column=0, sticky=E)
-        self.patientCodeVar = StringVar()
+        labelPatientCode = tkinter.Label(patientDefinitionFrame, text=_("Patient code") + " :")
+        labelPatientCode.grid(row=0, column=0, sticky=tkinter.E)
+        CallTypWindow.createToolTip(labelPatientCode,
+                                    _("Type new patient code or select an existant"),
+                                    self.delaymsTooltips)
+
+        self.patientCodeVar = tkinter.StringVar()
         self.patientCodeVar.trace_variable("w", self.changePatient)
         widthCode = int(self.configApp.get('Size', 'patientCodeComboboxWidth'))
         self.patientCodeCombobox = Combobox(patientDefinitionFrame, exportselection=0,
                                             textvariable=self.patientCodeVar,
-                                            state="normal",
+                                            state=tkinter.NORMAL,
                                             width=widthCode)
-        self.patientCodeCombobox.grid(row=0, column=1, sticky=W)
+        self.patientCodeCombobox.grid(row=0, column=1, sticky=tkinter.W)
 
-        Label(patientDefinitionFrame, text=_("Birth year") + " :").grid(row=1, column=0, sticky=E)
+        tkinter.Label(patientDefinitionFrame, text=_("Birth year") + " :").grid(row=1, column=0,
+                                                                                sticky=tkinter.E)
         self.currentYear = datetime.datetime.now().year
         self.oldestPatient = int(self.configApp.get('Patient', 'oldestPatient'))
         self.birthYearCombobox = Combobox(patientDefinitionFrame, exportselection=0,
@@ -56,57 +62,62 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                           values=list(range(self.currentYear-self.oldestPatient,
                                                             self.currentYear+1)))
         self.birthYearCombobox.bind('<<ComboboxSelected>>', self.modifyPatient)
-        self.birthYearCombobox.grid(row=1, column=1, sticky=W)
-        Label(patientDefinitionFrame, text=_("Gender") + " :").grid(row=2, column=0, sticky=E)
-        genderFrame = Frame(patientDefinitionFrame)
-        genderFrame.grid(row=2, column=1, sticky=EW)
-        self.genderVar = StringVar()
-        Radiobutton(genderFrame, text=_("M"), variable=self.genderVar, value="M",
-                    command=self.modifyPatient).pack(side=LEFT)
-        Radiobutton(genderFrame, text=_("F"), variable=self.genderVar, value="F",
-                    command=self.modifyPatient).pack(side=LEFT)
-        Radiobutton(genderFrame, text=_("U"), variable=self.genderVar, value="U",
-                    command=self.modifyPatient).pack(side=LEFT)
-        Label(patientDefinitionFrame, text=_("Size") + " (cm) :").grid(row=3, column=0, sticky=E)
+        self.birthYearCombobox.grid(row=1, column=1, sticky=tkinter.W)
+        tkinter.Label(patientDefinitionFrame, text=_("Gender") + " :").grid(row=2, column=0,
+                                                                            sticky=tkinter.E)
+        genderFrame = tkinter.Frame(patientDefinitionFrame)
+        genderFrame.grid(row=2, column=1, sticky=tkinter.EW)
+        self.genderVar = tkinter.StringVar()
+        tkinter.Radiobutton(genderFrame, text=_("M"), variable=self.genderVar, value="M",
+                    command=self.modifyPatient).pack(side=tkinter.LEFT)
+        tkinter.Radiobutton(genderFrame, text=_("F"), variable=self.genderVar, value="F",
+                    command=self.modifyPatient).pack(side=tkinter.LEFT)
+        tkinter.Radiobutton(genderFrame, text=_("U"), variable=self.genderVar, value="U",
+                    command=self.modifyPatient).pack(side=tkinter.LEFT)
+        tkinter.Label(patientDefinitionFrame, text=_("Size") + " (cm) :").grid(row=3, column=0,
+                                                                               sticky=tkinter.E)
         self.sizeMin = int(self.configApp.get('Patient', 'sizeMin'))
         self.sizeMax = int(self.configApp.get('Patient', 'sizeMax'))
         self.sizeCombobox = Combobox(patientDefinitionFrame, exportselection=0,
                                      state="readonly", width=len(str(self.sizeMax)),
                                      values=list(range(self.sizeMin, self.sizeMax+1)))
         self.sizeCombobox.bind('<<ComboboxSelected>>', self.modifyPatient)
-        self.sizeCombobox.grid(row=3, column=1, sticky=W)
+        self.sizeCombobox.grid(row=3, column=1, sticky=tkinter.W)
 
         # Buttons command
-        buttonDefinitionFrame = Frame(rightFrame)
-        buttonDefinitionFrame.pack(side=TOP)
-        Button(buttonDefinitionFrame, text=_("Delete"),
-               command=self.deletePatient).pack(side=LEFT)
+        buttonDefinitionFrame = tkinter.Frame(rightFrame)
+        buttonDefinitionFrame.pack(side=tkinter.TOP)
+        tkinter.Button(buttonDefinitionFrame, text=_("Delete"),
+               command=self.deletePatient).pack(side=tkinter.LEFT)
 
         # Notes frame
-        patientNoteFrame = LabelFrame(patientMainFrame, text=_("Notes for this patient"), padx=10)
-        patientNoteFrame.pack(side=LEFT)
-        self.patientNotesTextEditor = Text(patientNoteFrame,
-                                           wrap=NONE,
+        patientNoteFrame = tkinter.LabelFrame(patientMainFrame, text=_("Notes for this patient"),
+                                              padx=10)
+        patientNoteFrame.pack(side=tkinter.LEFT)
+        self.patientNotesTextEditor = tkinter.Text(patientNoteFrame,
+                                           wrap=tkinter.NONE,
                                            height=10, width=30,
                                            background=self.configApp.get('Colors',
                                                                          'colorPatientEditor'))
         self.patientNotesTextEditor.bind('<FocusOut>', self.modifyPatient)
         self.patientNotesTextEditor.grid(row=2, columnspan=2)
-        scrollbarRightNotes = Scrollbar(patientNoteFrame, command=self.patientNotesTextEditor.yview)
-        scrollbarRightNotes.grid(row=2, column=2, sticky=W+N+S)
-        scrollbarBottom = Scrollbar(patientNoteFrame, orient=HORIZONTAL,
+        scrollbarRightNotes = tkinter.Scrollbar(patientNoteFrame, command=self.patientNotesTextEditor.yview)
+        scrollbarRightNotes.grid(row=2, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
+        scrollbarBottom = tkinter.Scrollbar(patientNoteFrame, orient=tkinter.HORIZONTAL,
                                     command=self.patientNotesTextEditor.xview)
-        scrollbarBottom.grid(row=3, columnspan=2, sticky=N+E+W)
+        scrollbarBottom.grid(row=3, columnspan=2, sticky=tkinter.N+tkinter.E+tkinter.W)
         self.patientNotesTextEditor.config(yscrollcommand=scrollbarRightNotes.set)
         self.patientNotesTextEditor.config(xscrollcommand=scrollbarBottom.set)
 
-        patientListsFrame = Frame(patientMainFrame, padx=10)
-        patientListsFrame.pack(side=LEFT)
+        patientListsFrame = tkinter.Frame(patientMainFrame, padx=10)
+        patientListsFrame.pack(side=tkinter.LEFT)
         # Pathologies listbox for this patient
-        pathologiesListboxFrame = LabelFrame(patientListsFrame, text=_("Patient pathologies"))
-        pathologiesListboxFrame.pack(side=TOP)
+        pathologiesListboxFrame = tkinter.LabelFrame(patientListsFrame,
+                                                     text=_("Patient pathologies"))
+        pathologiesListboxFrame.pack(side=tkinter.TOP)
         color = self.configApp.get('Colors', 'colorPathologiesList')
-        self.pathologiesListbox = Listbox(pathologiesListboxFrame, selectmode=EXTENDED,
+        self.pathologiesListbox = tkinter.Listbox(pathologiesListboxFrame,
+                                                  selectmode=tkinter.EXTENDED,
                                           background=color, height=9, width=20,
                                           exportselection=False)
         self.pathologiesListbox.grid(row=0, columnspan=2)
@@ -114,9 +125,10 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                     _("Use Ctrl and Shift keys") + "\n" + \
                                     _("for multiple selection"),
                                     self.delaymsTooltips)
-        scrollbarRightPathologies = Scrollbar(pathologiesListboxFrame, orient=VERTICAL,
-                                              command=self.pathologiesListbox.yview)
-        scrollbarRightPathologies.grid(row=0, column=2, sticky=W+N+S)
+        scrollbarRightPathologies = tkinter.Scrollbar(pathologiesListboxFrame,
+                                                      orient=tkinter.VERTICAL,
+                                                      command=self.pathologiesListbox.yview)
+        scrollbarRightPathologies.grid(row=0, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         self.pathologiesListbox.config(yscrollcommand=scrollbarRightPathologies.set)
         self.pathologiesListbox.bind('<ButtonRelease-1>', self.clicPathologiesListbox)
 
@@ -140,9 +152,9 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.genderVar.set("U")
         #self.sizeCombobox.set((self.sizeMax + self.sizeMin)//2)
         self.sizeCombobox.set(0)
-        self.patientNotesTextEditor.delete('1.0', END)
+        self.patientNotesTextEditor.delete('1.0', tkinter.END)
 
-    def update(self, observable, event):
+    def updateObserver(self, observable, event):
         """Called when the model object is modified. """
         if observable == self.patientFrameModel:
             self.logger.debug("PatientFrame received from model : " + event)
@@ -166,10 +178,10 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def initListPathologies(self):
         """ Init Pathologies list content """
-        self.pathologiesListbox.delete(0, END)
+        self.pathologiesListbox.delete(0, tkinter.END)
         self.listPathologies = self.patientFrameModel.getAllPathologies()
         for pathology in self.listPathologies:
-            self.pathologiesListbox.insert(END, pathology)
+            self.pathologiesListbox.insert(tkinter.END, pathology)
 
     def modifyPatient(self, *args):
         """ Modify patient info in database """
@@ -212,11 +224,11 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.birthYearCombobox.set(patient.getData("birthYear"))
         self.genderVar.set(patient.getData("gender"))
         self.sizeCombobox.set(patient.getData("size"))
-        self.patientNotesTextEditor.delete('1.0', END)
-        self.patientNotesTextEditor.insert(INSERT, patient.getData("notes"))
+        self.patientNotesTextEditor.delete('1.0', tkinter.END)
+        self.patientNotesTextEditor.insert(tkinter.INSERT, patient.getData("notes"))
 
         listPathologies2Select = patient.getPathologies()
-        self.pathologiesListbox.selection_clear(0, END)
+        self.pathologiesListbox.selection_clear(0, tkinter.END)
         firstIndex = True
         for pathology2Select in listPathologies2Select:
             index = 0
@@ -234,7 +246,7 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         """ Called when model sid that a patient has been created """
         listCodes = self.patientFrameModel.getAllPatientCodes()
         self.patientCodeCombobox['values'] = listCodes
-        self.pathologiesListbox.selection_clear(0, END)
+        self.pathologiesListbox.selection_clear(0, tkinter.END)
 
         self.mainWindow.setStatusText(_("Patient created in database") + " : " +
                                       self.patientCodeVar.get())

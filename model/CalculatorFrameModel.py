@@ -3,7 +3,7 @@
 ************************************************************************************
 Class : CalculatorFrameModel
 Author : Thierry Maillard (TMD)
-Date : 12/11/2016 - 24/11/2016
+Date : 12/11/2016 - 19/12/2016
 
 Role : Define the model for calculator frame.
 
@@ -32,13 +32,13 @@ You should have received a copy of the GNU General Public License
 along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
+import logging
+
 from model import Foodstuff
 from model import TotalLine
 from model import Component
 from util import Observable
 from util import CalcalExceptions
-
-import logging
 
 class CalculatorFrameModel(Observable.Observable):
     """ Model for food table, manage access to database and receive commands from GUI """
@@ -163,7 +163,8 @@ class CalculatorFrameModel(Observable.Observable):
             for foodnameModif in self.listFoodModifiedInTable:
                 returnValue.append(self.dictFoodStuff[foodnameModif].getFormattedValue())
         except KeyError:
-            raise CalcalExceptions.CalcalInternalError("getListFoodModifiedInTable() : food " +
+            raise CalcalExceptions.CalcalInternalError(self.configApp,
+                                                       "getListFoodModifiedInTable() : food " +
                                                        foodnameModif +
                                                        " not in model table")
         self.logger.debug("getListFoodModifiedInTable() : returnValue = " + str(returnValue))
@@ -205,13 +206,16 @@ class CalculatorFrameModel(Observable.Observable):
         elif askedGroup == "WATER":
             group = self.waterEnergyCodes
         else:
-            raise CalcalExceptions.CalcalInternalError("getTotalComponents() : askedGroup " +
+            raise CalcalExceptions.CalcalInternalError(self.configApp,
+                                                       "getTotalComponents() : askedGroup " +
                                                        askedGroup +
                                                        " out of {ENERGY, WATER")
         dictTotalComponents = dict()
         if len(self.dictAllExistingComponents) > 0:
-            name, quantity, dictComponentsValueStr = self.totalLine.getFormattedValue()
-            name, quantity, dictComponentsValue = self.totalLine.getRawValue()
+            result = self.totalLine.getFormattedValue()
+            dictComponentsValueStr = result[2]
+            result = self.totalLine.getRawValue()
+            dictComponentsValue = result[2]
             for componentCode in group:
                 if componentCode in self.dictAllExistingComponents:
                     shortcut, unit = self.dictAllExistingComponents[componentCode]
@@ -239,6 +243,9 @@ class CalculatorFrameModel(Observable.Observable):
                 if len(listFoodnames) != 1:
                     raise ValueError(_("Please select one and only one line in food table"))
                 self.database.deleteUserProduct(listFoodnames[0])
+                event = "DELETE_FOOD"
+            else:
+                event = "ERASE_FOOD"
 
             # Delete foodstufs in this model
             for foodname in listFoodnames:
@@ -250,7 +257,7 @@ class CalculatorFrameModel(Observable.Observable):
                 # For observer information
                 self.listDeletedFoodnames = listFoodnames
                 self.setChanged()
-                self.notifyObservers("DELETE_FOOD")
+                self.notifyObservers(event)
 
             self.listDeletedFoodnames = listFoodnames
             self.logger.debug("deleteFood : foodstufs deleted : " + str(listFoodnames))
@@ -379,10 +386,14 @@ class CalculatorFrameModel(Observable.Observable):
         self.notifyObservers("DISPLAY_PORTION")
 
     def getEnergyComponentsNames(self):
-        """ Return energy table componants names """
+        """ Return energy table componants names
+            V0.45 : pb table USDA without Alcool components """
         componentsName = []
         for componentCode in self.energeticComponentsCodes:
-            componentsName.append(self.dictAllExistingComponents[componentCode][0])
+            try:
+                componentsName.append(self.dictAllExistingComponents[componentCode][0])
+            except KeyError:
+                componentsName.append("")
         return componentsName
 
     def getEnergyRatio(self):
@@ -392,16 +403,32 @@ class CalculatorFrameModel(Observable.Observable):
         listSupplyEnergy = []
 
         if self.getNumberOfFoodStuff() > 0 and len(self.dictAllExistingComponents) > 0:
-            name, quantity, dictComponentsValue = self.totalLine.getRawValue()
-            name, quantity, dictComponentsValueStr = self.totalLine.getFormattedValue()
+            result = self.totalLine.getFormattedValue()
+            dictComponentsValueStr = result[2]
+            result = self.totalLine.getRawValue()
+            dictComponentsValue = result[2]
             energyTotal = dictComponentsValue[self.energyTotalKcalCode][1]
+            # V0.45 : some products have no energy defined
+            # If 0.0 : try to sum energy given by energetic components
+            if energyTotal == 0.0:
+                index = 0
+                for componentCode in self.energeticComponentsCodes[:-1]:
+                    value = dictComponentsValue[componentCode][1]
+                    energy = value * self.EnergySuppliedByComponents[index]
+                    energyTotal += energy
+                    index = index + 1
+
             index = 0
             for componentCode in self.energeticComponentsCodes:
                 # Compute ratio
                 qualifier = dictComponentsValue[componentCode][0]
                 value = dictComponentsValue[componentCode][1]
                 energy = value * self.EnergySuppliedByComponents[index]
-                supplyEnergyRatio = round(energy * 100.0 / energyTotal)
+                # V0.45 : some products have no energy defined ...
+                if energyTotal != 0.0:
+                    supplyEnergyRatio = round(energy * 100.0 / energyTotal)
+                else:
+                    supplyEnergyRatio = '-'
                 listSupplyEnergyRatio.append(str(supplyEnergyRatio) + " %")
                 listValues.append(dictComponentsValueStr[componentCode])
                 formatedEnergy = Component.Component.getValueFormatedStatic(self.configApp,
@@ -426,8 +453,10 @@ class CalculatorFrameModel(Observable.Observable):
         isDataAvailable = False
         isEnougthWater = True
         if self.getNumberOfFoodStuff() > 0 and len(self.dictAllExistingComponents) > 0:
-            name, quantity, dictComponentsValue = self.totalLine.getRawValue()
-            name, quantity, dictComponentsValueStr = self.totalLine.getFormattedValue()
+            result = self.totalLine.getFormattedValue()
+            dictComponentsValueStr = result[2]
+            result = self.totalLine.getRawValue()
+            dictComponentsValue = result[2]
             waterInFood = dictComponentsValueStr[self.waterCode] + " ml"
             waterInFoodValueFloat = dictComponentsValue[self.waterCode][1]
             waterInFoodQualifier = dictComponentsValue[self.waterCode][0]

@@ -24,7 +24,8 @@ class USDA_28_Reader():
         self.configApp = configApp
         self.localDirPath = os.path.join(dirProject,
                                          self.configApp.get('Resources', 'LocaleDir'))
-        self.localDirPath = os.path.join(self.localDirPath, locale.getlocale()[0][:2])
+        curLocale = locale.getlocale()[0][:2]
+        self.localDirPath = os.path.join(self.localDirPath, curLocale)
         self.databaseRefDir = os.path.join(dirProject,
                                            self.configApp.get('Resources', 'ResourcesDir'),
                                            self.configApp.get('Resources', 'DatabaseDir'))

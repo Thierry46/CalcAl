@@ -4,7 +4,7 @@
 # Author : Thierry Maillard
 # Role : USDA Database components description
 # Reference : sr28abbr.zip/sr28_doc.pdf p39 (46 with header)
-# Date : 29/72016
+# Date : 29/7/2016
 # Format :
 #   - # Start a comment line
 #   - Position;Component_Name;Component_Code;Unit_Orig
