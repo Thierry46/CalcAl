@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Database
 Author : Thierry Maillard (TMD)
-Date  : 23/3/2016 - 7/1/2017
+Date  : 23/3/2016 - 1/2/2017
 
 Role : Define a database and method to create, consult and save it.
 ************************************************************************************
@@ -13,7 +13,6 @@ import os.path
 import sqlite3
 import time
 
-from util import DateUtil
 from . import DatabaseReaderFactory
 
 class Database():
@@ -158,7 +157,7 @@ class Database():
         numberResults = 0
         messageproductsCondition = ""
         listDictProductValues = []
-        for constituantCode, selectedOperator, level in listFilters:
+        for constituantCode, selectedOperator, level, constituantName in listFilters:
             dictProductValues = {}
             # Build condition for extraction of products from BD
             condition = " AND constituantCode=" + str(constituantCode) + \
@@ -168,7 +167,8 @@ class Database():
                 dictProductValues[product[0]] = [product[1], product[2], product[3]]
             numberResults += len(productValues)
             messageproductsCondition = _("Filter") + " " + str(numFilter) + " : " + \
-                                        str(numberResults) + " " + _("results")
+                                        constituantName + " : " + \
+                                        str(len(productValues)) + " " + _("results")
             messageQueue.put(messageproductsCondition)
             listDictProductValues.append(dictProductValues)
             numFilter += 1
@@ -181,9 +181,9 @@ class Database():
         cursor.execute("""SELECT products.name, constituantCode, qualifValue, value
             FROM products, constituantsValues
             WHERE constituantsValues.productCode = products.code""" + condition)
-        listProductNamesConstituantsValues = cursor.fetchall()
+        listProductNamesConstitValues = cursor.fetchall()
         cursor.close()
-        return listProductNamesConstituantsValues
+        return listProductNamesConstitValues
 
     def insertNewComposedProduct(self, productName, familyName,
                                  totalQuantity, dictComponentsQualifierQuantity,
@@ -230,7 +230,8 @@ class Database():
 
                 # Save components values of new product
                 cursor.executemany("""
-                    INSERT INTO constituantsValues(productCode, constituantCode, qualifValue, value)
+                    INSERT INTO constituantsValues(productCode, constituantCode,
+                                                   qualifValue, value)
                     VALUES(?, ?, ?, ?)
                     """, fieldsComposants)
 
@@ -487,7 +488,12 @@ class Database():
         cursor.close()
 
     def createUserTables(self):
-        """ V0.32 : Create al user tables """
+        """ Function used to add table or update database structure
+            V0.32 : Create al user tables
+            V0.50 : remove database correction
+            V0.41 : Add column nbDays to existing portions table
+            V0.41 : Check and correct dates in portions table
+            Check v0.49 for example how to create columns, query database schema"""
         self.logger.debug("Database : createUserTables")
         cursor = self.connDB.cursor()
 
@@ -532,32 +538,6 @@ class Database():
                 constituantCode INTEGER
                 )""")
 
-        # V0.41 : Add column nbDays to existing portions table
-        try:
-            cursor.execute(" ALTER TABLE portions ADD COLUMN nbDays INTEGER DEFAULT 1")
-            self.logger.warning("v0.41 : Table portions has got old schema : add an nbDays field")
-        except sqlite3.OperationalError:
-            self.logger.debug("OK v0.41 : Table portions as got an nbDays field")
-
-        # V0.41 : Check and correct dates in portions table (to delete in a future version)
-        cursor.execute("SELECT code, date FROM portions")
-        listCodeDate = cursor.fetchall()
-        listPb = []
-        nbDateCorrected = 0
-        for codeDate in listCodeDate:
-            code, date = codeDate
-            try:
-                dateFormated = DateUtil.formatDate(date)
-                if dateFormated != date:
-                    cursor.execute("UPDATE portions SET date=? WHERE code=?", (dateFormated, code))
-                    nbDateCorrected += 1
-            except ValueError:
-                listPb.append([code, date])
-        if len(listPb) > 0:
-            self.logger.warning(_("Dates are invalid in following portions") + " : " + str(listPb))
-        if nbDateCorrected > 0:
-            self.logger.warning(str(nbDateCorrected) + " " +_("dates corrected in portions table"))
-
         # V0.42 : 26/11/2016 : Patient tables
         # Check if patientInfo table exists
         cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='patientInfo'")
@@ -575,15 +555,6 @@ class Database():
                     patientCode TEXT,
                     pathologyName TEXT
                 )""")
-          # Create patient whith existing ration info (to delete in a future version)
-            cursor.execute("SELECT DISTINCT patient FROM portions")
-            CodePatents = cursor.fetchall()
-            nbInsertedPatient = 0
-            for code in CodePatents:
-                cursor.execute("INSERT INTO patientInfo(code) VALUES(?)", (code[0],))
-                nbInsertedPatient += 1
-            if nbInsertedPatient > 0:
-                self.logger.warning(str(nbInsertedPatient) + " " +_("patient get from portion table"))
 
         self.connDB.commit()
         cursor.close()
@@ -964,7 +935,7 @@ class Database():
         # Get energy codes useful to compute missing energies
         energyTotalKcalCode = self.configApp.get('Energy', 'EnergyTotalKcalCode')
         energyTotalKJCode = self.configApp.get('Energy', 'EnergyTotalKJCode')
-        CoefKcal2Kj = float(self.configApp.get('Energy', 'CoefKcal2Kj'))
+        coefKcal2Kj = float(self.configApp.get('Energy', 'CoefKcal2Kj'))
         listComp = self.configApp.get('Energy', 'EnergeticComponentsCodes')
         energeticComponentsCodes = [int(code) for code in listComp.split(";")]
         energyCodesStr = listComp.replace(";", ",")
@@ -1013,7 +984,7 @@ class Database():
                                                       energy, 'N'))
                     listCorrectedEnergies.append((productCodePrev,
                                                     int(energyTotalKJCode),
-                                                    energy * CoefKcal2Kj, 'N'))
+                                                    energy * coefKcal2Kj, 'N'))
                     listCodesProducts.append(str(productCodePrev))
                 productCodePrev = productCode
                 energy = 0.0
@@ -1024,7 +995,7 @@ class Database():
                                               energy, 'N'))
             listCorrectedEnergies.append((productCodePrev,
                                             int(energyTotalKJCode),
-                                            energy * CoefKcal2Kj, 'N'))
+                                            energy * coefKcal2Kj, 'N'))
             listCodesProducts.append(str(productCodePrev))
 
         # Message to user
@@ -1046,7 +1017,8 @@ class Database():
                             FROM products
                             WHERE code IN (""" + listCodesProductsStr + ")")
         results = cursor.fetchall()
-        listCodesProductsSourceM = [[source + " (" + _("Energies recalculated by CalcAl") + " !)", code]
+        listCodesProductsSourceM = [[source + " (" + _("Energies recalculated by CalcAl") + " !)",
+                                     code]
                                     for code, source in results]
         cursor.executemany("UPDATE products SET source=? WHERE code=?",
                            listCodesProductsSourceM)

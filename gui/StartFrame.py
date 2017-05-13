@@ -33,7 +33,8 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseDirPath = os.path.join(ressourcePath,
                                             self.configApp.get('Resources', 'DatabaseDir'))
 
-        tkinter.Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=tkinter.TOP)
+        tkinter.Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))
+                      ).pack(side=tkinter.TOP)
         centerFrame = tkinter.Frame(self)
         centerFrame.pack(side=tkinter.TOP)
         buttonFrame = tkinter.Frame(centerFrame)
@@ -75,7 +76,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         self.startButton.pack(side=tkinter.LEFT)
 
-    def clicListBoxItem(self, evt):
+    def clicListBoxItem(self, dummy):
         """ Activate New and Delete button when a database is chosen """
         index = self.databaseListbox.curselection()
         if index:
@@ -88,7 +89,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.mainWindow.closeDatabase()
             self.mainWindow.enableTabCalculator(False)
 
-    def start(self, event=None):
+    def start(self, dummy=None):
         """ start calculator frame with chosen database """
         index = self.databaseListbox.curselection()
         if index:

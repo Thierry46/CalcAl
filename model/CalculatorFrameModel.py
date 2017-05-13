@@ -66,8 +66,8 @@ class CalculatorFrameModel(Observable.Observable):
         self.currentComponentCodes = set()
         self.askedByUserCodes = set()
         listEnergy = self.configApp.get('Energy', 'EnergySuppliedByComponents')
-        self.EnergySuppliedByComponents = [float(value) for value in listEnergy.split(";")]
-        self.EnergySuppliedByComponents.append(1.0) # Coeff for energy total
+        self.energySuppliedByComponents = [float(value) for value in listEnergy.split(";")]
+        self.energySuppliedByComponents.append(1.0) # Coeff for energy total
 
         self.specialComponentsCodes = set(self.energeticComponentsCodes) |\
                                       set(self.waterEnergyCodes)
@@ -146,7 +146,8 @@ class CalculatorFrameModel(Observable.Observable):
         self.totalLine.update(self.dictFoodStuff)
 
         # Notify Observers
-        self.logger.debug("updateFollowedComponents : components " + str(self.currentComponentCodes))
+        self.logger.debug("updateFollowedComponents : components " +
+                          str(self.currentComponentCodes))
         if notifyObservers:
             self.setChanged()
             self.notifyObservers("CHANGE_COMPONENTS")
@@ -281,8 +282,8 @@ class CalculatorFrameModel(Observable.Observable):
         dictFood2Group = dict()
         for foodname, quantity in listFoodNameAndQty2Group:
             newFood = Foodstuff.Foodstuff(self.configApp, self.database,
-                                          foodname, quantity,
-                                          listFollowedComponents=self.dictAllExistingComponents.keys())
+                                   foodname, quantity,
+                                   listFollowedComponents=self.dictAllExistingComponents.keys())
             dictFood2Group[foodname] = newFood
 
         # Create a total line to group theese foodstuffs
@@ -293,9 +294,9 @@ class CalculatorFrameModel(Observable.Observable):
 
         # Insert new group in database
         self.database.insertNewComposedProduct(productName, familyName,
-                                               totalQuantity,
-                                               totalLineGroup.getData("dictComponentsQualifierQuantity"),
-                                               listFoodNameAndQty2Group)
+                                        totalQuantity,
+                                        totalLineGroup.getData("dictComponentsQualifierQuantity"),
+                                        listFoodNameAndQty2Group)
 
         # Insert new group foodstuff in this model
         self.addFoodInTable([[productName, str(totalQuantity)]])
@@ -366,9 +367,9 @@ class CalculatorFrameModel(Observable.Observable):
             productCode = productPortion[2]
             if productCode != currentProductCode:
                 self.dictFoodStuff[foodname] = Foodstuff.Foodstuff(self.configApp,
-                                                                   self.database,
-                                                                   foodname, quantity,
-                                                                   listInfoProduct=productPortion[0:7])
+                                                            self.database,
+                                                            foodname, quantity,
+                                                            listInfoProduct=productPortion[0:7])
                 currentProductCode = productCode
                 self.listFoodModifiedInTable.append(foodname)
             self.dictFoodStuff[foodname].addComponentFromList(productPortion[7:])
@@ -414,7 +415,7 @@ class CalculatorFrameModel(Observable.Observable):
                 index = 0
                 for componentCode in self.energeticComponentsCodes[:-1]:
                     value = dictComponentsValue[componentCode][1]
-                    energy = value * self.EnergySuppliedByComponents[index]
+                    energy = value * self.energySuppliedByComponents[index]
                     energyTotal += energy
                     index = index + 1
 
@@ -423,7 +424,7 @@ class CalculatorFrameModel(Observable.Observable):
                 # Compute ratio
                 qualifier = dictComponentsValue[componentCode][0]
                 value = dictComponentsValue[componentCode][1]
-                energy = value * self.EnergySuppliedByComponents[index]
+                energy = value * self.energySuppliedByComponents[index]
                 # V0.45 : some products have no energy defined ...
                 if energyTotal != 0.0:
                     supplyEnergyRatio = round(energy * 100.0 / energyTotal)

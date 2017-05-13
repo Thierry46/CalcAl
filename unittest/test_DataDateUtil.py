@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-Name : test_Data_DateUtil.py
+Name : test_DataDateUtil.py
 Author : Thierry Maillard (TMD)
 Date : 24/11/2016
-Role : Tests unitaires du projet Calcal avec py.test
+Role : Tests unitaires module DateUtil du projet Calcal avec py.test
 Use : See unittest.sh
 
 Licence : GPLv3
@@ -43,6 +43,7 @@ def initEnv():
 
 @pytest.mark.parametrize("dateStr", ["2016/11/24", "2016/09/24", "2016/09/04"])
 def test_formatDate_OK(dateStr):
+    """ Test DateUtil.formatDate() with correct dates no modification must appear """
     # Call init fixture
     initEnv()
 
@@ -62,6 +63,7 @@ def test_formatDate_OK(dateStr):
                                              ("09:04:16", '%d:%m:%y'),
                                              ("2016:11:2", '%Y:%m:%d')])
 def test_formatDate_convert_OK(dateStr, formatStr):
+    """ Test DateUtil.formatDate() date reformatting """
     # Call init fixture
     initEnv()
 
@@ -73,6 +75,7 @@ def test_formatDate_convert_OK(dateStr, formatStr):
 @pytest.mark.parametrize("dateStr", ["2016/11 24", "2016:09/24", "choucroute",
                                      "16 novembre 2016", "31/2/2016", "31/12/6"])
 def test_formatDate_Error(dateStr):
+    """ Test DateUtil.formatDate() bad dates """
     # Call init fixture
     initEnv()
 

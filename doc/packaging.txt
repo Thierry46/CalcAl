@@ -1,28 +1,5 @@
-CalcAl - packaging
+CalcAl - packaging on Mac
 ==================
-
-Pip :
-Ref : https://pypi.python.org/pypi/pip
-curl -O https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py
-su
-cd /Users/thierry/Documents/informatique/logiciels/python/python3
-python3 get-pip.py
-
-Install p2app :
-sudo python3 -m pip install py2app
-
-cd /Users/thierry/Documents/dietetique/CalcAl
-============
-To create setup.py only but it is already configured.
-DON'T EXECUTE !
-==============
-py2applet --make-setup --force-system-tk --report-missing-from-imports \
-    Calcal.py --iconfile resources/images/logo_calcal.icns \
-    --resources CalcAl.ini,locale,resources \
-    —-packages database,gui
-
-Ajouter encoding à setup.py
-# -*- coding: utf-8 -*-
 
 Modif setup.py
 DATA_FILES = ['CalcAl.ini', 'locale', 'resources']

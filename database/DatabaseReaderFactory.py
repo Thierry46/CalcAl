@@ -14,6 +14,9 @@ class DatabaseReaderFactory():
     """ Class used to get a database reader using the design pattern Factory.
     """
 
+    # Decorator to use method getValueFormatedStatic()
+    # without instantiating class : static method
+    @staticmethod
     def getInstance(configApp, dirProject, typeDatabase, connDB, dbname):
         """ return a database reader """
         databaseReader = None
@@ -46,6 +49,3 @@ class DatabaseReaderFactory():
                               configApp.get("Version", "EmailSupport1") + " " + _("or") + " " +
                               configApp.get("Version", "EmailSupport2"))
         return databaseReader
-
-    # To use method getInstance() without instantiating class : static method
-    getInstance = staticmethod(getInstance)

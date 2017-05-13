@@ -3,7 +3,7 @@
 """
 Name : test_CalculatorFrameModel.py
 Author : Thierry Maillard (TMD)
-Date : 26/10/2016 - 27/10/2016
+Date : 26/10/2016 - 17/11/2016
 Role : Tests unitaires du projet Calcal avec py.test
 Use : See unittest.sh
 
@@ -25,15 +25,11 @@ Copyright (c) 2015 - Thierry Maillard
    You should have received a copy of the GNU General Public License
    along with Finance Locales project.  If not, see <http://www.gnu.org/licenses/>.
 """
-import pytest
-from pytest import approx
-
 import configparser
 import os.path
-import pwd
-import platform
-import gettext
-import platform
+
+import pytest
+from pytest import approx
 
 import CalcAl
 from model import CalculatorFrameModel
@@ -43,7 +39,8 @@ from util import CalcalExceptions
 # Code to execute before and at the end of all test
 @pytest.fixture(scope="session")
 def initEnv():
-    # Code to be executed when called by test function
+    """ Code to be executed when called by test function
+        Open 'Resources', 'DemoDatabaseName' database """
     fileConfigApp = 'CalcAl.ini'
     configApp = configparser.RawConfigParser()
     configApp.read(fileConfigApp, encoding="utf-8")
@@ -62,7 +59,6 @@ def test_initGetterNone():
     """ Test constructor and getter, no database loaded """
     # Call init fixture
     configApp, databaseManager = initEnv()
-    database = databaseManager.getDatabase()
 
     calculatorFrameModel = CalculatorFrameModel.CalculatorFrameModel(configApp)
     assert len(calculatorFrameModel.getAllExistingComponents()) == 0
@@ -71,6 +67,9 @@ def test_initGetterNone():
     databaseManager.closeDatabase()
 
 def test_setDatabase():
+    """ Test calculatorFrameModel.setDatabase :
+        open an existing database
+        Test number of components  > 0 and no componet activated """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -87,6 +86,8 @@ def test_setDatabase():
     databaseManager.closeDatabase()
 
 def test_addFoodInTable():
+    """ Test calculatorFrameModel.addFoodInTable :
+        Test adding in model 2 fudstuff and modifying the first """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -102,7 +103,8 @@ def test_addFoodInTable():
     calculatorFrameModel.addFoodInTable([[foodname1, quantity1]])
     assert calculatorFrameModel.getNumberOfFoodStuff() == 1
     assert calculatorFrameModel.dictFoodStuff[foodname1].getData("name") == foodname1
-    assert calculatorFrameModel.dictFoodStuff[foodname1].getData("quantity") == approx(float(quantity1))
+    assert calculatorFrameModel.dictFoodStuff[foodname1].getData("quantity") == \
+           approx(float(quantity1))
     assert len(calculatorFrameModel.dictFoodStuff[foodname1].dictComponents) == 7
 
     foodname2 = "Légumes, pur jus (aliment moyen)"
@@ -114,7 +116,8 @@ def test_addFoodInTable():
     quantity3 = str(50.)
     calculatorFrameModel.addFoodInTable([[foodname1, quantity3]])
     assert calculatorFrameModel.getNumberOfFoodStuff() == 2
-    assert calculatorFrameModel.dictFoodStuff[foodname1].getData("quantity") == approx(float(quantity3))
+    assert calculatorFrameModel.dictFoodStuff[foodname1].getData("quantity") == \
+           approx(float(quantity3))
 
     # Add quantity in foodname1
     quantity4 = str(150.)
@@ -127,6 +130,8 @@ def test_addFoodInTable():
     databaseManager.closeDatabase()
 
 def test_addFoodInTable_Error():
+    """ Test calculatorFrameModel.addFoodInTable :
+        Test error if adding in model a fudstuff with an empty name """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -139,19 +144,21 @@ def test_addFoodInTable_Error():
     # Add a foodstuff with empty name
     foodname1 = ""
     quantity1 = str(200.)
-    with pytest.raises(CalcalExceptions.CalcalValueError) as e:
+    with pytest.raises(CalcalExceptions.CalcalValueError):
         calculatorFrameModel.addFoodInTable([[foodname1, quantity1]])
 
     # Add a foodstuff with empty name
     foodname1 = "Jus de fruits (aliment moyen)"
     quantity1 = "a,"
-    with pytest.raises(CalcalExceptions.CalcalValueError) as e:
+    with pytest.raises(CalcalExceptions.CalcalValueError):
         calculatorFrameModel.addFoodInTable([[foodname1, quantity1]])
 
     # Close demo database
     databaseManager.closeDatabase()
 
-def test_updateFollowedComponents():
+def test_updateFollowedComp():
+    """ Test calculatorFrameModel.updateFollowedComponents :
+        Test adding component with no fudstuff entered in model """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -175,7 +182,9 @@ def test_updateFollowedComponents():
     # Close demo database
     databaseManager.closeDatabase()
 
-def test_updateFollowedComponents_withFood():
+def test_updateFollowedCompFood():
+    """ Test calculatorFrameModel.updateFollowedComponents :
+        Test adding component with 2 fudstuffs entered in model """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -210,6 +219,9 @@ def test_updateFollowedComponents_withFood():
     databaseManager.closeDatabase()
 
 def test_getListFoodModifiedInTable():
+    """ Test calculatorFrameModel.getListFoodModifiedInTable :
+        Test the values returned by getListFoodModifiedInTable
+        after adding a foodstuff """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -234,7 +246,11 @@ def test_getListFoodModifiedInTable():
     # Close demo database
     databaseManager.closeDatabase()
 
-def test_getTotalLineStr():
+@pytest.mark.parametrize("nbDays", [1, 2])
+def test_getTotalLineStr(nbDays):
+    """ Test calculatorFrameModel.getTotalLineStr :
+        Test the values returned by getTotalLineStr
+        after adding 2 foodstuffs and changing number of day to eat portion """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -248,33 +264,44 @@ def test_getTotalLineStr():
     calculatorFrameModel.updateFollowedComponents(askedByUserCodes)
 
     # Test getTotalLineStr() 1 food in table
-    nameTotal, quantityTotal, dictComponentTotal = calculatorFrameModel.getTotalLineStr()
-    assert nameTotal == _("Total")
-    assert quantityTotal == float(quantity1)
+    nameTotal, quantityTotal, dictComponentTotal = calculatorFrameModel.getTotalLineStr(nbDays)
+    assert nameTotal.startswith(_("Total"))
+    if nbDays > 1:
+        assert nameTotal.endswith(_("per day"))
+    assert quantityTotal == approx(float(quantity1) / float(nbDays))
     assert compWater in dictComponentTotal
     foodModif = calculatorFrameModel.getListFoodModifiedInTable()
     assert len(foodModif) == 1
-    name, quantity, dictComponent = foodModif[0]
-    assert quantity == quantityTotal
-    assert dictComponent == dictComponentTotal
+    dummy, quantity, dictComponent = foodModif[0]
+    assert quantityTotal == approx(quantity / float(nbDays))
+    if nbDays == 1:
+        assert dictComponent == dictComponentTotal
+    else:
+        assert float(dictComponentTotal[compWater]) == \
+                approx(float(dictComponent[compWater])/ float(nbDays))
 
     # Test getTotalLineStr() 2 foods in table
     foodname2 = "Légumes, pur jus (aliment moyen)"
     quantity2 = str(100.)
     calculatorFrameModel.addFoodInTable([[foodname2, quantity2]])
-    nameTotal, quantityTotal, dictComponentTotal = calculatorFrameModel.getTotalLineStr()
+    nameTotal, quantityTotal, dictComponentTotal = calculatorFrameModel.getTotalLineStr(nbDays)
     foodModif = calculatorFrameModel.getListFoodModifiedInTable()
     assert len(foodModif) == 1
-    name2, quantity2, dictComponent2 = foodModif[0]
-    assert quantity + quantity2 == quantityTotal
-    assert float(dictComponent[compWater]) + float(dictComponent2[compWater]) == \
-            approx(float(dictComponentTotal[compWater]))
+    dummy, quantity2, dictComponent2 = foodModif[0]
+    assert quantityTotal == approx((quantity + quantity2) / nbDays)
+    # Enlarge tolerance to 0.1 because values are rounded for each food before adding
+    assert float(dictComponentTotal[compWater]) == \
+            approx((float(dictComponent[compWater]) + float(dictComponent2[compWater])) / \
+                   float(nbDays), rel=1e-1)
 
     # Close demo database
     databaseManager.closeDatabase()
 
 # Test getFullTable()
 def test_getFullTable():
+    """ Test calculatorFrameModel.getFullTable :
+        Test the values returned by getFullTable
+        after adding 2 foodstuffs """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -301,6 +328,8 @@ def test_getFullTable():
 
 # Test deleteFood()
 def test_deleteFood():
+    """ Test calculatorFrameModel.deleteFood :
+        Test adding and removing foodstuffs """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -328,6 +357,8 @@ def test_deleteFood():
 
 # Test groupFood()
 def test_groupFood():
+    """ Test calculatorFrameModel.groupFood :
+        Test grouping foodstuffs """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -338,8 +369,7 @@ def test_groupFood():
     foodname2 = "Légumes, pur jus (aliment moyen)"
     quantity2 = str(100.)
     calculatorFrameModel.addFoodInTable([[foodname1, quantity1], [foodname2, quantity2]])
-    line0 = calculatorFrameModel.getListFoodModifiedInTable()[0]
-    line1 = calculatorFrameModel.getListFoodModifiedInTable()[1]
+    assert len(calculatorFrameModel.getListFoodModifiedInTable()) == 2
     assert calculatorFrameModel.getNumberOfFoodStuff() == 2
 
     # Take a picture of model
@@ -368,6 +398,8 @@ def test_groupFood():
 
 # Test ungroupFood()
 def test_ungroupFood():
+    """ Test calculatorFrameModel.ungroupFood :
+        Test ungrouping foodstuffs """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -402,7 +434,10 @@ def test_ungroupFood():
     # Close demo database
     databaseManager.closeDatabase()
 
-def test_ungroupFoodAndUpdateExisting():
+def test_ungroupFoodExisting():
+    """ Test calculatorFrameModel.ungroupFood :
+        Test ungrouping foodstuffs hen a foodstuf in the group already in model
+        Test if no duplication ant if quantities are summed"""
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -443,6 +478,8 @@ def test_ungroupFoodAndUpdateExisting():
     databaseManager.closeDatabase()
 
 def test_portion():
+    """ Test calculatorFrameModel.displayPortion :
+        Test saving a group of food in a portion"""
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -496,6 +533,8 @@ def test_portion():
     databaseManager.closeDatabase()
 
 def test_getEnergyComponentsNames():
+    """ Test calculatorFrameModel.getEnergyComponentsNames :
+        Test getting energetic components name """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -511,6 +550,9 @@ def test_getEnergyComponentsNames():
     databaseManager.closeDatabase()
 
 def test_getEnergyRatio():
+    """ Test calculatorFrameModel.getEnergyRatio :
+        enter 1 foodstuff and check all ratio for energy given
+        by all energetics components"""
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -534,6 +576,9 @@ def test_getEnergyRatio():
     databaseManager.closeDatabase()
 
 def test_getWaterEnergy():
+    """ Test calculatorFrameModel.getWaterEnergy :
+        enter 1 foodstuff and check energy and water given
+        by all energetics components of 0 or one foodstuff"""
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()
@@ -543,7 +588,8 @@ def test_getWaterEnergy():
     waterUnknownValue = configApp.get('Water', 'WaterUnknownValue')
 
     # Test with no food Selected
-    isDataAvailable, waterInFood, waterNeeded, isEnougthWater = calculatorFrameModel.getWaterEnergy()
+    isDataAvailable, waterInFood, waterNeeded, isEnougthWater = \
+        calculatorFrameModel.getWaterEnergy()
     assert not isDataAvailable
     assert waterInFood == waterUnknownValue
     assert waterNeeded == waterUnknownValue
@@ -555,7 +601,8 @@ def test_getWaterEnergy():
     calculatorFrameModel.addFoodInTable([[foodname1, quantity1]])
 
     # Test with food Selected (enougth water)
-    isDataAvailable, waterInFood, waterNeeded, isEnougthWater = calculatorFrameModel.getWaterEnergy()
+    isDataAvailable, waterInFood, waterNeeded, isEnougthWater = \
+        calculatorFrameModel.getWaterEnergy()
     assert isDataAvailable
     assert waterInFood != waterUnknownValue
     assert waterNeeded != waterUnknownValue
@@ -567,7 +614,8 @@ def test_getWaterEnergy():
     calculatorFrameModel.addFoodInTable([[foodname2, quantity2]])
 
     # Test with food Selected (enougth water)
-    isDataAvailable, waterInFood, waterNeeded, isEnougthWater = calculatorFrameModel.getWaterEnergy()
+    isDataAvailable, waterInFood, waterNeeded, isEnougthWater = \
+        calculatorFrameModel.getWaterEnergy()
     assert isDataAvailable
     assert waterInFood != waterUnknownValue
     assert waterNeeded != waterUnknownValue
@@ -575,4 +623,3 @@ def test_getWaterEnergy():
 
     # Close demo database
     databaseManager.closeDatabase()
-

@@ -14,7 +14,6 @@ Modifications :
 """
 import logging
 import locale
-import zipfile
 import os
 import re
 
@@ -34,8 +33,8 @@ class Ciqual_Reader():
         curLocale = locale.getlocale()[0][:2]
         self.localDirPath = os.path.join(self.localDirPath, curLocale)
         self.databaseRefDir = os.path.join(dirProject,
-                                            self.configApp.get('Resources', 'ResourcesDir'),
-                                            self.configApp.get('Resources', 'DatabaseDir'))
+                                           self.configApp.get('Resources', 'ResourcesDir'),
+                                           self.configApp.get('Resources', 'DatabaseDir'))
 
         self.connDB = connDB
         self.dbname = dbname
@@ -83,19 +82,14 @@ class Ciqual_Reader():
         # Source for Ciqual file
         self.source = os.path.basename(pathZipFileInit)
 
-        if pathZipFileInit.endswith(".zip"):
-            with zipfile.ZipFile(pathZipFileInit, "r") as zfile:
-                with zfile.open(self.configApp.get('Ciqual', 'CiqualCSVFile')) as readfile:
-                    self.processFile(readfile, cursor, True)
-                readfile.close()
-            zfile.close()
-        elif pathZipFileInit.endswith(".csv"):
+        # 5/5/2017 : v0.52 : solve pb bug zipfile : remove zip support
+        if pathZipFileInit.endswith(".csv"):
             with open(pathZipFileInit, 'r', encoding='cp1252') as readfile:
-                self.processFile(readfile, cursor, False)
+                self.processFile(readfile, cursor, decode=False)
             readfile.close()
         else:
             cursor.close()
-            raise ValueError("Ciqual_Reader : " + _("Only .zip or .csv files allowed"))
+            raise ValueError("Ciqual_Reader : " + _("Only .csv files allowed"))
 
         self.connDB.commit()
         cursor.close()
@@ -156,9 +150,10 @@ class Ciqual_Reader():
 
         # V0.45 : if Ciqual version 2016 : read components codes not in database
         if self.dateSource == "2016":
-            compCodesFilePath = os.path.join(self.databaseRefDir,
-                                             self.configApp.get('Ciqual',
-                                                                'Cilqual2016Codes4ComponentsFilePath'))
+            compCodesFilePath = os.path.join(
+                                    self.databaseRefDir,
+                                    self.configApp.get('Ciqual',
+                                                       'Cilqual2016Codes4ComponentsFilePath'))
             dicoCompCodes = {}
             # ComponantsCodes file is utf-8 encoded, we have to decode it
             # No problem on Mac but problem on non utf-8 systems like Windows
@@ -176,8 +171,8 @@ class Ciqual_Reader():
 
         numField = 0
         # Check 4 first fields
-        FirstFieldsCiqualFile = self.configApp.get('Ciqual', 'FirstFieldsCiqualFile').split(";")
-        for fieldName in FirstFieldsCiqualFile:
+        firstFieldsCiqual = self.configApp.get('Ciqual', 'FirstFieldsCiqualFile').split(";")
+        for fieldName in firstFieldsCiqual:
             readField = headerSplitted[numField]
             if readField != fieldName:
                 raise ValueError(_("Ciqual file : invalid header field") + " " +  str(numField+1) +

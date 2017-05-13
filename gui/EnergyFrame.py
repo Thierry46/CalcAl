@@ -23,15 +23,13 @@ class EnergyFrame(tkinter.LabelFrame):
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
         self.calculatorFrameModel.addObserver(self)
 
-        self.bgValueComp = self.configApp.get('Colors', 'colorComponantValueTableFood')
-
         listComp = self.configApp.get('Energy', 'EnergeticComponentsCodes')
-        self.EnergeticComponentsCodes = [int(code) for code in listComp.split(";")]
-        self.emptyComponents = ['-' for index in range(len(self.EnergeticComponentsCodes))]
+        self.eComponentsCodes = [int(code) for code in listComp.split(";")]
+        self.emptyComponents = ['-' for index in range(len(self.eComponentsCodes))]
         listEnergy = self.configApp.get('Energy', 'EnergySuppliedByComponents')
-        self.EnergySuppliedByComponents = [float(value) for value in listEnergy.split(";")]
-        assert len(self.EnergeticComponentsCodes) == len(self.EnergySuppliedByComponents), \
-            "pb in ini file : EnergeticComponentsCodes and EnergySuppliedByComponents" + \
+        self.eSuppliedByComponents = [float(value) for value in listEnergy.split(";")]
+        assert len(self.eComponentsCodes) == len(self.eSuppliedByComponents), \
+            "pb in init file : EnergeticComponentsCodes and EnergySuppliedByComponents" + \
             " must have the same number of elements"
 
         self.energyTable = TableTreeView.TableTreeView(self, [_("Components")],
@@ -40,12 +38,13 @@ class EnergyFrame(tkinter.LabelFrame):
                                  int(self.configApp.get('Size', 'energyTableOtherColWidth')),
                                  int(self.configApp.get('Size', 'energyTableColMinWdth')),
                                  selectmode="extended")
-        self.energyTable.setColor('normalRow', self.bgValueComp)
+        self.energyTable.setColor('normalRow',
+                                  self.configApp.get('Colors', 'colorComponantValueTableFood'))
         self.energyTable.pack(side=tkinter.TOP)
         self.energyTable.setBinding('<Command-c>', self.copyEnergyInClipboard)
         self.energyTable.setBinding('<Control-c>', self.copyEnergyInClipboard)
 
-    def copyEnergyInClipboard(self, event=None):
+    def copyEnergyInClipboard(self, dummy=None):
         "Copy selected energy item in clipboard"
         try:
             text = self.energyTable.getTableAsText()

@@ -4,7 +4,7 @@
 ************************************************************************************
 program : CalcAl
 Author : Thierry Maillard (TMD)
-Date : 10/3/2016 - 3/12/2016
+Date : 10/3/2016 - 7/5/2016
 
 Object : Food Calculator based on CIQUAL Tables.
     https://pro.anses.fr/tableciqual
@@ -55,68 +55,26 @@ from tkinter import TkVersion
 from database import DatabaseManager
 from gui import CalcAlGUI
 
-##################################################
-# main function
-##################################################
 def main(argv=None):
     """
-    Get options, set logging system and launch GUI
+    Main function : set options, set logging system and launch GUI
     """
-    isModeDebug = False
-    isPathDBSet = False
-    baseDirPath = ""
-    #############################
-    # Analyse des arguments reçus
-    #############################
-    if argv is None:
-        argv = sys.argv
 
-        # parse command line options
-    try:
-        opts, args = getopt.getopt(argv[1:], "hdb:", ["help", "debug", "baseDirPath="])
-    except getopt.error as msg:
-        print(msg)
-        print("to get help : --help ou -h", file=sys.stderr)
-        sys.exit(1)
-
-    # process options
-    progName = sys.argv[0]
-    dirProject = os.path.dirname(os.path.abspath(sys.argv[0]))
-    for option, arg in opts:
-        if option in ("-h", "--help"):
-            print(__doc__)
-            sys.exit(0)
-        if option in ("-d", "--debug"):
-            isModeDebug = True
-            print("Debug mode : verbose.")
-        if option in ("-b", "--baseDirPath"):
-            isPathDBSet = True
-            baseDirPath = arg.strip()
-            print("Path for database set to ", baseDirPath)
+    # parse command line options and parameters
+    progName, dirProject, isModeDebug, baseDirPath = parseParameters(argv, __doc__)
 
     # Read configuration properties
-    fileConfigApp = os.path.join(dirProject, 'CalcAl.ini')
-    if not os.path.isfile(fileConfigApp):
-        print("Unable to locate config file :", fileConfigApp)
-        sys.exit(2)
-
-    configApp = configparser.RawConfigParser()
-    configApp.read(fileConfigApp, encoding="utf-8")
+    configApp = readConfigurationFile(dirProject)
 
     # Set local : country, region and encoding
     setLocaleCalcal(configApp, dirProject)
 
-    # No parameter
-    if len(args) > 0:
-        print(__doc__)
-        print(_("Error : 0 parameter allowed" + " !"))
-        sys.exit(1)
-
     # Get user workdir for loging system
     homeUser = os.path.expanduser("~")
-    if platform.system() == 'Darwin': # On Mac
+    if platform.system() == 'Darwin':  # On Mac
         homeUser = os.path.join(homeUser, "Documents")
-    homeCalcAl = os.path.join(homeUser, configApp.get('Resources', 'AppDataDir'))
+    homeCalcAl = os.path.join(homeUser,
+                              configApp.get('Resources', 'AppDataDir'))
     if not os.path.exists(homeCalcAl):
         os.mkdir(homeCalcAl)
         print(_("Directory created") + " :", homeCalcAl)
@@ -133,33 +91,26 @@ def main(argv=None):
     welcomeMsg = _("Thanks to you") + " " + getpass.getuser() + " " + \
                  _("for using this software") + " !"
     logger.info(welcomeMsg)
-    emails = configApp.get('Version', 'EmailSupport1')  + ", " +\
+    emails = configApp.get('Version', 'EmailSupport1') + ", " +\
              configApp.get('Version', 'EmailSupport2')
     logger.info(_("To contact authors") + " : " + emails)
-    logger.info(_("On") + " : " + platform.system() + ", " + platform.release() + ", " +
-                "Python : " + platform.python_version() + ", Tk : " + str(TkVersion))
-    logger.info(_("Detected language and encoding on this computer") + " = " +
-                str(locale.getlocale()))
+    logger.info(_("On") + " : " + platform.system() + ", " +
+                platform.release() + ", " +
+                "Python : " + platform.python_version() +
+                ", Tk : " + str(TkVersion))
+    logger.info(_("Detected language and encoding on this computer") +
+                " = " + str(locale.getlocale()))
 
-    # Init database path and user demo database
-    if not isPathDBSet:
+    # Init user databases
+    if baseDirPath is None:
         baseDirPath = os.path.join(homeCalcAl,
                                    configApp.get('Resources', 'DatabaseDir'))
-    if not os.path.exists(baseDirPath):
-        os.mkdir(baseDirPath)
-        logger.info(_("Directory created") + " :" + baseDirPath)
-    pathDBDemoSvg = os.path.join(dirProject,
-                                 configApp.get('Resources', 'ResourcesDir'),
-                                 configApp.get('Resources', 'DatabaseDir'),
-                                 configApp.get('Resources', 'DemoDatabaseName'))
-    pathDBDemo = os.path.join(baseDirPath,
-                              configApp.get('Resources', 'DemoDatabaseName'))
-    if not os.path.exists(pathDBDemo):
-        shutil.copyfile(pathDBDemoSvg, pathDBDemo)
-        logger.info(_("Demo DB copied") + " :" + pathDBDemo)
+    installUserDatabases(configApp, logger, baseDirPath, dirProject)
 
     # Init database manager
-    databaseManager = DatabaseManager.DatabaseManager(configApp, dirProject, baseDirPath)
+    databaseManager = DatabaseManager.DatabaseManager(configApp,
+                                                      dirProject,
+                                                      baseDirPath)
 
     # Launch GUI
     CalcAlGUI.CalcAlGUI(configApp, dirProject, databaseManager).mainloop()
@@ -230,11 +181,81 @@ def setLocaleCalcal(configApp, dirProject):
     if platform.system() == 'Windows':
         # V0.32 : Hack on Windows : ref http://python.zirael.org/e-localization4.html
         os.environ['LANG'] = locale.getlocale()[0]
-    gettext.install("messages", localeDirPath)
+    gettext.install(configApp.get('Resources', 'MessageNameFile'), localeDirPath)
 
+def installUserDatabases(configApp, logger, baseDirPath, dirProject):
+    """ Init user database location and user demo database """
+
+    if not os.path.exists(baseDirPath):
+        os.mkdir(baseDirPath)
+        logger.info(_("Directory created") + " :" + baseDirPath)
+
+    logger.info(_("Database path used") + " : " + baseDirPath)
+    pathDBDemoSvg = os.path.join(dirProject,
+                                 configApp.get('Resources', 'ResourcesDir'),
+                                 configApp.get('Resources', 'DatabaseDir'),
+                                 configApp.get('Resources', 'DemoDatabaseName'))
+    pathDBDemo = os.path.join(baseDirPath,
+                              configApp.get('Resources', 'DemoDatabaseName'))
+    if not os.path.exists(pathDBDemo):
+        shutil.copyfile(pathDBDemoSvg, pathDBDemo)
+        logger.info(_("Demo DB copied") + " : " + pathDBDemo)
+    else:
+        logger.info(_("Demo DB already exists") + " : " + pathDBDemo)
+
+def parseParameters(argv, docCalcal):
+    """ Parse command line options and parameters """
+
+    isModeDebug = False
+    baseDirPath = None
+
+    if argv is None:
+        argv = sys.argv
+
+    try:
+        opts, args = getopt.getopt(argv[1:], "hdb:",
+                                   ["help", "debug", "baseDirPath="])
+    except getopt.error as msg:
+        print(msg)
+        print("to get help : --help ou -h", file=sys.stderr)
+        sys.exit(1)
+
+    # process options
+    progName = sys.argv[0]
+    dirProject = os.path.dirname(os.path.abspath(sys.argv[0]))
+    for option, arg in opts:
+        if option in ("-h", "--help"):
+            print(docCalcal)
+            sys.exit(0)
+        if option in ("-d", "--debug"):
+            isModeDebug = True
+            print("Debug mode : verbose.")
+        if option in ("-b", "mmodule de démarrage "):
+            baseDirPath = arg.strip()
+            print("Path for database set to ", baseDirPath)
+
+    # No parameter allowed
+    if len(args) > 0:
+        print(docCalcal)
+        print(_("Error : 0 parameter allowed" + " !"))
+        sys.exit(1)
+
+    return progName, dirProject, isModeDebug, baseDirPath
+
+def readConfigurationFile(dirProject):
+    """ Read configuration properties .ini file CalcAl.ini in executable dir """
+
+    fileConfigApp = os.path.join(dirProject, 'CalcAl.ini')
+    if not os.path.isfile(fileConfigApp):
+        print("Unable to locate config file :", fileConfigApp)
+        sys.exit(2)
+
+    configApp = configparser.RawConfigParser()
+    configApp.read(fileConfigApp, encoding="utf-8")
+    return configApp
 
 ##################################################
-#to be called as a script
+# To be called as a script
 if __name__ == "__main__":
     main()
     sys.exit(0)

@@ -1,8 +1,8 @@
 # messages.po : French translation file for CalcAl project labels.
-# Date : 10/3/2016 - 7/1/2017
+# Date : 10/3/2016 - 5/3/2017
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
-# Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
+# Thierry Maillard <Thierry.Maillard500@orange.fr>, 2017.
 #
 # Conversion in .mo format to be used by gettext :
 # cd locale/fr/LC_MESSAGES
@@ -60,6 +60,12 @@ msgstr "Langue et encodage détectés sur cet ordinateur"
 
 msgid "Demo DB copied"
 msgstr "Base demo copiée"
+
+msgid "Demo DB already exists"
+msgstr "Base demo déjà existante"
+
+msgid "Database path used"
+msgstr "Chemin des bases de données utilisées"
 
 ###############
 # CalcAlGUI
@@ -135,6 +141,12 @@ msgstr "déjà installé"
 
 msgid "installed"
 msgstr "installé"
+
+msgid "Documentation"
+msgstr "Documentation"
+
+msgid "Start web browser with"
+msgstr "Lancement navigateur Internet pour"
 
 ########################
 # Start frame
@@ -278,6 +290,9 @@ msgstr "Selectionner une base de données\npuis cliquer sur le bouton Démarrer"
 ##############################
 # DatabaseInitialiser windows
 ##############################
+msgid "Get help for this operation"
+msgstr "Obtenir de l'aide pour cette opération"
+
 msgid "Enter a new database name"
 msgstr "Entrer le nom de la nouvelle base de données"
 
@@ -308,20 +323,17 @@ msgstr "Choisissez un fichier"
 msgid "Download init file"
 msgstr "Téléchargez un fichier d'initialisation"
 
-msgid "Copy WEB link in clipboard"
-msgstr "Copier le lien WEB dans le presse-papier"
+msgid "Download file"
+msgstr "Télécharger le fichier"
 
 msgid "Download a source file"
 msgstr "Téléchargez un fichier source"
 
-msgid "Open your web browser\nand download from"
-msgstr "Ouvrez votre navigateur internet\net téléchargez le fichier depuis"
+msgid "Your web browser is going to be\nopen on official data providers WEB site"
+msgstr "Votre navigateur va s'ouvrir sur\nle site officiel du fournisseur de données"
 
-msgid "URL is in your clipboard\nready to be pasted in address bar"
-msgstr "L'adresse est prête à être collée\ndans la barre d'adresse"
-
-msgid "File to download on your computer"
-msgstr "Fichier à télécharger sur votre ordinateur"
+msgid "Please download the following file"
+msgstr "Veuillez télécharger le fichier suivant"
 
 ##############################
 # DatabaseJoinDialog windows
@@ -482,7 +494,7 @@ msgstr "Enregistrement du groupe annulé"
 msgid "removed from above table"
 msgstr "effacé de la table au dessus"
 
-msgid "about foodstuf"
+msgid "about foodstuff"
 msgstr "à propos de l'aliment"
 
 msgid "about foodstuff group"
@@ -541,6 +553,12 @@ msgstr "Durée portion (jours)"
 
 msgid "Components selected"
 msgstr "Composants selectionnés"
+
+msgid "More results may be displayed"
+msgstr "Plus de résultats pourraient apparaître"
+
+msgid "Please type something more in name field"
+msgstr "Veuillez tapez plus d'infos dans la zone de saisie Nom"
 
 # -- Tooltips --
 msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
@@ -717,6 +735,9 @@ msgstr "produits de la deuxième base ignorés"
 msgid "Energies recalculated by CalcAl"
 msgstr "Energies recalculées par CalcAl"
 
+msgid "results"
+msgstr "resultats"
+
 ########################
 # DatabaseReaderFactory
 ########################
@@ -741,8 +762,8 @@ msgstr "ou"
 msgid "Ciqual version not supported"
 msgstr "Version Ciqual non autorisée"
 
-msgid "Only .zip or .csv files allowed"
-msgstr "Seul les fichiers .zip ou .csv sont acceptés"
+msgid "Only .csv files allowed"
+msgstr "Seuls les fichiers .csv sont acceptés"
 
 msgid "Ciqual file : invalid header field"
 msgstr "Fichier Ciqual : champ d'entête invalide"

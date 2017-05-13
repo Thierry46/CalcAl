@@ -38,7 +38,7 @@ class TableTreeView(tkinter.Frame):
     def __init__(self, master, firstColumnsTitle, nbMinLines,
                  firstColWidth=100, otherColWidth=75, colMinWidth=50,
                  selectmode="none"):
-        self.decimal_point = locale.localeconv()['decimal_point']
+        self.decimalPoint = locale.localeconv()['decimal_point']
 
         """ Define  a table with labels cells """
         super(TableTreeView, self).__init__(master)
@@ -242,30 +242,13 @@ class TableTreeView(tkinter.Frame):
                 for child in self.treeview.get_children()
                 if 'normalRow' in self.treeview.item(child, option='tags')]
         # if the data to be sorted is numeric change to float
-        data = self.change2Numeric(data)
+        data = change2Numeric(data)
         # now sort the data in place
         data.sort(reverse=descending)
-        for ix, item in enumerate(data):
-            self.treeview.move(item[1], '', ix)
+        for numItemData, item in enumerate(data):
+            self.treeview.move(item[1], '', numItemData)
         # switch the heading so it will sort in the opposite direction
         self.treeview.heading(col, command=lambda col=col: self.sortby(col, not descending))
-
-    def change2Numeric(self, data):
-        """ Try to convert each first field of data in numeric value
-            if all values can't be converted, return data parameter
-            if a numeric value exists in the column, all text values are considered as 0 """
-        areAllText = True
-        dataConverted = []
-        for ix, item in data:
-            try:
-                ixFloat = float(ix.replace("< ", ""))
-                areAllText = False
-            except ValueError:
-                ixFloat = 0.0
-            dataConverted.append((ixFloat, item))
-        if areAllText:
-            dataConverted = data
-        return dataConverted
 
     def selectAllOrNothing(self, selectAll):
         """ Select every or no normal row according parameter """
@@ -297,11 +280,28 @@ class TableTreeView(tkinter.Frame):
                     list(self.treeview.item(item, option='values'))
             # Format decimal values
             colsValuesFormatted = ";".join(cols)
-            if self.decimal_point != '.':
-                colsValuesFormatted = colsValuesFormatted.replace('.', self.decimal_point)
+            if self.decimalPoint != '.':
+                colsValuesFormatted = colsValuesFormatted.replace('.', self.decimalPoint)
             textBuffer = textBuffer + colsValuesFormatted + "\n"
         return textBuffer
 
     def setBinding(self, event, command):
         """ Bind an event to an action for the treeview object """
         self.treeview.bind(event, command)
+
+def change2Numeric(data):
+    """ Try to convert each first field of data in numeric value
+        if all values can't be converted, return data parameter
+        if a numeric value exists in the column, all text values are considered as 0 """
+    areAllText = True
+    dataConverted = []
+    for numItemData, item in data:
+        try:
+            ixFloat = float(numItemData.replace("< ", ""))
+            areAllText = False
+        except ValueError:
+            ixFloat = 0.0
+        dataConverted.append((ixFloat, item))
+    if areAllText:
+        dataConverted = data
+    return dataConverted

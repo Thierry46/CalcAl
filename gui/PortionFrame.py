@@ -42,7 +42,8 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         tkinter.Label(filtersFrame, text=_("Date")).grid(row=1, column=0, sticky=tkinter.E)
         self.dateVar = tkinter.StringVar()
         self.dateVar.trace_variable("w", self.updateSearchResultTable)
-        tkinter.Entry(filtersFrame, textvariable=self.dateVar).grid(row=1, column=1, sticky=tkinter.W)
+        tkinter.Entry(filtersFrame, textvariable=self.dateVar
+                      ).grid(row=1, column=1, sticky=tkinter.W)
 
         tkinter.Label(filtersFrame, text=_("Patient code")).grid(row=2, column=0, sticky=tkinter.E)
         self.patientCodeCombobox = Combobox(filtersFrame, exportselection=0,
@@ -102,13 +103,13 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         _("Ctrl-C to put in clipboard"),
                         2 * self.delaymsTooltips)
         # Command buttons
-        ButtonFrame = tkinter.Frame(resultsActionFrame)
-        ButtonFrame.pack(side=tkinter.LEFT)
-        tkinter.Button(ButtonFrame, text=_("Calculator"),
+        buttonFrame = tkinter.Frame(resultsActionFrame)
+        buttonFrame.pack(side=tkinter.LEFT)
+        tkinter.Button(buttonFrame, text=_("Calculator"),
                command=self.putInCalculator).pack(side=tkinter.TOP)
-        tkinter.Button(ButtonFrame, text=_("Delete Portion"),
+        tkinter.Button(buttonFrame, text=_("Delete Portion"),
                command=self.deletePortion).pack(side=tkinter.TOP)
-        tkinter.Button(ButtonFrame, text=_("Clipboard"),
+        tkinter.Button(buttonFrame, text=_("Clipboard"),
                command=self.copyInClipboard).pack(side=tkinter.TOP)
 
     def updateObserver(self, observable, event):
@@ -134,7 +135,7 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             message = _("Error") + " : " + str(exc) + " !"
             self.mainWindow.setStatusText(message, True)
 
-    def putInCalculator(self, event=None):
+    def putInCalculator(self, dummy=None):
         """ Update food definition in calculator pane with new components chosen """
         try:
             # Get selection
@@ -150,7 +151,7 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
-    def copyInClipboard(self, event=None):
+    def copyInClipboard(self, dummy=None):
         "Copy search results in clipboard"
         try:
             text = self.portionResultTable.getTableAsText()
@@ -159,7 +160,7 @@ class PortionFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             message = _("Error") + " : " + str(exc) + " !"
             self.mainWindow.setStatusText(message, True)
 
-    def updateSearchResultTable(self, *args):
+    def updateSearchResultTable(self, *dummy):
         """ Update portionResultTable filtering with id frame fields content """
         self.logger.debug("PortionFrame/updateSearchResultTable()")
         self.portionResultTable.deleteAllRows()

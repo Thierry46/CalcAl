@@ -94,7 +94,8 @@ def test_initWithComponents():
 
     assert len(foodstuff.dictComponents) == 3
     for codeComp in listFollowedComponents:
-        assert foodstuff.dictComponents[codeComp].getData("productCode") == foodstuff.getData("code")
+        assert foodstuff.dictComponents[codeComp].getData("productCode") == \
+               foodstuff.getData("code")
         assert foodstuff.dictComponents[codeComp].getData("constituantCode") == codeComp
         value = foodstuff.dictComponents[codeComp].getData("value")
         quantity = foodstuff.dictComponents[codeComp].getData("quantity")
@@ -146,7 +147,7 @@ def test_updateQuantity_add():
     # Close demo database
     databaseManager.closeDatabase()
 
-def test_updateQuantityWithComponents():
+def test_updateQtyWithComponents():
     """ Test updateQuantity with components checked """
     # Call init fixture
     configApp, databaseManager = initEnv()
@@ -193,6 +194,7 @@ def test_getFormattedValue():
     databaseManager.closeDatabase()
 
 def test_addMissingComponents():
+    """ Test adding a component with no values given by database """
     # Call init fixture
     configApp, databaseManager = initEnv()
     database = databaseManager.getDatabase()

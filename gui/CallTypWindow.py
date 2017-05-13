@@ -40,22 +40,22 @@ class ToolTip(object):
             return
 
         try:
-            x, y, cx, cy = self.widget.bbox("active")
+            x, y, dummy, yLenght = self.widget.bbox("active")
             x = x + self.widget.winfo_rootx() + 27
-            y = y + cy + self.widget.winfo_rooty() + 27
-            self.tipwindow = tw = tkinter.Toplevel(self.widget)
+            y = y + yLenght + self.widget.winfo_rooty() + 27
+            self.tipwindow = tkinter.Toplevel(self.widget)
             # Prevent Windows Manager to decorate this Toplevel objet
             # It will not have a title or a border, and cannot be moved or closed via ordinary means
-            tw.wm_overrideredirect(1)
-            tw.wm_geometry("+%d+%d" % (x, y))
+            self.tipwindow.wm_overrideredirect(1)
+            self.tipwindow.wm_geometry("+%d+%d" % (x, y))
             try:
                 # For Mac OS
-                tw.tk.call("::tk::unsupported::MacWindowStyle",
-                           "style", tw._w,
-                           "help", "noActivates")
+                self.tipwindow.tk.call("::tk::unsupported::MacWindowStyle",
+                                       "style", self.tipwindow._w,
+                                       "help", "noActivates")
             except tkinter.TclError:
                 pass
-            label = tkinter.Label(tw, text=self.text, justify=tkinter.LEFT,
+            label = tkinter.Label(self.tipwindow, text=self.text, justify=tkinter.LEFT,
                                   background="#ffffe0", relief=tkinter.SOLID, borderwidth=1,
                                   font=("tahoma", "12", "normal"))
             label.pack(ipadx=1)
@@ -65,10 +65,10 @@ class ToolTip(object):
 
     def hidetip(self):
         """ Destroy tooltip window """
-        tw = self.tipwindow
+        tipwindow = self.tipwindow
         self.tipwindow = None
-        if tw:
-            tw.destroy()
+        if tipwindow:
+            tipwindow.destroy()
 
 def createToolTip(widget, text, delayms):
     """
@@ -78,10 +78,10 @@ def createToolTip(widget, text, delayms):
         delayms : int : delay in ms after what tooltip will disappear
     """
     toolTip = ToolTip(widget, delayms)
-    def enter(event):
+    def enter(dummy):
         """ Called when enter in widget """
         toolTip.showtip(text)
-    def leave(event):
+    def leave(dummy):
         """ Called when leave widget """
         toolTip.hidetip()
     widget.bind('<Enter>', enter)

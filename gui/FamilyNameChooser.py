@@ -44,14 +44,14 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
         tkinter.Entry(master, textvariable=self.nameVar).pack(side=tkinter.TOP)
         return familyEntry # initial focus
 
-    def clicFamily(self, evt):
+    def clicFamily(self, dummy):
         """ Update food definition with new components chosen """
         # Get selection
         selectedFamily = list(self.familyList.curselection())
         if len(selectedFamily) > 0:
             self.familyVar.set(self.familyList.get(selectedFamily[0]))
 
-    def updateFamilyList(self, *args):
+    def updateFamilyList(self, *dummy):
         """ Update familyList filtering with self.familyVar Entry content """
         self.familyList.delete(0, tkinter.END)
         stringInFamily = self.familyVar.get()

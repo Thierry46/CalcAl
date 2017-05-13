@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    Name : test_CalculatorFrameModel.py
+    Name : test_Database_Pathologies.py
     Author : Thierry Maillard (TMD)
     Date : 23/11/2016
     Role : Tests unitaires du projet Calcal avec py.test
@@ -68,7 +68,7 @@ def initEnv():
 def test_emptyPatholology():
     """ Test getter on empty database """
     # Call init fixture
-    configApp, databaseManager = initEnv()
+    dummy, databaseManager = initEnv()
     database = databaseManager.getDatabase()
 
     assert database.getDefinedPathologiesNames() == []
@@ -79,7 +79,7 @@ def test_emptyPatholology():
 def test_1Patholology():
     """ Test inserting a pathology in database """
     # Call init fixture
-    configApp, databaseManager = initEnv()
+    dummy, databaseManager = initEnv()
     database = databaseManager.getDatabase()
 
     name = "diabete type A"
@@ -126,7 +126,7 @@ def test_1Patholology():
 def test_1PatholologyError():
     """ Test exception while inserting a pathology in database """
     # Call init fixture
-    configApp, databaseManager = initEnv()
+    dummy, databaseManager = initEnv()
     database = databaseManager.getDatabase()
 
     name = ""
@@ -151,11 +151,11 @@ def test_1PatholologyError():
     description = "Probleme pancréas"
     reference = "TMD Bof Bof"
     listConstituantsCodes = [999999]
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         database.savePathology(name, description, reference, listConstituantsCodes)
 
     name = "diabete type B"
-    with pytest.raises(ValueError) as e:
+    with pytest.raises(ValueError):
         database.getComponentsCodes4Pathologies([name])
 
     database.deletePathology(name)
@@ -166,7 +166,7 @@ def test_1PatholologyError():
 def test_2Patholology():
     """ Test getting components for 2 pathologies in database """
     # Call init fixture
-    configApp, databaseManager = initEnv()
+    dummy, databaseManager = initEnv()
     database = databaseManager.getDatabase()
 
     name1 = "diabete type A"

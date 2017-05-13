@@ -136,11 +136,11 @@ def test_getValueFormatedError():
     badQualifier = "XX"
     component.setData("qualifValue", badQualifier)
     component.setData("quantity", 45.0)
-    with pytest.raises(CalcalExceptions.CalcalInternalError) as e:
+    with pytest.raises(CalcalExceptions.CalcalInternalError) as exc:
         component.getValueFormated()
-    print(e)
-    assert "getValueFormated : unknown value qualifier : " in str(e.value)
-    assert badQualifier in str(e.value)
+    print(exc)
+    assert "getValueFormated : unknown value qualifier : " in str(exc.value)
+    assert badQualifier in str(exc.value)
 
     # Close demo database
     databaseManager.closeDatabase()

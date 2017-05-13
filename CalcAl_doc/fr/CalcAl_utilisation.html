@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr" lang="fr"><head>
+
+
+
+
+  
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>CalcAl utilisation</title>
+  
+
+  
+  
+  <meta content="Thierry Maillard" name="author">
+
+  
+  <meta content="CalcAl Installation" name="installation">
+
+  
+  <meta content="Guide d'utilisation CalcAl" name="description"></head><body alink="#000099" bgcolor="#ccffff" link="#000099" text="#000000" vlink="#990099">
+<h1 align="center"><img alt="Logo CalcAl" src="../images/logo_calcal.gif" align="right" border="0" height="135" hspace="10" vspace="10" width="150">CalcAl utilisation<br>
+</h1>
+
+<ul>
+
+  <li><a href="#Lancement_de_CalcAl">Lancement de CalcAl</a></li>
+  <li><a href="#A_Propos" target="_blank">Fenêtre à propos</a></li>
+  <li><a href="#Documentation">Documentation</a><br>
+  </li>
+
+  <li><a href="#Import">Import des bases de données</a></li>
+  <li><a href="#Fusion_de_bases">Fusion de bases</a><br>
+  </li>
+  <li><a href="#Utiliser_longlet_calculateur">Utiliser l'onglet
+calculateur</a></li>
+  <li><a href="#Creer_un_groupe_daliment">Créer un groupe d'aliment</a></li>
+  <li><a href="#Rechercher_les_aliments_selon_des">Rechercher les
+aliments selon des critères</a></li>
+  <li><a href="#Pathologie">Définir une pathologie</a><br>
+  </li>
+  <li><a href="#Patient">Définir les données pour un patient</a></li>
+  <li><a href="#Sauver_une_ration_ou_un_ingestat">Sauver une ration ou
+un ingestat</a></li>
+  <li><a href="#Exporter_les_donnees">Exporter des données</a></li>
+  <li><a href="#Data_Messages">Localisation de vos données et des
+messages de l'application</a></li>
+  <li><a href="#Licences_BD">Licences des bases de données</a><br>
+  </li>
+
+</ul>
+
+<br>
+
+<hr size="2" width="100%">
+<h2><a name="Lancement_de_CalcAl"></a>Lancement de CalcAl</h2>
+
+Comme indiqué dans la partie <a href="CalcAl_installation.html">installation</a>
+: sous Windows ou Mac, double-cliquez sur l'icône de l'application,
+sous Linux sur le script Calcal.sh.<br>
+
+<br>
+
+La page de bienvenue de CalcAl apparait.<br>
+
+<img alt="Page de bienvenue" src="../images/welcome_frame_fr.png" height="251" hspace="10" vspace="10" width="300"><br>
+Pour le fonctionnement en réseau, voir le chapitre concerné du <a href="CalcAl_maintenance.html">manuel de maintenance</a>.<br>
+
+<hr size="2" width="100%">
+<h2><a name="A_Propos"></a>Fenêtre à propos</h2>
+
+L'option <i><b>A propos...</b></i> du menu <i><b>?</b></i> ou un clic
+sur les bandeaux en haut des fenêtres, vous affichez la fenetre
+suivante :<br>
+
+<br>
+
+<img alt="La fenetre A Propos" src="../images/about_window_fr.png" height="497" hspace="10" vspace="10" width="400"><br>
+
+Vous y trouverez des informations concernant le CalcAl, votre système,
+les adresses mail et photos des concepteurs.<br>
+<hr size="2" width="100%">
+<h2><a name="Documentation"></a>Documentation</h2>
+La documentation du projet est accessible par le menu <b>? et </b>son option <b>Documentation</b> de l'interface graphique.<br>
+
+<img alt="Accès à la doc dans l'IHM" src="../images/documentation_access.png" height="88" width="149"><br>
+Un onglet s'ouvre alors dans votre navigateur Internet actuel.<br>
+
+<br>
+
+<hr size="2" width="100%"><h2><a name="Import"></a>Import des bases de données<br>
+</h2>
+
+Par défaut, vous ne disposez que d'une base de données de démonstration
+appelée "demo". Cette base ne contient que quelques aliments moyens
+issus de l'ancienne base Ciqual 2013.<br>
+
+<br>
+
+Pour disposer de données plus récentes et plus nombreuses, importez une
+base de <a href="https://www.anses.fr/fr" target="_blank">l'ANSES</a>
+et/ou de l'<a href="https://www.usda.gov/wps/portal/usda/usdahome">USDA</a>.<br>
+
+<br>
+
+Cliquez sur Le bouton nouvelle :<br>
+
+<img alt="Bouton nouvelle base" src="../images/new_base_btn_fr.png" height="199" width="228"><br>
+
+La fenêtre d'import apparait :<br>
+
+<img alt="Fenetre nouvelle base" src="../images/Init_db_fr.png" height="137" width="700"><br>
+
+Pour importer la base Ciqual 2016 :<br>
+
+Entrer le <b>nom</b> de votre base, par exemple : Ciqual 2016<br>
+
+Choisissez le <b>Type de base</b> : Ciqual_2016<br>
+
+Cliquez sur le bouton <b>Copier le lien WEB dans le presse-papier</b><br>
+
+Une fenêtre apparait et vous donne des consignes pour télécharger la
+base depuis le site de <a href="https://www.anses.fr/fr" target="_blank">l'ANSES</a> avec votre navigateur WEB :<br>
+
+<img alt="Popup conseils Ciqual" src="../images/popup_database_ciqual_fr.png" height="264" width="422"><br>
+
+Télécharger la base comme indiqué avec votre navigateur Internet à
+l'URL :<br>
+
+<i>https://pro.anses.fr/tableciqual/PN7001.htm</i> :<br>
+
+<br>
+
+<img alt="Ciqual_web_site" src="../images/capture_ciqual_2016.png" height="259" width="532"><br>
+
+<br>
+
+Téléchargez le données brutes sous le nom proposé : <i><b>Table_Ciqual_2016.csv</b></i><br>
+
+<br>
+
+Dans CalcAl, cliquez sur le bouton <b>Fichier pour init de la base</b>
+(1) pour sélectionner le fichier que vous venez de télécharger, le nom
+du fichier choisis s'affiche (2) :<br>
+
+<img alt="Fenetre Init base ok" src="../images/Init_db_fr_ok.png" height="155" width="700"><br>
+
+Cliquez sur le bouton <b>OK</b> (3).<br>
+
+<br>
+
+La base apparait alors dans la liste des bases disponibles :<br>
+
+<img alt="Base Ciqual disponible" src="../images/database_ciqual_ok_fr.png" height="132" width="592"><br>
+
+<br>
+
+Répéter les étapes suivantes pour la base <a href="https://www.usda.gov/wps/portal/usda/usdahome">USDA</a>.<br>
+
+<hr size="2" width="100%">
+<h2><a name="Fusion_de_bases"></a>Fusion de bases</h2>
+
+La fusion de base permet d'ajouter à une base de référence les aliments
+contenus dans une 2ème base.<br>
+
+Les aliment de la base de référence sont prioritaires sauf en cas de
+mise à jour explicite.<br>
+
+<br>
+
+Importez deux bases et sélectionnez la base de référence et cliquez sur
+<b>Fusionner</b> :<br>
+
+<img alt="Fusion de 2 bases" src="../images/merge_2_database_fr.png" height="111" vspace="10" width="254"><br>
+
+Complétez la fenêtre de fusion et validez :<br>
+
+<img alt="Définition fusion bases" src="../images/database%20_merging_def_fr.png" height="180" hspace="20" vspace="10" width="317"><img alt="fenetre bases fusionnées" src="../images/databases_fr.png" height="101" hspace="20" vspace="10" width="188"><br>
+
+Le bouton Info résume le contenu de la base :<br>
+
+<img alt="Info_database_fr.png" src="../images/database_info_fr.png" height="172" width="423"><br>
+
+<br>
+
+<br>
+
+<hr size="2" width="100%">
+<h2><a name="Utiliser_longlet_calculateur"></a>Utiliser l'onglet
+calculateur</h2>
+
+Dans l'onglet <b>Bienvenue</b>, choisissez la base à utiliser (1) et
+cliquez le bouton <b>Démarrer</b> (2) :<br>
+
+<img alt="De la fenetre Bienvenue à la fenètre Calculateur" src="../images/Welcome2Calculator_fr.png" height="127" width="564"><br>
+
+<br>
+
+L'onglet Calculateur apparait :<br>
+
+<img alt="Onglet calculateur" src="../images/calculator_Frame_fr.png" height="517" width="700"><br>
+
+<br>
+
+Le cadre <i><b>Recherche d'aliment </b></i>vous permet de trouver
+facilement des aliments si vous tapez dans la boîte d'entrée Nom :<br>
+
+<br>
+
+<img alt="L'onglet recherche d'aliment" src="../images/Food_select_fr.png" height="182" vspace="10" width="399"><br>
+
+Tous les aliments contenant <i>sou</i> dans leur nom sont affichés.<br>
+
+<br>
+
+En cas de recherche infructueuse, le bouton + élargit la recherche.<br>
+
+<br>
+
+Cliquez sur un aliment pour l'envoyer dans le Cadre de Définition d'un
+aliment :<br>
+
+<img alt="Selection d'un aliment" src="../images/Select_food_fr.png" height="197" vspace="10" width="798"><br>
+
+Remplissez la <b>Quantité</b> en g (1) et appuyez sur Entrée ou sur la
+<b>flèche
+verte</b> (2). L'alimant apparait dans la liste (3) :<br>
+
+<br>
+
+<img alt="Mettre l'aliment dans la liste" src="../images/Put_food_in_Calculator_fr.png" height="264" vspace="10" width="791"><br>
+
+Vous pouvez sélectionner un ou plusieurs composants (Clic + Shift ou
+Control) :<br>
+
+<img alt="Choix des composants à suivre" src="../images/Components_Selection_fr.png" height="229" vspace="10" width="800"><br>
+
+Selectionnez d'autres aliments :<br>
+
+<img alt="deux aliments dans le calculateur" src="../images/calculator_2_food_fr.png" height="99" vspace="10" width="798"><br>
+
+Les entêtes du tableau sont des boutons permettant : pour a première <b>Nom</b>
+sert à sélectionner tout le tableau, les autres servent à trier les
+lignes selon les valeurs des colonnes.<br>
+
+<br>
+
+Le tableau des énergies indique leur répartition par composant :<br>
+
+<img alt="Table des énergies" src="../images/Energy_table_fr.png" height="98" vspace="10" width="593"><br>
+
+<hr size="2" width="100%">
+<h2><a name="Creer_un_groupe_daliment"></a>Créer un groupe d'aliment</h2>
+
+Dans l'<a href="#Utiliser_longlet_calculateur">onglet Calculateur</a>,
+créez une liste d'aliments et sélectionnez les lignes correspondant à
+celle de votre recette (1).<br>
+
+Cliquez sur le bouton <b>grouper...</b> (2)<b> </b>ou le menu <b>Sélection
+/
+Grouper</b> :<br>
+
+<img alt="Liste d'aliment à grouper" src="../images/list_group_food_fr.png" height="253" vspace="10" width="496"><br>
+
+Dans la fenêtre <b>Sauvegarder ce groupe d'aliments</b>, dénissez une
+famille existante ou non. Toutes les zones sont actives. Donner un nom
+au groupe, puis cliquez sur le bouton <b>OK</b> :<br>
+
+<img alt="Fenêtre sauver un groupe" src="../images/Save_group_fr.png" height="339" vspace="10" width="300"><br>
+
+Ce nouvel aliment utilisateur est sauvé, il remplace ses constituants
+dans la liste et peut se trouver facilement dans les boîtes de
+recherche et de définition.<br>
+
+<img alt="Legroupe créé" src="../images/group_created_fr.png" height="292" vspace="10" width="604"><br>
+
+Vous pouvez à tous moments rappeler, dégrouper ou avoir des infos sur
+un groupe que vous avez créé comme pour les autres aliments :<br>
+
+<img alt="Info sur un groupe" src="../images/info_group_fr.png" height="285" vspace="10" width="425"><br>
+
+<hr size="2" width="100%">
+<h2><a name="Rechercher_les_aliments_selon_des"></a>Rechercher les
+aliments selon des critères</h2>
+
+Vous devez d'abord avoir <a href="#Utiliser_longlet_calculateur">choisi
+une base de données active</a>.<br>
+
+L'onglet <b>Recherche</b> vous permet de sélectionner des aliments
+selon des
+filtres sur leurs composants :<br>
+
+<img alt="Fenêtre de recherche" src="../images/Search_food_fr.png" height="551" vspace="10" width="700"><br>
+
+Vous pouvez trier une colonne en cliquant sur son entête.<br>
+
+<hr size="2" width="100%">
+<h2><a name="Pathologie"></a>Définir une pathologie</h2>
+
+Vous devez d'abord avoir <a href="CalcAl_utilisation.html#Utiliser_longlet_calculateur">choisi une
+base de données active</a>.<br>
+
+L'onglet <b>Pathologies</b>, vous permet de définir ou modifier les
+pathologies qui peuvent affecter les patients et de définir des
+composants à suivre pour chaque affection.<br>
+
+<img alt="Fenêtre pathologies" src="../images/Pathologies_frame_fr.png" height="506" vspace="10" width="700"><br>
+
+<hr size="2" width="100%">
+<h2><a name="Patient"></a>Définir les données pour un patient</h2>
+
+Vous devez d'abord avoir <a href="CalcAl_utilisation.html#Utiliser_longlet_calculateur">choisi une
+base de données active</a>.<br>
+
+L'onglet <b>Patients</b>, vous permet de définir ou modifier les
+données de suivi pour vos patients.<br>
+
+<img alt="Fenêtre Patients" src="../images/Patient_Frame_fr.png" height="390" vspace="10" width="700"><br>
+
+<hr size="2" width="100%">
+<h2><a name="Sauver_une_ration_ou_un_ingestat"></a>Sauver une ration ou
+un ingestat</h2>
+
+Déninissez dans l'<a href="#Utiliser_longlet_calculateur">onglet
+Calculateur</a>, la liste des aliments composant cette ration ou cet
+ingestat.<br>
+
+<img alt="Sauver la ration dans l'onglet calculateur" src="../images/Save_Ration_fr.png" height="176" vspace="10" width="700"><br>
+
+Et cliquez sur le bouton <b>Sauver la ration... </b>ou choisissez le
+menu <b>Selection/Sauver la ration...</b><br>
+
+La fenêtre de définition de ration ou d'ingestat apparait, vous
+renseignez les champs et vous sauvez.<br>
+
+<img alt="Popup de définition de ration" src="../images/Save_ration_frame_fr.png" height="430" vspace="10" width="460"><br>
+
+A tout moment l'onglet Rations et ingestats vous permet de les gérer,
+et de les afficher à nouveau dans l'<a href="#Utiliser_longlet_calculateur">onglet Calculateur</a>.<br>
+
+<hr size="2" width="100%">
+<h2><a name="Exporter_les_donnees"></a>Exporter des données</h2>
+
+Dans plusieurs endroits de CalcAl vous pouvez copier des données dans
+le Presse-papier avec le menu Selection/Presse-papier ou des boutons
+Presse_papier.<br>
+
+<img alt="Copie des données dans le presse-papier" src="../images/Calculator_copy_Paste_fr.png" height="227" vspace="10" width="700"><br>
+
+Les données sont prêtes à être collées dans un fichier texte ou dans un
+tableur par exemple. Elles sont au format CSV :<br>
+
+Après copie dans un éditeur de texte et sauvegarde dans test.csv :<br>
+
+<img alt="Contenu du presse papier" src="../images/Clipboard_content_fr.png" height="105" width="468"><br>
+
+Après ouverture de ce fichier test.csv dans OpenOffice/Calc :<br>
+
+<img alt="Donnéees importer dans OpenOffice Calc" src="../images/OpenOffice_Calc_fr.png" height="160" vspace="10" width="700"><br>
+
+<hr size="2" width="100%">
+<h2><a name="Data_Messages"></a>Localisation de vos données et des
+messages de l'application</h2>
+
+Vos données sont stokées dans votre répertoire utilisateur dans <b>CalcAl_data</b>
+:<br>
+
+<img alt="Données utilisateur" src="../images/user_data.png" height="81" width="534"><br>
+
+<ul>
+
+  <li>Le sous-répertoire <b>databases</b> contient vos bases de
+données ;<br>
+  </li>
+  <li>Le sous-répertoire <b>log</b> héberge les historiques cycliques
+et datés de CalcAl.</li>
+</ul>
+
+Extrait d'un fichier de log :<br>
+
+<pre>2017-01-22 18:20:12,605 :: INFO :: Démarrage CalcAl.py : CalcAl - version 0.48 du 14/1/2017</pre>
+
+<pre>2017-01-22 18:20:12,610 :: INFO :: Merci à vous thierry d'utiliser ce logiciel !</pre>
+
+<pre>2017-01-22 18:20:12,610 :: INFO :: Pour contacter les auteurs : Thierry.Maillard500@orange.fr, Perrine.Maillard2@gmail.com</pre>
+
+<pre>2017-01-22 18:20:12,610 :: INFO :: Sur : Darwin, 16.3.0, Python : 3.5.1, Tk : 8.5</pre>
+
+<pre>2017-01-22 18:20:12,610 :: INFO :: Langue et encodage détectés sur cet ordinateur = ('fr_FR', 'UTF-8')</pre>
+
+<pre>2017-01-22 18:20:13,635 :: INFO :: Démarrage de l'IHM...</pre>
+
+<pre>2017-01-22 18:20:13,870 :: INFO :: Onglet Bienvenue activé.</pre>
+
+<pre>2017-01-22 18:22:05,239 :: INFO :: c16.db choisie</pre>
+
+<pre>2017-01-22 18:22:07,041 :: INFO :: c16.db choisie</pre>
+
+<pre>2017-01-22 18:22:09,482 :: INFO :: demo.db choisie</pre>
+
+<pre>2017-01-22 18:22:10,826 :: INFO :: c16.db choisie</pre>
+
+<pre>2017-01-22 18:22:14,955 :: INFO :: DatabaseManager/deleteDatabase() : database deleted : c16.db</pre>
+
+<pre>2017-01-22 18:22:14,956 :: INFO :: Base de données : c16.db détruite</pre>
+
+<br>
+<hr size="2" width="100%">
+<h2><a name="Licences_BD"></a>Licences des bases de données</h2>
+<h3>Base Ciqual</h3>
+Lorsque vous utilisez les données de la base Ciqual, vous devez mentionner dans vos rapports et documents :<br>
+<br>
+<i>Les données et les informations présentes sont mises à disposition
+du public par l'Agence nationale de sécurité sanitaire de
+l'alimentation, de l'environnement et du travail (Anses). Elles ne
+peuvent être reproduites de quelque manière que ce soit sans référence
+explicite à la source :<br>
+"Table de composition nutritionnelle des aliments Ciqual (année
+mentionnée sur le bandeau du site internet au moment de la
+consultation)" .</i><br>
+<br>
+
+<hr size="2" width="100%"><br>
+
+Chapitre précédent : <a href="CalcAl_installation.html">Installation</a>
+-
+Chapitre suivant : <a href="CalcAl_maintenance.html">Maintenance</a><br>
+
+<hr size="2" width="100%"><br>
+
+Copyleft (c) 2017 -&nbsp; <a href="http://perrine.maillard.free.fr/" target="_blank">Perrine </a>et <a href="http://thierry.maillard.pagesperso-orange.fr/" target="_blank">Thierry</a>
+Maillard<br>
+
+Vous avez la permission de copier, distribuer ou modifier ce document
+selon les termes de la licence GNU de documentation libre, dans sa
+version 1.3 ou dans toute version ultérieure publiée par la Free
+Software Foundation ; sans Section Invariante, sans Texte De Première
+De Couverture, et sansTexte De Quatrième De Couverture. <br>
+
+Une copie de cette licence est incluse dans la section intitulée
+"Licence GNU de documentation libre" : <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation
+License</a>.<br>
+
+Une copie de cette Licence est incluse dans le fichier <a href="licences/gfdl.1.3-js.fr.html">gfdl.1.3-js.fr.html</a><br>
+
+<br>
+
+</body></html>

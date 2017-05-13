@@ -1,0 +1,424 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+
+  
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>CalcAl Maintenance</title>
+  
+
+  
+  
+  <meta content="Thierry Maillard" name="author">
+
+  
+  <meta content="CalcAl Installation" name="maintenance">
+
+  
+  <meta content="Guide dde Maintenance CalcAl" name="description"></head><body alink="#000099" bgcolor="#ccffff" link="#000099" text="#000000" vlink="#990099">
+<br>
+
+<h1 align="center"><a name="CalcAl_maintenance_"></a><img alt="Logo CalcAl" src="../images/logo_calcal.gif" align="right" border="0" height="135" hspace="10" vspace="10" width="150">CalcAl
+maintenance<br>
+</h1>
+
+<ul>
+
+  <li><a href="#Prerequis">Prérequis</a></li>
+  <li><a href="#Execution">Exécution du code dans un terminal</a></li>
+  <li><a href="#Config_ini">Fichier de paramétrage</a></li>
+  <li><a href="#Version_du_code">Version du code</a><br>
+  </li>
+  <li><a href="#Messages_et_internationalisation_">Messages et
+internationalisation</a><br>
+  </li>
+  <li><a href="#Fichiers_de_Log">Fichier de log</a><br>
+  </li>
+  <li><a href="#Tests_unitaires">Tests unitaires</a></li>
+  <li><a href="#Installer">Génération d'un programme d'installation</a></li>
+  <li><a href="#Import_BD">Import des bases de données</a><br>
+  </li>
+  <li><a href="#Modification_documentation">Modification de la
+documentation du projet</a></li>
+  <li><a href="CalcAl_maintenance.html#Networking">Fonctionnement en
+réseau</a> </li>
+  <li><a href="#Techniques">Techniques utilisées</a></li>
+  <li><a href="#Justification_des_choix_">Justification des choix</a></li>
+  <li><a href="#Problemes">Problèmes connus</a></li>
+</ul>
+
+<br>
+
+<hr size="2" width="100%">
+<h2><a name="Prerequis"></a>Prérequis</h2>
+
+<img alt="Arborescence des sources de CalcAl" src="../images/arbo_src_CalcAl.png" align="right" height="359" width="150">
+Pour modifier CalcAl, vous devez disposer :<br>
+
+<ul>
+
+  <li>De l'arborescence des fichiers sources de la dernière
+version du logiciel compressée dans une archive au format zip :
+CalcAl_v0.50.zip que vous décompacterez dans un de vos répertoires<br>
+  </li>
+  <li>D'un éditeur de texte de préférence adapté à Python.</li>
+  <li>De la dernière version de python 3 disponible sous : <a target="_blank" href="https://www.python.org">https://www.python.org</a></li>
+  <li>D'un compilateur de message pour l'internationalisation de
+logiciels : <a target="_blank" href="https://www.gnu.org/software/gettext">https://www.gnu.org/software/gettext</a><br>
+  </li>
+  <li>D'un logiciel d'affichage de bases de donnée Sqlite : <a target="_blank" href="http://sqlitebrowser.org">http://sqlitebrowser.org</a></li>
+  <li>Du package python de test unitaire pytest : <a target="_blank" href="http://docs.pytest.org/en/latest">http://docs.pytest.org/en/latest</a></li>
+  <li>Du logiciel py2exe sous Windows : <a target="_blank" href="http://py2exe.org">http://py2exe.org</a></li>
+  <li>Du logiciel py2app sous Windows : <a target="_blank" href="https://py2app.readthedocs.io/en/latest">https://py2app.readthedocs.io/en/latest</a></li>
+  <li>D'un éditeur HTML pour modifier la documentation du projet : <a href="http://www.kompozer.net" target="_blank">http://www.kompozer.net</a><br>
+  </li>
+</ul>
+
+<h2><a name="Execution"></a>Exécution du code dans un terminal<br>
+</h2>
+
+Sous Mac OS X et Linux, ouvrez une fenêtre Terminal.<br>
+
+<img alt="Terminal Mac" src="../images/terminal_mac.png" height="89" width="452"><br>
+
+<br>
+
+Sous Windows, ouvrez une fenetre de commande avec les touches Windows +
+R.`<br>
+
+<br>
+
+Allez dans le répertoire créé lors du décompactage du .zip<br>
+
+<br>
+
+Effectuez vos modifications dans les fichiers sources.<br>
+
+Lancez l'application avec le script <i><b>CalcAl.sh</b></i> ous Mac OS
+X et Linux, ou <i><b>CalcAl.bat</b></i> sous Windows.<br>
+
+<br>
+
+Les messages de l'application apparaissent alors dans la fenêtre de
+commande et les
+messages de l'application (log) sont disponibles sous votre Home sous
+CalcAl_data/log/messages.<br>
+
+<h2><a name="Config_ini"></a>Fichier de paramétrage</h2>
+
+Le paramétrage de l'application est basé sur le package python3
+standard <b>configparser</b>.<br>
+
+Une des premières actions de l'application dans son programme principal
+<i><b>CalcAl.py</b></i> est de charger le fichier de paramètre
+CalcAl.ini situé à la racine du répertoire d'installation de
+l'application.<br>
+
+Ce fichier contient des clés et leurs valeurs réparties en sections
+dont le nom est entre crochets.<br>
+
+CalcAl récupère ces clés dans les fichiers sources python par des
+instructions du genre :<br>
+
+<i><b>configApp.get('Section', 'Cle')<br>
+</b></i>
+<h2><a name="Version_du_code"></a>Version du code</h2>
+
+La version courante du code est définie dans&nbsp; la section [<b>Version</b>]
+de <b>CalcAl.ini</b> par les clés <b>Date</b> et <b>Number</b>. Le
+numéro de version est utilisé dans les script qui fabriquent les
+packages Mac et Windows.<br>
+
+<br>
+
+Les numéros de version du code sont de la forme <b><i>Version.Release</i></b>.
+<b>Version</b> est supérieur à zéro pour les version publiable, 0 pour
+les versions de développement.<br>
+
+<br>
+
+Un historique des version est disponible dans le fichier <b>doc/versions.txt
+</b>du répertoire d'installation.<br>
+
+<br>
+
+<h2><a name="Messages_et_internationalisation_"></a>Messages et
+internationalisation<br>
+</h2>
+
+L'application CalcAl utilise le package <a href="https://www.gnu.org/software/gettext">gettext</a>
+pour l'internationalisation de tous les messages et intitulés des
+widgets de l'Interface Homme Machine. L'application utilise la locale
+(convention de langue) détectée par CalcAl.py/setLocaleCalcal() ou le
+français si la langue par défaut de l'ordinateur n'est pas définie dans
+le système de traduction des messages ou la locale ne peut pas être
+récupéré. paramétré dans la section [<b>DefaultLocale</b>] de <b>CalcAl.ini</b>.<br>
+
+<br>
+
+Dans les fichiers sources .py, les messages apparaissent en version
+anglaise comme des chaine de caractère entourés de _("message in
+english") . La définition du système de traduction est mise en place
+dans CalcAl.py par : import gettext, setLocaleCalcal() qui défini le
+chemin et le nom du fichier de traduction : CalcAl.ini et clés
+[<b>Resources</b>]/LocaleDir et [<b>Resources</b>]/MessageNameFile.<br>
+
+<br>
+
+Le chemin du fichier de messages est de la forme :
+locale/&lt;LANG&gt;/LC_MESSAGES/<b>messages.po</b> avec &lt;LANG&gt; le
+<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank">code à deux lettres du pays</a>
+: fr, en... Si vous créez un nouveau message vous devez fournir sa
+traduction dans les fichiers <b>messages.po</b> modifiables avec un
+simple
+éditeur de texte par un couple de ligne du genre :<br>
+
+<i>msgid "Directory created"<br>
+msgstr "Répertoire créé"<br>
+</i>Après toute modification dans ce fichier, vous devez le recompiler
+en le passant à l'outil gettext : <i><b>msgfmt messages.po</b></i><br>
+
+<br>
+
+Les noms des composants sont traduits grace au fichier
+locale/&lt;LANG&gt;/componants_shortcuts.txt avec &lt;LANG&gt; le <a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank">code à deux lettres du pays</a>
+: fr, en...
+<h2><a name="Fichiers_de_Log"></a>Fichiers de Log</h2>
+
+L'application CalcAl utilise le package python3 standard <b>logging</b>
+pour
+contrôler l'enregistrement de tous les évennement de l'application :
+journal. Ce système est mis en place dans <b>CalcAl.py/initLogging()</b>.<br>
+
+Les messages sont enregistrés dans deux fichiers journaux situé dans le
+répertoire utilisateur <b>CalcAl_data/log</b>. par des appels à une
+méthode d'une instance de <i>logging.getLogger()</i> : <i>logger.debug(),
+logger.warning(), logger.info()</i>. Ces messages sont
+internalionalisés et datés :<br>
+
+<i>2017-02-14 20:59:39,714 :: INFO :: Démarrage du calculateur avec la
+base ciqual2016.db</i><br>
+
+<br>
+
+Le paramétrage de ce système est réalisé dans la section [<b>log</b>]
+de <b>CalcAl.ini</b>.<br>
+
+<br>
+
+Le niveau de détail filtré est défini par l'appel à logger.setLevel()
+dans <b>CalcAl.py/initLogging()</b> et dans g<b>ui/CalcAlGUIMenu.py/setLogLevel()</b>.<br>
+
+<br>
+
+L'utilisateur peut choisir de passer en mode info ou debug depuis l'IHM.<br>
+
+<img alt="Log level selection" src="../images/loglevelSelect.png" height="93" width="220"><br>
+
+Vous pouvez forcer le mode debug au démarrage de l'application en
+passant au programme les options de ligne de commande <b>-d</b> ou<b>--debug</b>.<br>
+
+<h2><a name="Tests_unitaires"></a>Tests unitaires</h2>
+
+L'application possède une batterie partielle de test unitaires
+utilisées pour vérifier la non-régression du code.<br>
+
+Répertoire : unittest<br>
+
+Script de lancement : unittest.sh<br>
+
+<br>
+
+<img alt="Unit test result example" src="../images/uniitest_results.png" height="232" width="567"><br>
+
+<br>
+
+<h2><a name="Installer"></a>Génération d'un programme d'installation<br>
+</h2>
+
+<h3>Génération d'un installer Windows</h3>
+
+La génération d'un programme d'installation Windows est automatiséee
+dans le script package_win.bat.<br>
+
+Ce script utilise les logiciels : <br>
+
+<ul>
+
+  <li><b>py2exe</b> et le script <b>setup_win.py</b> pour créer un
+exécutable .exe pour Windows à partir des .py de l'application.</li>
+  <li><b>Inno Setup</b> pour créer un installateur Windows à l'aide des
+directives contenues dans calcal.iss.<br>
+Pensez à mettre à jour la version du code dans ce fichier.<br>
+  </li>
+</ul>
+
+<h3>Génération d'un installer Mac</h3>
+
+La génération d'un programme d'installation Mac OS X est automatiséee
+dans le script package_mac.sh.<br>
+
+Ce script utilise le logiciel <b>py2app</b> et le script <b>setup_model.py</b>
+pour créer un exécutable .app à partir des .py et des ressources de
+l'application. Cet exécutable est ensuite packagé dans un fichier
+archive .dmg.<br>
+
+<h2><a name="Import_BD"></a>Import des bases de données</h2>
+
+Les bases de données CIQUAL et USDA ne sont pas fournies avec CalcAl.<br>
+
+Les données de ces bases sont la propriété des organismes
+gouvernementaux qui les publient et ne peuvent pas être fournies avec
+le logiciel CalcAl.<br>
+
+C'est à l'utilisateur de télécharger leurs fichiers d'initialisation
+depuis Internet puis de les importer dans CalcAl.<br>
+
+Une base de demo est cependant incluse mais n'offre que les éléments
+moyens de la Ciqual 2013.<br>
+
+<br>
+
+L'import est réalisé par des modules optionnel (plugins) du package <b>database</b>
+: <i><b>Ciqual_Reader.py</b></i> et <i><b>USDA_28_Reader.py</b></i>.<br>
+
+Ce mode de distribution de modules optionnels n'est cependant pas
+compatible avec les installateurs Windows et Mac.<br>
+
+<br>
+
+La table Ciqual version 2016 ne fournissant plus les codes constituant,
+ces derniers sont récupérés dans le fichier <b>resources/databases/ciqual_2016_constituants_Codes.txt</b>
+de façon à etre homogène avec la version 2013.<br>
+
+<br>
+
+Pour la table USDA SR28, les codes, noms et unités des constituants
+sont reconstitués à l'aide du fichier <b>resources/databases/usda_constituants.txt.<br>
+<br>
+</b>
+<h2><a name="Modification_documentation"></a>Modification de la
+documentation du projet</h2>
+
+La documentation du projet que vous consultez est localisée dans le
+dossier <b>CalcAl_doc/&lt;LANG&gt;</b> du répertoire d'installation de
+l'application. Elle est accessible par le menu <b>? / Documentation</b>
+de l'interface graphique.<br>
+
+<img alt="Accès à la doc dans l'IHM" src="../images/documentation_access.png" height="88" width="149"><br>
+
+<br>
+
+Les clés suivantes de la section [<b>Resources]</b>
+de <b>CalcAl.ini </b>permettent au logiciel d'y accéder :<br>
+
+<ul>
+
+  <li><b>DocumentationDir</b> : nom du dossier hégergeant la
+documentation</li>
+  <li><b>DocumentationIndexFile</b> : Nom du fichier HTML d'entrée de
+la documentation.<br>
+  </li>
+</ul>
+
+<h2><a name="Networking"></a>Fonctionnement en réseau</h2>Cette fonctionnalité doit être validée.<br>
+Il est possible de définir un emplacement réseau commun pour les bases de données.<br>
+Il faut alors lancer l'application <b>CalcAl</b> par un script <b>calcal.bat</b> ou <b>calcal.sh</b> qui fournit l'option<b> -b</b> ou <b>--baseDirPath </b>au module&nbsp; <b>CalcAl.py</b>. <br>
+
+<h2><a name="Techniques"></a>Techniques utilisées</h2>
+
+<ul>
+
+  <li>Portable, multi plateforme :</li>
+  <ul>
+    <li>Des tests sont réalisés pour exécuter du code spécifique à une
+plateforme : <i>Darwin (Mac)</i> ou <i>Windows</i>.</li>
+    <li>Le code source python est encodé en utf-8.</li>
+    <li>Les accents sont supportés</li>
+    <li>Les readers des bases de données décodent les fichiers
+d'initialisation <i>iso8859_1</i> (<b>USDA_28_Reader.py</b>) et <i>cp1252</i>
+(<b>Ciqual_Reader.py</b>)</li>
+  </ul>
+  <li>S'adapte à la taille de l'écran : voir&nbsp; <b>gui/CalcAlGUI.py/__init__()</b> les
+seuils sont définis dans <b>CalcAl.ini </b>: dans la section [<b>Limits</b>],
+clés <b>heightBigScreenInPixel</b> et <b>heightSmallScreenInPixel</b></li>
+  <li>Performances : Multithreading pour la recherche d'aliment : 1
+thread GUI + 1 Thread <b>SearchThreadedTask.py</b> pour les accès à la base de
+données, communication des messages par <i>Queue</i> entre les 2 Threads.</li>
+  <li>Design Pattern MVC : Un modèle de données (package <b>model</b>) contient les infos sur les produits
+affichés et décide des rafraichissement de l'IHM (package <b>gui</b>) ce qui permet un gain
+de performance et un découplage entre les données et l'IHM.<br>
+  </li>
+  <li>Base de donnée interne Sqlite : Toutes les données sont
+regrouppées en bases de données relationnelles indépendante gérées par
+le package <b>database</b>. Chaque base est composée de 10 tables
+(V0.51). Le format d'encodage des données est UTF-8.<br>
+  </li>
+</ul>
+
+<img alt="Vue des tables Calcal dans Sqlite" src="../images/tables_Calcal.png" height="620" width="764">
+<h2><a name="Justification_des_choix_"></a>Justification des choix</h2>
+
+<ul>
+
+  <li>Le langage de programmation choisit est <a href="https://www.python.org/" target="_blank">python,</a>
+pour des raisons de portabilité sur les système Windows, Mac OS X et
+Linux. Ce langage interprété possède une grande richesse fonctionnelle.
+La version 3 offre un support étendu des jeux de caractères et facilite
+l'internationnalisation.<br>
+  </li>
+  <li>L'Interface Homme Machine est basée sur <a href="https://wiki.python.org/moin/TkInter" target="_blank">Tkinter</a>
+car il est distribué habituellement dans les distributions Python et
+fonctionne sur toutes les plateformes. <br>
+  </li>
+  <li><a href="https://fr.wikipedia.org/wiki/Hypertext_Markup_Language" target="_blank">HTML</a> est un format de données adapté à la
+documentation et lisible par de nombreux navigateurs.</li>
+  <li>Le <a href="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur" target="_blank">patron de conception Modèle-Vue</a>
+permet de découpler les données de leur affichage dand l'IHM. Permet
+d'améliorer les performances par une gestion des données par le modèle
+qui décide si les données de l'IHM doivent être raffraichie.<br>
+  </li>
+</ul>
+
+<br>
+
+<h2><a name="Problemes"></a>Problèmes connus</h2>
+
+<ol>
+
+  <li>Sur Mac OS X version X.12 ou moins, la version de Tk est obsolète
+: 8.5. Cette version ne supporte pas certains caractères accentué comme
+l'accent circonflexe dans les zones de saisie. Un crash violent de
+l'application ce produit. La version Active TCL Tk 8.5.18 corrige ce
+problème, mais les bulles d'aide n'apparaissent plus.</li>
+  <li>Problème de certification des exe et .app non traitée
+actuellement.<br>
+  </li>
+</ol>
+
+<br>
+
+<hr size="2" width="100%"><br>
+
+Chapitre précédent : <a href="CalcAl_utilisation.html">Utilisation</a>
+- Chapitre
+suivant : <a href="CalcAl_versions.html">Versions</a><br>
+
+<hr size="2" width="100%"><br>
+
+Copyleft (c) 2017 - <a href="http://perrine.maillard.free.fr/" target="_blank">Perrine</a><a href="http://perrine.maillard.free.fr/" target="_blank"> </a>et <a href="http://thierry.maillard.pagesperso-orange.fr/" target="_blank">Thierry</a>
+Maillard<br>
+
+Vous avez la permission de copier, distribuer ou modifier ce document
+selon les termes de la licence GNU de documentation libre, dans sa
+version 1.3 ou dans toute version ultérieure publiée par la Free
+Software Foundation ; sans Section Invariante, sans Texte De Première
+De Couverture, et sans Texte De Quatrième De Couverture. <br>
+
+Une copie de cette licence est incluse dans la section intitulée
+"Licence GNU de documentation libre" : <a href="http://www.gnu.org/licenses/fdl.html">GNU Free Documentation
+License</a>.<br>
+
+Une copie de cette Licence est incluse dans le fichier <a href="licences/gfdl.1.3-js.fr.html">gfdl.1.3-js.fr.html</a><br>
+
+<br>
+
+</body></html>
