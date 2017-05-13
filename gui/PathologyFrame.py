@@ -77,8 +77,9 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         tkinter.Label(entriesFrame, text=_("Pathology name")).grid(row=0, column=0,
                                                                    sticky=tkinter.E)
         self.pathologyNameEntryVar = tkinter.StringVar()
-        self.pathologyNameEntry = tkinter.Entry(entriesFrame, textvariable=self.pathologyNameEntryVar,
-                                        width=35)
+        self.pathologyNameEntry = tkinter.Entry(entriesFrame,
+                                                textvariable=self.pathologyNameEntryVar,
+                                                width=35)
         self.pathologyNameEntry.grid(row=0, column=1, sticky=tkinter.W)
 
         tkinter.Label(entriesFrame, text=_("Description") + " :").grid(row=1, column=0,
@@ -196,7 +197,7 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.pathologyReferenceEntryVar.set("")
         self.componentsListbox.selection_clear(0, tkinter.END)
 
-    def clicPathologiesListbox(self, evt=None):
+    def clicPathologiesListbox(self, dummy=None):
         """ Update Definition frame with pathology selected by user """
         listIndexSelection = self.pathologiesListbox.curselection()
         if len(listIndexSelection) == 1:
@@ -266,7 +267,7 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 raise ValueError(_("Please select one and only one pathology to delete"))
             pathologyName = self.pathologiesListbox.get(listIndexSelection[0])
             isDestructionOk = messagebox.askyesno(_("Deleting selected user element in database"),
-                                                  _("Do you really want to delete selection in database ?") + \
+                            _("Do you really want to delete selection in database ?") + \
                                                   "\n" + pathologyName,
                                                   icon='warning')
             if isDestructionOk:
@@ -275,7 +276,8 @@ class PathologyFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 self.clearPathologyDefinition()
                 self.initListPathologies()
                 self.patientFrameModel.initListPathologies()
-                self.mainWindow.setStatusText(_("Pathology deleted in database") + " : " + pathologyName)
+                self.mainWindow.setStatusText(_("Pathology deleted in database") + " : " +
+                                              pathologyName)
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 

@@ -3,7 +3,7 @@
 ************************************************************************************
 programme : CalcAlGUIMenu
 Auteur : Thierry Maillard (TMD)
-Date : 12/3/2016 - 17/12/2016
+Date : 12/3/2016 - 5/3/2017
 
 Role : Menu bar for CalcAl Food Calculator project.
 
@@ -30,6 +30,9 @@ along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 import logging
 import os.path
 import shutil
+import locale
+import pathlib
+import webbrowser
 
 import tkinter
 from tkinter import filedialog
@@ -50,15 +53,15 @@ class CalcAlGUIMenu(tkinter.Menu):
         self.allowSelection = False
 
         self.databaseMenu = tkinter.Menu(self, tearoff=0)
-        self.databaseMenu.add_command(label=_("New"),
+        self.databaseMenu.add_command(label=_("New") + "...",
                                       command=self.master.getStartFrame().newDB)
-        self.databaseMenu.add_command(label=_("Info"),
+        self.databaseMenu.add_command(label=_("Info") + "...",
                                       state=tkinter.DISABLED,
                                       command=self.master.getStartFrame().infoDB)
         self.databaseMenu.add_command(label=_("Delete"),
                                       state=tkinter.DISABLED,
                                       command=self.master.getStartFrame().deleteDB)
-        self.databaseMenu.add_command(label=_("Join"),
+        self.databaseMenu.add_command(label=_("Join") + "...",
                                       command=self.master.getStartFrame().joinDB)
         self.add_cascade(label=_("Database"), menu=self.databaseMenu)
 
@@ -66,8 +69,9 @@ class CalcAlGUIMenu(tkinter.Menu):
         self.selectionMenu = tkinter.Menu(self, tearoff=0)
         self.selectionMenu.add_command(label=_("Modify"),
                                        state=tkinter.DISABLED,
-                                       command=self.master.getCalculatorFrame().copySelectionInDefinitionFrame)
-        self.selectionMenu.add_command(label=_("Group"),
+                                       command=self.master.getCalculatorFrame().
+                                       copySelectionInDefinitionFrame)
+        self.selectionMenu.add_command(label=_("Group") + "...",
                                        state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().groupFood)
         self.selectionMenu.add_command(label=_("Ungroup"),
@@ -75,17 +79,19 @@ class CalcAlGUIMenu(tkinter.Menu):
                                        command=self.master.getCalculatorFrame().ungroupFood)
         self.selectionMenu.add_command(label=_("Erase line"),
                                        state=tkinter.DISABLED,
-                                       command=lambda inBd=False: self.master.getCalculatorFrame().deleteFood(inBd))
+                                       command=lambda inBd=False: self.master.getCalculatorFrame().
+                                       deleteFood(inBd))
         self.selectionMenu.add_command(label=_("Delete in database"),
                                        state=tkinter.DISABLED,
-                                       command=lambda inBd=True: self.master.getCalculatorFrame().deleteFood(inBd))
+                                       command=lambda inBd=True: self.master.getCalculatorFrame().
+                                       deleteFood(inBd))
         self.selectionMenu.add_command(label=_("Clipboard"),
                                        state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().copyInClipboard)
-        self.selectionMenu.add_command(label=_("Info"),
+        self.selectionMenu.add_command(label=_("Info") + "...",
                                        state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().infoFood)
-        self.selectionMenu.add_command(label=_("Save portion"),
+        self.selectionMenu.add_command(label=_("Save portion") + "...",
                                        state=tkinter.DISABLED,
                                        command=self.master.getCalculatorFrame().savePortion)
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
@@ -98,7 +104,8 @@ class CalcAlGUIMenu(tkinter.Menu):
         self.add_cascade(label=_("Plugins"), menu=self.pluginsMenu)
 
         otherMenu = tkinter.Menu(self, tearoff=0)
-        otherMenu.add_command(label=_("About"), command=self.master.about)
+        otherMenu.add_command(label=_("About") + "...", command=self.master.about)
+        otherMenu.add_command(label=_("Documentation") + "...", command=self.documentation)
         self.isLoglevelDebug = tkinter.BooleanVar()
         self.isLoglevelDebug.set(False)
         # Observer self.setLogLevel on self.isLoglevelDebug called if modified : 'w'
@@ -120,7 +127,7 @@ class CalcAlGUIMenu(tkinter.Menu):
             else:
                 self.logger.debug("CalcAlGUIMenu event ignored")
 
-    def setLogLevel(self, *args):
+    def setLogLevel(self, *dummy):
         """ Set logging level """
 
         # Get handler to write on console
@@ -174,3 +181,16 @@ class CalcAlGUIMenu(tkinter.Menu):
             self.logger.info(_("Plugin") + " " + pluginName + " " + _("installed"))
         except ValueError as exc:
             self.master.setStatusText(_("Error") + " : " + str(exc) + " !", True)
+
+    def documentation(self):
+        """ Open HTML documentation in user web browser """
+        # Get documentation URL
+        curLocale = locale.getlocale()[0][:2]
+        htmlIndexPath = os.path.join(self.master.getDirProject(),
+                                     self.configApp.get('Resources', 'DocumentationDir'),
+                                     curLocale,
+                                     self.configApp.get('Resources', 'DocumentationIndexFile'))
+        htmlIndexAbsPath = os.path.abspath(htmlIndexPath)
+        urlHtmlIndexPath = pathlib.Path(htmlIndexAbsPath).as_uri()
+        self.logger.info(_("Start web browser with") + " " + urlHtmlIndexPath)
+        webbrowser.open_new_tab(urlHtmlIndexPath)

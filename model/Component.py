@@ -58,6 +58,9 @@ class Component(ModelBaseData.ModelBaseData):
                                                 self.getData("qualifValue"),
                                                 self.getData("quantity"))
 
+    # Decorator to use method getValueFormatedStatic()
+    # without instantiating class : static method
+    @staticmethod
     def getValueFormatedStatic(configApp, qualifier, quantity):
         """ Static method to convert (qualifier, quantity) into a string """
         formatFloatValue = "{0:." + configApp.get('Limits', 'nbMaxDigit') + "f}"
@@ -72,9 +75,6 @@ class Component(ModelBaseData.ModelBaseData):
             resultValue = "< " + formatFloatValue.format(quantity)
         else:
             raise CalcalExceptions.CalcalInternalError(configApp,
-                                                       "getValueFormated : unknown value qualifier : " +\
+                                    "getValueFormated : unknown value qualifier : " +\
                                                        qualifier)
         return resultValue
-
-    # To use method getValueFormatedStatic() without instantiating class : static method
-    getValueFormatedStatic = staticmethod(getValueFormatedStatic)

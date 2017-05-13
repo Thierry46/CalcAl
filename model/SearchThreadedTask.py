@@ -3,7 +3,7 @@
 ************************************************************************************
 Class : SearchThreadedTask
 Author : Thierry Maillard (TMD)
-Date : 13/11/2016
+Date : 2/1/2017
 
 Role : Define a Threaded that search Food in database.
     in association with SearchFoodFrame
@@ -46,7 +46,6 @@ class SearchThreadedTask(threading.Thread):
         self.parent = parent
         self.endMarker = endMarker
         self.listFilters = listFilters
-        self.formatFloatValue = "{0:." + self.parent.configApp.get('Limits', 'nbMaxDigit') + "f}"
 
     def run(self):
         self.runSearch()
@@ -84,7 +83,7 @@ class SearchThreadedTask(threading.Thread):
 
             # Build a list One line  per products : list [products,[listCompvalue formated]]
             # Components are ordered according fistFilter
-            listComp = set([filter[0] for filter in self.listFilters])
+            listComp = [filter[0] for filter in self.listFilters]
             listProductsFormatedComponents = []
             nbFoundProducts = 0
             for product in intersectKeys:
@@ -94,10 +93,13 @@ class SearchThreadedTask(threading.Thread):
                         if dictProductValues[product][0] == codeComp:
                             qualifier = dictProductValues[product][1]
                             value = dictProductValues[product][2]
-                            formatValue = Component.Component.getValueFormatedStatic(self.parent.configApp,
-                                                                                 qualifier, value)
+                            formatValue = Component.Component.\
+                                            getValueFormatedStatic(self.parent.configApp,
+                                                                   qualifier, value)
                             listCompValues.append(formatValue)
-                            break # Component can be in 2 dict if asked twice by user : take only the first
+                            # Component can be in 2 dict if asked twice by user :
+                            # take only the first
+                            break
                 listProductsFormatedComponents.append([product, listCompValues])
                 if nbFoundProducts > nbMaxResultSearch:
                     break

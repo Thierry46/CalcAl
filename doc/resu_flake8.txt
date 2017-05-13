@@ -1,0 +1,1269 @@
+./CalcAl.py:157:80: E501 line too long (80 > 79 characters)
+./CalcAl.py:173:23: E261 at least two spaces before inline comment
+./CalcAl.py:189:80: E501 line too long (80 > 79 characters)
+./CalcAl.py:213:80: E501 line too long (90 > 79 characters)
+./CalcAl.py:224:80: E501 line too long (85 > 79 characters)
+./CalcAl.py:228:19: E126 continuation line over-indented for hanging indent
+./CalcAl.py:228:80: E501 line too long (81 > 79 characters)
+./CalcAl.py:233:80: E501 line too long (85 > 79 characters)
+./CalcAl.py:236:80: E501 line too long (85 > 79 characters)
+./CalcAl.py:238:80: E501 line too long (81 > 79 characters)
+./setup_model.py:47:1: E265 block comment should start with '# '
+./setup_model.py:63:80: E501 line too long (83 > 79 characters)
+./setup_model.py:66:80: E501 line too long (96 > 79 characters)
+./setup_win.py:16:1: F401 'py2exe' imported but unused
+./setup_win.py:18:1: W191 indentation contains tabs
+./setup_win.py:18:2: E128 continuation line under-indented for visual indent
+./setup_win.py:19:1: E101 indentation contains mixed spaces and tabs
+./setup_win.py:19:5: E128 continuation line under-indented for visual indent
+./database/Ciqual_Reader.py:21:80: E501 line too long (80 > 79 characters)
+./database/Ciqual_Reader.py:32:80: E501 line too long (86 > 79 characters)
+./database/Ciqual_Reader.py:36:80: E501 line too long (92 > 79 characters)
+./database/Ciqual_Reader.py:37:80: E501 line too long (91 > 79 characters)
+./database/Ciqual_Reader.py:41:80: E501 line too long (80 > 79 characters)
+./database/Ciqual_Reader.py:42:80: E501 line too long (91 > 79 characters)
+./database/Ciqual_Reader.py:50:80: E501 line too long (80 > 79 characters)
+./database/Ciqual_Reader.py:57:80: E501 line too long (94 > 79 characters)
+./database/Ciqual_Reader.py:102:80: E501 line too long (81 > 79 characters)
+./database/Ciqual_Reader.py:103:80: E501 line too long (100 > 79 characters)
+./database/Ciqual_Reader.py:108:22: E261 at least two spaces before inline comment
+./database/Ciqual_Reader.py:119:80: E501 line too long (89 > 79 characters)
+./database/Ciqual_Reader.py:120:46: E261 at least two spaces before inline comment
+./database/Ciqual_Reader.py:120:80: E501 line too long (90 > 79 characters)
+./database/Ciqual_Reader.py:135:80: E501 line too long (96 > 79 characters)
+./database/Ciqual_Reader.py:151:80: E501 line too long (80 > 79 characters)
+./database/Ciqual_Reader.py:155:80: E501 line too long (103 > 79 characters)
+./database/Ciqual_Reader.py:159:80: E501 line too long (81 > 79 characters)
+./database/Ciqual_Reader.py:165:80: E501 line too long (83 > 79 characters)
+./database/Ciqual_Reader.py:173:80: E501 line too long (96 > 79 characters)
+./database/Ciqual_Reader.py:177:80: E501 line too long (99 > 79 characters)
+./database/Ciqual_Reader.py:177:81: E222 multiple spaces after operator
+./database/Ciqual_Reader.py:177:95: E226 missing whitespace around arithmetic operator
+./database/Ciqual_Reader.py:196:80: E501 line too long (98 > 79 characters)
+./database/Ciqual_Reader.py:199:80: E501 line too long (98 > 79 characters)
+./database/Ciqual_Reader.py:211:80: E501 line too long (98 > 79 characters)
+./database/Ciqual_Reader.py:215:80: E501 line too long (80 > 79 characters)
+./database/Ciqual_Reader.py:216:46: E226 missing whitespace around arithmetic operator
+./database/Ciqual_Reader.py:219:80: E501 line too long (85 > 79 characters)
+./database/Ciqual_Reader.py:232:9: E265 block comment should start with '# '
+./database/Ciqual_Reader.py:240:80: E501 line too long (98 > 79 characters)
+./database/Ciqual_Reader.py:266:80: E501 line too long (80 > 79 characters)
+./database/Ciqual_Reader.py:268:80: E501 line too long (80 > 79 characters)
+./database/Database.py:28:80: E501 line too long (80 > 79 characters)
+./database/Database.py:36:80: E501 line too long (96 > 79 characters)
+./database/Database.py:37:80: E501 line too long (97 > 79 characters)
+./database/Database.py:38:80: E501 line too long (94 > 79 characters)
+./database/Database.py:39:80: E501 line too long (93 > 79 characters)
+./database/Database.py:40:80: E501 line too long (93 > 79 characters)
+./database/Database.py:49:32: E261 at least two spaces before inline comment
+./database/Database.py:70:80: E501 line too long (92 > 79 characters)
+./database/Database.py:73:80: E501 line too long (82 > 79 characters)
+./database/Database.py:79:80: E501 line too long (86 > 79 characters)
+./database/Database.py:80:80: E501 line too long (81 > 79 characters)
+./database/Database.py:82:80: E501 line too long (84 > 79 characters)
+./database/Database.py:88:80: E501 line too long (93 > 79 characters)
+./database/Database.py:92:80: E501 line too long (84 > 79 characters)
+./database/Database.py:109:80: E501 line too long (88 > 79 characters)
+./database/Database.py:117:80: E501 line too long (80 > 79 characters)
+./database/Database.py:125:9: W191 indentation contains tabs
+./database/Database.py:125:9: E101 indentation contains mixed spaces and tabs
+./database/Database.py:126:9: W191 indentation contains tabs
+./database/Database.py:126:9: E101 indentation contains mixed spaces and tabs
+./database/Database.py:130:80: E501 line too long (90 > 79 characters)
+./database/Database.py:138:80: E501 line too long (86 > 79 characters)
+./database/Database.py:141:80: E501 line too long (90 > 79 characters)
+./database/Database.py:150:80: E501 line too long (81 > 79 characters)
+./database/Database.py:154:80: E501 line too long (87 > 79 characters)
+./database/Database.py:160:80: E501 line too long (85 > 79 characters)
+./database/Database.py:167:80: E501 line too long (84 > 79 characters)
+./database/Database.py:169:80: E501 line too long (85 > 79 characters)
+./database/Database.py:171:80: E501 line too long (84 > 79 characters)
+./database/Database.py:183:80: E501 line too long (80 > 79 characters)
+./database/Database.py:189:80: E501 line too long (80 > 79 characters)
+./database/Database.py:193:34: E271 multiple spaces after keyword
+./database/Database.py:197:80: E501 line too long (81 > 79 characters)
+./database/Database.py:199:80: E501 line too long (94 > 79 characters)
+./database/Database.py:200:80: E501 line too long (92 > 79 characters)
+./database/Database.py:207:80: E501 line too long (99 > 79 characters)
+./database/Database.py:207:97: E226 missing whitespace around arithmetic operator
+./database/Database.py:210:80: E501 line too long (93 > 79 characters)
+./database/Database.py:212:80: E501 line too long (85 > 79 characters)
+./database/Database.py:213:80: E501 line too long (98 > 79 characters)
+./database/Database.py:216:80: E501 line too long (92 > 79 characters)
+./database/Database.py:219:80: E501 line too long (91 > 79 characters)
+./database/Database.py:222:80: E501 line too long (99 > 79 characters)
+./database/Database.py:226:80: E501 line too long (85 > 79 characters)
+./database/Database.py:233:80: E501 line too long (80 > 79 characters)
+./database/Database.py:243:80: E501 line too long (95 > 79 characters)
+./database/Database.py:250:80: E501 line too long (98 > 79 characters)
+./database/Database.py:259:80: E501 line too long (80 > 79 characters)
+./database/Database.py:261:80: E501 line too long (86 > 79 characters)
+./database/Database.py:262:80: E501 line too long (95 > 79 characters)
+./database/Database.py:280:80: E501 line too long (92 > 79 characters)
+./database/Database.py:315:80: E501 line too long (94 > 79 characters)
+./database/Database.py:319:80: E501 line too long (87 > 79 characters)
+./database/Database.py:325:80: E501 line too long (92 > 79 characters)
+./database/Database.py:332:80: E501 line too long (82 > 79 characters)
+./database/Database.py:348:80: E501 line too long (93 > 79 characters)
+./database/Database.py:384:80: E501 line too long (81 > 79 characters)
+./database/Database.py:390:80: E501 line too long (89 > 79 characters)
+./database/Database.py:434:80: E501 line too long (91 > 79 characters)
+./database/Database.py:437:80: E501 line too long (91 > 79 characters)
+./database/Database.py:441:80: E501 line too long (94 > 79 characters)
+./database/Database.py:443:80: E501 line too long (81 > 79 characters)
+./database/Database.py:445:80: E501 line too long (94 > 79 characters)
+./database/Database.py:447:80: E501 line too long (94 > 79 characters)
+./database/Database.py:460:80: E501 line too long (82 > 79 characters)
+./database/Database.py:462:80: E501 line too long (94 > 79 characters)
+./database/Database.py:464:80: E501 line too long (81 > 79 characters)
+./database/Database.py:471:80: E501 line too long (81 > 79 characters)
+./database/Database.py:473:65: E225 missing whitespace around operator
+./database/Database.py:476:80: E501 line too long (81 > 79 characters)
+./database/Database.py:477:80: E501 line too long (82 > 79 characters)
+./database/Database.py:480:80: E501 line too long (80 > 79 characters)
+./database/Database.py:481:69: E225 missing whitespace around operator
+./database/Database.py:496:80: E501 line too long (83 > 79 characters)
+./database/Database.py:543:80: E501 line too long (95 > 79 characters)
+./database/Database.py:568:80: E501 line too long (90 > 79 characters)
+./database/Database.py:575:80: E501 line too long (94 > 79 characters)
+./database/Database.py:583:80: E501 line too long (96 > 79 characters)
+./database/Database.py:591:80: E501 line too long (95 > 79 characters)
+./database/Database.py:594:80: E501 line too long (88 > 79 characters)
+./database/Database.py:595:80: E501 line too long (90 > 79 characters)
+./database/Database.py:614:80: E501 line too long (96 > 79 characters)
+./database/Database.py:619:80: E501 line too long (94 > 79 characters)
+./database/Database.py:633:80: E501 line too long (94 > 79 characters)
+./database/Database.py:637:80: E501 line too long (85 > 79 characters)
+./database/Database.py:640:80: E501 line too long (93 > 79 characters)
+./database/Database.py:645:80: E501 line too long (83 > 79 characters)
+./database/Database.py:648:80: E501 line too long (80 > 79 characters)
+./database/Database.py:649:80: E501 line too long (80 > 79 characters)
+./database/Database.py:651:80: E501 line too long (86 > 79 characters)
+./database/Database.py:662:80: E501 line too long (96 > 79 characters)
+./database/Database.py:663:80: E501 line too long (86 > 79 characters)
+./database/Database.py:665:80: E501 line too long (90 > 79 characters)
+./database/Database.py:668:80: E501 line too long (82 > 79 characters)
+./database/Database.py:673:80: E501 line too long (82 > 79 characters)
+./database/Database.py:676:80: E501 line too long (96 > 79 characters)
+./database/Database.py:680:80: E501 line too long (90 > 79 characters)
+./database/Database.py:682:80: E501 line too long (83 > 79 characters)
+./database/Database.py:683:80: E501 line too long (88 > 79 characters)
+./database/Database.py:684:80: E501 line too long (93 > 79 characters)
+./database/Database.py:687:80: E501 line too long (89 > 79 characters)
+./database/Database.py:696:80: E501 line too long (80 > 79 characters)
+./database/Database.py:703:80: E501 line too long (85 > 79 characters)
+./database/Database.py:707:80: E501 line too long (89 > 79 characters)
+./database/Database.py:713:80: E501 line too long (93 > 79 characters)
+./database/Database.py:715:80: E501 line too long (81 > 79 characters)
+./database/Database.py:723:80: E501 line too long (99 > 79 characters)
+./database/Database.py:725:80: E501 line too long (87 > 79 characters)
+./database/Database.py:728:80: E501 line too long (86 > 79 characters)
+./database/Database.py:731:80: E501 line too long (90 > 79 characters)
+./database/Database.py:743:80: E501 line too long (90 > 79 characters)
+./database/Database.py:764:80: E501 line too long (84 > 79 characters)
+./database/Database.py:774:80: E501 line too long (92 > 79 characters)
+./database/Database.py:777:80: E501 line too long (91 > 79 characters)
+./database/Database.py:782:80: E501 line too long (80 > 79 characters)
+./database/Database.py:787:80: E501 line too long (80 > 79 characters)
+./database/Database.py:792:80: E501 line too long (82 > 79 characters)
+./database/Database.py:801:80: E501 line too long (99 > 79 characters)
+./database/Database.py:804:80: E501 line too long (85 > 79 characters)
+./database/Database.py:824:80: E501 line too long (82 > 79 characters)
+./database/Database.py:825:80: E501 line too long (85 > 79 characters)
+./database/Database.py:853:80: E501 line too long (87 > 79 characters)
+./database/Database.py:891:80: E501 line too long (88 > 79 characters)
+./database/Database.py:894:80: E501 line too long (92 > 79 characters)
+./database/Database.py:897:80: E501 line too long (83 > 79 characters)
+./database/Database.py:908:80: E501 line too long (85 > 79 characters)
+./database/Database.py:910:80: E501 line too long (90 > 79 characters)
+./database/Database.py:922:80: E501 line too long (92 > 79 characters)
+./database/Database.py:925:80: E501 line too long (95 > 79 characters)
+./database/Database.py:933:80: E501 line too long (87 > 79 characters)
+./database/Database.py:936:80: E501 line too long (81 > 79 characters)
+./database/Database.py:949:80: E501 line too long (86 > 79 characters)
+./database/Database.py:950:80: E501 line too long (82 > 79 characters)
+./database/Database.py:951:80: E501 line too long (94 > 79 characters)
+./database/Database.py:967:80: E501 line too long (92 > 79 characters)
+./database/Database.py:979:47: E261 at least two spaces before inline comment
+./database/Database.py:981:41: E261 at least two spaces before inline comment
+./database/Database.py:1003:80: E501 line too long (83 > 79 characters)
+./database/Database.py:1005:80: E501 line too long (98 > 79 characters)
+./database/Database.py:1008:80: E501 line too long (81 > 79 characters)
+./database/Database.py:1010:80: E501 line too long (92 > 79 characters)
+./database/Database.py:1020:80: E501 line too long (104 > 79 characters)
+./database/DatabaseManager.py:28:80: E501 line too long (80 > 79 characters)
+./database/DatabaseManager.py:41:80: E501 line too long (81 > 79 characters)
+./database/DatabaseManager.py:43:80: E501 line too long (85 > 79 characters)
+./database/DatabaseManager.py:47:80: E501 line too long (91 > 79 characters)
+./database/DatabaseManager.py:51:37: E261 at least two spaces before inline comment
+./database/DatabaseManager.py:53:80: E501 line too long (91 > 79 characters)
+./database/DatabaseManager.py:87:80: E501 line too long (99 > 79 characters)
+./database/DatabaseManager.py:95:80: E501 line too long (82 > 79 characters)
+./database/DatabaseManager.py:97:80: E501 line too long (100 > 79 characters)
+./database/DatabaseReaderFactory.py:32:80: E501 line too long (96 > 79 characters)
+./database/DatabaseReaderFactory.py:33:80: E501 line too long (81 > 79 characters)
+./database/DatabaseReaderFactory.py:34:80: E501 line too long (95 > 79 characters)
+./database/DatabaseReaderFactory.py:40:80: E501 line too long (86 > 79 characters)
+./database/DatabaseReaderFactory.py:43:80: E501 line too long (81 > 79 characters)
+./database/DatabaseReaderFactory.py:48:80: E501 line too long (81 > 79 characters)
+./database/DatabaseReaderFactory.py:49:80: E501 line too long (95 > 79 characters)
+./database/USDA_28_Reader.py:26:80: E501 line too long (86 > 79 characters)
+./database/USDA_28_Reader.py:30:80: E501 line too long (91 > 79 characters)
+./database/USDA_28_Reader.py:31:80: E501 line too long (90 > 79 characters)
+./database/USDA_28_Reader.py:34:80: E501 line too long (80 > 79 characters)
+./database/USDA_28_Reader.py:37:80: E501 line too long (97 > 79 characters)
+./database/USDA_28_Reader.py:39:80: E501 line too long (94 > 79 characters)
+./database/USDA_28_Reader.py:66:80: E501 line too long (87 > 79 characters)
+./database/USDA_28_Reader.py:72:80: E501 line too long (80 > 79 characters)
+./database/USDA_28_Reader.py:116:80: E501 line too long (97 > 79 characters)
+./database/USDA_28_Reader.py:117:80: E501 line too long (100 > 79 characters)
+./database/USDA_28_Reader.py:122:80: E501 line too long (80 > 79 characters)
+./database/USDA_28_Reader.py:126:80: E501 line too long (85 > 79 characters)
+./database/USDA_28_Reader.py:134:80: E501 line too long (89 > 79 characters)
+./database/USDA_28_Reader.py:135:80: E501 line too long (92 > 79 characters)
+./database/USDA_28_Reader.py:137:80: E501 line too long (93 > 79 characters)
+./database/USDA_28_Reader.py:144:80: E501 line too long (82 > 79 characters)
+./database/USDA_28_Reader.py:149:80: E501 line too long (96 > 79 characters)
+./database/USDA_28_Reader.py:179:80: E501 line too long (95 > 79 characters)
+./database/USDA_28_Reader.py:180:80: E501 line too long (87 > 79 characters)
+./database/USDA_28_Reader.py:203:80: E501 line too long (85 > 79 characters)
+./gui/CalcAlGUI.py:65:80: E501 line too long (100 > 79 characters)
+./gui/CalcAlGUI.py:67:80: E501 line too long (80 > 79 characters)
+./gui/CalcAlGUI.py:71:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUI.py:72:80: E501 line too long (96 > 79 characters)
+./gui/CalcAlGUI.py:92:80: E501 line too long (88 > 79 characters)
+./gui/CalcAlGUI.py:97:80: E501 line too long (82 > 79 characters)
+./gui/CalcAlGUI.py:101:80: E501 line too long (97 > 79 characters)
+./gui/CalcAlGUI.py:102:80: E501 line too long (89 > 79 characters)
+./gui/CalcAlGUI.py:103:80: E501 line too long (86 > 79 characters)
+./gui/CalcAlGUI.py:104:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUI.py:106:80: E501 line too long (97 > 79 characters)
+./gui/CalcAlGUI.py:107:80: E501 line too long (89 > 79 characters)
+./gui/CalcAlGUI.py:110:80: E501 line too long (85 > 79 characters)
+./gui/CalcAlGUI.py:111:80: E501 line too long (80 > 79 characters)
+./gui/CalcAlGUI.py:115:80: E501 line too long (93 > 79 characters)
+./gui/CalcAlGUI.py:116:80: E501 line too long (86 > 79 characters)
+./gui/CalcAlGUI.py:117:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUI.py:118:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUI.py:119:80: E501 line too long (85 > 79 characters)
+./gui/CalcAlGUI.py:126:80: E501 line too long (86 > 79 characters)
+./gui/CalcAlGUI.py:158:80: E501 line too long (89 > 79 characters)
+./gui/CalcAlGUI.py:173:9: E122 continuation line missing indentation or outdented
+./gui/CalcAlGUI.py:174:9: E122 continuation line missing indentation or outdented
+./gui/CalcAlGUI.py:196:80: E501 line too long (90 > 79 characters)
+./gui/CalcAlGUI.py:197:80: E501 line too long (82 > 79 characters)
+./gui/CalcAlGUI.py:198:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUI.py:264:80: E501 line too long (100 > 79 characters)
+./gui/CalcAlGUI.py:278:80: E501 line too long (89 > 79 characters)
+./gui/CalcAlGUI.py:280:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUI.py:281:9: E122 continuation line missing indentation or outdented
+./gui/CalcAlGUI.py:286:80: E501 line too long (94 > 79 characters)
+./gui/CalcAlGUI.py:289:64: E221 multiple spaces before operator
+./gui/CalcAlGUI.py:293:80: E501 line too long (94 > 79 characters)
+./gui/CalcAlGUI.py:295:80: E501 line too long (100 > 79 characters)
+./gui/CalcAlGUI.py:297:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUI.py:300:80: E501 line too long (82 > 79 characters)
+./gui/CalcAlGUI.py:307:34: E128 continuation line under-indented for visual indent
+./gui/CalcAlGUI.py:307:80: E501 line too long (81 > 79 characters)
+./gui/CalcAlGUI.py:308:34: E128 continuation line under-indented for visual indent
+./gui/CalcAlGUI.py:309:34: E128 continuation line under-indented for visual indent
+./gui/CalcAlGUI.py:309:80: E501 line too long (85 > 79 characters)
+./gui/CalcAlGUI.py:311:80: E501 line too long (99 > 79 characters)
+./gui/CalcAlGUI.py:312:37: E261 at least two spaces before inline comment
+./gui/CalcAlGUI.py:312:80: E501 line too long (99 > 79 characters)
+./gui/CalcAlGUI.py:321:80: E501 line too long (100 > 79 characters)
+./gui/CalcAlGUIMenu.py:51:80: E501 line too long (80 > 79 characters)
+./gui/CalcAlGUIMenu.py:57:80: E501 line too long (80 > 79 characters)
+./gui/CalcAlGUIMenu.py:60:80: E501 line too long (81 > 79 characters)
+./gui/CalcAlGUIMenu.py:63:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUIMenu.py:65:80: E501 line too long (81 > 79 characters)
+./gui/CalcAlGUIMenu.py:69:9: E303 too many blank lines (2)
+./gui/CalcAlGUIMenu.py:72:80: E501 line too long (111 > 79 characters)
+./gui/CalcAlGUIMenu.py:75:80: E501 line too long (90 > 79 characters)
+./gui/CalcAlGUIMenu.py:78:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUIMenu.py:81:80: E501 line too long (116 > 79 characters)
+./gui/CalcAlGUIMenu.py:84:80: E501 line too long (115 > 79 characters)
+./gui/CalcAlGUIMenu.py:87:80: E501 line too long (96 > 79 characters)
+./gui/CalcAlGUIMenu.py:90:80: E501 line too long (89 > 79 characters)
+./gui/CalcAlGUIMenu.py:93:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUIMenu.py:100:80: E501 line too long (100 > 79 characters)
+./gui/CalcAlGUIMenu.py:100:93: E226 missing whitespace around arithmetic operator
+./gui/CalcAlGUIMenu.py:104:80: E501 line too long (82 > 79 characters)
+./gui/CalcAlGUIMenu.py:105:80: E501 line too long (91 > 79 characters)
+./gui/CalcAlGUIMenu.py:108:80: E501 line too long (84 > 79 characters)
+./gui/CalcAlGUIMenu.py:110:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUIMenu.py:116:80: E501 line too long (93 > 79 characters)
+./gui/CalcAlGUIMenu.py:118:80: E501 line too long (81 > 79 characters)
+./gui/CalcAlGUIMenu.py:119:80: E501 line too long (94 > 79 characters)
+./gui/CalcAlGUIMenu.py:120:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUIMenu.py:136:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUIMenu.py:140:80: E501 line too long (97 > 79 characters)
+./gui/CalcAlGUIMenu.py:149:35: E226 missing whitespace around arithmetic operator
+./gui/CalcAlGUIMenu.py:159:35: E226 missing whitespace around arithmetic operator
+./gui/CalcAlGUIMenu.py:166:80: E501 line too long (84 > 79 characters)
+./gui/CalcAlGUIMenu.py:171:80: E501 line too long (81 > 79 characters)
+./gui/CalcAlGUIMenu.py:172:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUIMenu.py:177:80: E501 line too long (92 > 79 characters)
+./gui/CalcAlGUIMenu.py:178:80: E501 line too long (83 > 79 characters)
+./gui/CalcAlGUIMenu.py:180:80: E501 line too long (81 > 79 characters)
+./gui/CalcAlGUIMenu.py:187:80: E501 line too long (89 > 79 characters)
+./gui/CalcAlGUIMenu.py:189:80: E501 line too long (95 > 79 characters)
+./gui/CalculatorFrame.py:36:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:38:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:39:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:52:80: E501 line too long (91 > 79 characters)
+./gui/CalculatorFrame.py:61:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:63:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:69:57: E222 multiple spaces after operator
+./gui/CalculatorFrame.py:69:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:72:80: E501 line too long (96 > 79 characters)
+./gui/CalculatorFrame.py:76:19: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:76:78: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:76:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:76:83: E225 missing whitespace around operator
+./gui/CalculatorFrame.py:76:84: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:77:19: E126 continuation line over-indented for hanging indent
+./gui/CalculatorFrame.py:77:53: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:77:58: E225 missing whitespace around operator
+./gui/CalculatorFrame.py:77:59: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:79:37: E131 continuation line unaligned for hanging indent
+./gui/CalculatorFrame.py:82:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:84:80: E501 line too long (80 > 79 characters)
+./gui/CalculatorFrame.py:89:80: E501 line too long (91 > 79 characters)
+./gui/CalculatorFrame.py:95:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:97:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:98:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:99:66: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:99:76: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:99:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:104:9: E303 too many blank lines (2)
+./gui/CalculatorFrame.py:105:80: E501 line too long (95 > 79 characters)
+./gui/CalculatorFrame.py:106:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:107:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:108:80: E501 line too long (91 > 79 characters)
+./gui/CalculatorFrame.py:111:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:112:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:113:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:116:80: E501 line too long (83 > 79 characters)
+./gui/CalculatorFrame.py:117:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:120:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:131:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:132:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:138:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:140:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:141:40: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:141:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:142:40: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:142:74: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:149:80: E501 line too long (83 > 79 characters)
+./gui/CalculatorFrame.py:150:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:154:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:155:42: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:155:80: E501 line too long (100 > 79 characters)
+./gui/CalculatorFrame.py:156:42: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:159:75: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:162:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:163:36: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:164:62: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:164:72: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:164:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:166:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:170:80: E501 line too long (95 > 79 characters)
+./gui/CalculatorFrame.py:175:33: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:175:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:176:33: E126 continuation line over-indented for hanging indent
+./gui/CalculatorFrame.py:176:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:177:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:178:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:182:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:183:80: E501 line too long (91 > 79 characters)
+./gui/CalculatorFrame.py:187:74: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:188:74: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:189:68: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:190:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:190:93: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:191:72: E225 missing whitespace around operator
+./gui/CalculatorFrame.py:191:80: E501 line too long (81 > 79 characters)
+./gui/CalculatorFrame.py:191:81: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:192:68: E225 missing whitespace around operator
+./gui/CalculatorFrame.py:192:77: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:198:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:199:48: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:200:48: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:201:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:203:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:204:50: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:204:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:205:50: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:205:71: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:209:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:210:54: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:210:80: E501 line too long (91 > 79 characters)
+./gui/CalculatorFrame.py:211:54: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:215:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:216:54: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:216:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:217:54: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:217:80: E501 line too long (80 > 79 characters)
+./gui/CalculatorFrame.py:218:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:221:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:222:51: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:222:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:223:51: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:223:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:224:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:227:80: E501 line too long (95 > 79 characters)
+./gui/CalculatorFrame.py:228:57: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:228:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:229:57: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:229:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:233:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:234:63: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:234:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:235:63: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:235:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:235:82: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:239:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:240:52: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:240:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:241:52: E128 continuation line under-indented for visual indent
+./gui/CalculatorFrame.py:241:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:253:80: E501 line too long (97 > 79 characters)
+./gui/CalculatorFrame.py:258:80: E501 line too long (83 > 79 characters)
+./gui/CalculatorFrame.py:299:80: E501 line too long (100 > 79 characters)
+./gui/CalculatorFrame.py:336:13: E125 continuation line with same indent as next logical line
+./gui/CalculatorFrame.py:351:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:352:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:354:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:358:80: E501 line too long (99 > 79 characters)
+./gui/CalculatorFrame.py:360:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:381:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:383:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:394:80: E501 line too long (81 > 79 characters)
+./gui/CalculatorFrame.py:416:80: E501 line too long (96 > 79 characters)
+./gui/CalculatorFrame.py:420:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:423:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:426:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:448:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:457:80: E501 line too long (82 > 79 characters)
+./gui/CalculatorFrame.py:461:80: E501 line too long (105 > 79 characters)
+./gui/CalculatorFrame.py:468:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:492:80: E501 line too long (105 > 79 characters)
+./gui/CalculatorFrame.py:493:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:500:80: E501 line too long (80 > 79 characters)
+./gui/CalculatorFrame.py:523:5: E303 too many blank lines (2)
+./gui/CalculatorFrame.py:524:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:531:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:532:80: E501 line too long (80 > 79 characters)
+./gui/CalculatorFrame.py:556:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:560:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:586:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:589:80: E501 line too long (86 > 79 characters)
+./gui/CalculatorFrame.py:592:65: E226 missing whitespace around arithmetic operator
+./gui/CalculatorFrame.py:599:80: E501 line too long (99 > 79 characters)
+./gui/CalculatorFrame.py:604:80: E501 line too long (96 > 79 characters)
+./gui/CalculatorFrame.py:621:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:624:80: E501 line too long (81 > 79 characters)
+./gui/CalculatorFrame.py:639:80: E501 line too long (87 > 79 characters)
+./gui/CalculatorFrame.py:643:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:647:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:648:80: E501 line too long (91 > 79 characters)
+./gui/CalculatorFrame.py:658:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:661:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:665:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:666:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:670:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:675:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:679:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:684:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:686:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:690:37: E126 continuation line over-indented for hanging indent
+./gui/CalculatorFrame.py:690:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:691:80: E501 line too long (97 > 79 characters)
+./gui/CalculatorFrame.py:691:97: E502 the backslash is redundant between brackets
+./gui/CalculatorFrame.py:695:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:697:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:703:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:705:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:714:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:717:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:730:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:731:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:734:80: E501 line too long (88 > 79 characters)
+./gui/CalculatorFrame.py:737:80: E501 line too long (92 > 79 characters)
+./gui/CalculatorFrame.py:749:80: E501 line too long (84 > 79 characters)
+./gui/CalculatorFrame.py:758:80: E501 line too long (83 > 79 characters)
+./gui/CalculatorFrame.py:759:80: E501 line too long (93 > 79 characters)
+./gui/CalculatorFrame.py:763:80: E501 line too long (94 > 79 characters)
+./gui/CalculatorFrame.py:769:40: E222 multiple spaces after operator
+./gui/CalculatorFrame.py:769:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:771:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:774:29: E126 continuation line over-indented for hanging indent
+./gui/CalculatorFrame.py:774:80: E501 line too long (83 > 79 characters)
+./gui/CalculatorFrame.py:782:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:791:80: E501 line too long (90 > 79 characters)
+./gui/CalculatorFrame.py:792:80: E501 line too long (95 > 79 characters)
+./gui/CalculatorFrame.py:800:80: E501 line too long (85 > 79 characters)
+./gui/CalculatorFrame.py:803:80: E501 line too long (89 > 79 characters)
+./gui/CalculatorFrame.py:805:80: E501 line too long (100 > 79 characters)
+./gui/CalculatorFrame.py:816:80: E501 line too long (82 > 79 characters)
+./gui/CallTypWindow.py:17:80: E501 line too long (86 > 79 characters)
+./gui/CallTypWindow.py:48:80: E501 line too long (100 > 79 characters)
+./gui/CallTypWindow.py:59:80: E501 line too long (92 > 79 characters)
+./gui/CallTypWindow.py:81:5: E306 expected 1 blank line before a nested definition, found 0
+./gui/CallTypWindow.py:84:5: E306 expected 1 blank line before a nested definition, found 0
+./gui/DatabaseInitialiser.py:26:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseInitialiser.py:34:16: E128 continuation line under-indented for visual indent
+./gui/DatabaseInitialiser.py:34:80: E501 line too long (80 > 79 characters)
+./gui/DatabaseInitialiser.py:35:43: E128 continuation line under-indented for visual indent
+./gui/DatabaseInitialiser.py:35:59: E226 missing whitespace around arithmetic operator
+./gui/DatabaseInitialiser.py:36:80: E501 line too long (95 > 79 characters)
+./gui/DatabaseInitialiser.py:37:80: E501 line too long (96 > 79 characters)
+./gui/DatabaseInitialiser.py:43:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseInitialiser.py:44:80: E501 line too long (84 > 79 characters)
+./gui/DatabaseInitialiser.py:49:46: E261 at least two spaces before inline comment
+./gui/DatabaseInitialiser.py:52:80: E501 line too long (97 > 79 characters)
+./gui/DatabaseInitialiser.py:58:80: E501 line too long (91 > 79 characters)
+./gui/DatabaseInitialiser.py:60:80: E501 line too long (85 > 79 characters)
+./gui/DatabaseInitialiser.py:64:80: E501 line too long (89 > 79 characters)
+./gui/DatabaseInitialiser.py:67:27: E261 at least two spaces before inline comment
+./gui/DatabaseInitialiser.py:74:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseInitialiser.py:75:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseInitialiser.py:79:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseInitialiser.py:80:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseInitialiser.py:84:9: E303 too many blank lines (2)
+./gui/DatabaseInitialiser.py:101:80: E501 line too long (96 > 79 characters)
+./gui/DatabaseInitialiser.py:112:80: E501 line too long (90 > 79 characters)
+./gui/DatabaseInitialiser.py:114:80: E501 line too long (97 > 79 characters)
+./gui/DatabaseInitialiser.py:117:80: E501 line too long (89 > 79 characters)
+./gui/DatabaseInitialiser.py:118:80: E501 line too long (86 > 79 characters)
+./gui/DatabaseInitialiser.py:134:80: E501 line too long (89 > 79 characters)
+./gui/DatabaseInitialiser.py:137:80: E501 line too long (87 > 79 characters)
+./gui/DatabaseInitialiser.py:141:80: E501 line too long (96 > 79 characters)
+./gui/DatabaseInitialiser.py:145:80: E501 line too long (89 > 79 characters)
+./gui/DatabaseJoinDialog.py:17:80: E501 line too long (85 > 79 characters)
+./gui/DatabaseJoinDialog.py:22:80: E501 line too long (83 > 79 characters)
+./gui/DatabaseJoinDialog.py:30:80: E501 line too long (95 > 79 characters)
+./gui/DatabaseJoinDialog.py:32:80: E501 line too long (92 > 79 characters)
+./gui/DatabaseJoinDialog.py:35:80: E501 line too long (93 > 79 characters)
+./gui/DatabaseJoinDialog.py:39:80: E501 line too long (99 > 79 characters)
+./gui/DatabaseJoinDialog.py:57:27: E261 at least two spaces before inline comment
+./gui/DatabaseJoinDialog.py:72:80: E501 line too long (95 > 79 characters)
+./gui/DatabaseJoinDialog.py:77:80: E501 line too long (96 > 79 characters)
+./gui/DatabaseJoinDialog.py:81:80: E501 line too long (96 > 79 characters)
+./gui/EnergyFrame.py:19:80: E501 line too long (82 > 79 characters)
+./gui/EnergyFrame.py:23:80: E501 line too long (80 > 79 characters)
+./gui/EnergyFrame.py:26:80: E501 line too long (87 > 79 characters)
+./gui/EnergyFrame.py:29:80: E501 line too long (83 > 79 characters)
+./gui/EnergyFrame.py:30:80: E501 line too long (91 > 79 characters)
+./gui/EnergyFrame.py:32:80: E501 line too long (91 > 79 characters)
+./gui/EnergyFrame.py:33:80: E501 line too long (92 > 79 characters)
+./gui/EnergyFrame.py:34:80: E501 line too long (90 > 79 characters)
+./gui/EnergyFrame.py:38:34: E128 continuation line under-indented for visual indent
+./gui/EnergyFrame.py:38:80: E501 line too long (97 > 79 characters)
+./gui/EnergyFrame.py:39:34: E126 continuation line over-indented for hanging indent
+./gui/EnergyFrame.py:39:80: E501 line too long (93 > 79 characters)
+./gui/EnergyFrame.py:40:80: E501 line too long (93 > 79 characters)
+./gui/EnergyFrame.py:41:80: E501 line too long (90 > 79 characters)
+./gui/EnergyFrame.py:93:80: E501 line too long (80 > 79 characters)
+./gui/EnergyFrame.py:94:80: E501 line too long (88 > 79 characters)
+./gui/FamilyNameChooser.py:32:35: E128 continuation line under-indented for visual indent
+./gui/FamilyNameChooser.py:32:80: E501 line too long (93 > 79 characters)
+./gui/FamilyNameChooser.py:33:35: E128 continuation line under-indented for visual indent
+./gui/FamilyNameChooser.py:35:80: E501 line too long (84 > 79 characters)
+./gui/FamilyNameChooser.py:36:36: E128 continuation line under-indented for visual indent
+./gui/FamilyNameChooser.py:37:62: E226 missing whitespace around arithmetic operator
+./gui/FamilyNameChooser.py:37:72: E226 missing whitespace around arithmetic operator
+./gui/FamilyNameChooser.py:37:80: E501 line too long (82 > 79 characters)
+./gui/FamilyNameChooser.py:45:27: E261 at least two spaces before inline comment
+./gui/FamilyNameChooser.py:78:80: E501 line too long (93 > 79 characters)
+./gui/FamilyNameChooser.py:82:80: E501 line too long (96 > 79 characters)
+./gui/FrameBaseCalcAl.py:18:80: E501 line too long (85 > 79 characters)
+./gui/FrameBaseCalcAl.py:33:80: E501 line too long (80 > 79 characters)
+./gui/FrameBaseCalcAl.py:34:80: E501 line too long (83 > 79 characters)
+./gui/FrameBaseCalcAl.py:36:80: E501 line too long (80 > 79 characters)
+./gui/FrameBaseCalcAl.py:41:80: E501 line too long (99 > 79 characters)
+./gui/FrameBaseCalcAl.py:42:65: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:20:80: E501 line too long (82 > 79 characters)
+./gui/PathologyFrame.py:36:80: E501 line too long (89 > 79 characters)
+./gui/PathologyFrame.py:43:80: E501 line too long (81 > 79 characters)
+./gui/PathologyFrame.py:44:43: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:45:43: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:45:80: E501 line too long (80 > 79 characters)
+./gui/PathologyFrame.py:46:43: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:49:75: E502 the backslash is redundant between brackets
+./gui/PathologyFrame.py:52:80: E501 line too long (85 > 79 characters)
+./gui/PathologyFrame.py:53:47: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:54:47: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:54:80: E501 line too long (84 > 79 characters)
+./gui/PathologyFrame.py:55:73: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:55:80: E501 line too long (93 > 79 characters)
+./gui/PathologyFrame.py:55:83: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:56:80: E501 line too long (84 > 79 characters)
+./gui/PathologyFrame.py:57:80: E501 line too long (86 > 79 characters)
+./gui/PathologyFrame.py:62:80: E501 line too long (96 > 79 characters)
+./gui/PathologyFrame.py:63:16: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:65:16: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:69:80: E501 line too long (91 > 79 characters)
+./gui/PathologyFrame.py:77:80: E501 line too long (83 > 79 characters)
+./gui/PathologyFrame.py:78:80: E501 line too long (84 > 79 characters)
+./gui/PathologyFrame.py:80:80: E501 line too long (102 > 79 characters)
+./gui/PathologyFrame.py:81:41: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:84:80: E501 line too long (87 > 79 characters)
+./gui/PathologyFrame.py:85:80: E501 line too long (88 > 79 characters)
+./gui/PathologyFrame.py:86:80: E501 line too long (81 > 79 characters)
+./gui/PathologyFrame.py:88:52: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:89:52: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:90:52: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:93:47: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:93:80: E501 line too long (96 > 79 characters)
+./gui/PathologyFrame.py:94:73: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:94:80: E501 line too long (93 > 79 characters)
+./gui/PathologyFrame.py:94:83: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:95:80: E501 line too long (84 > 79 characters)
+./gui/PathologyFrame.py:96:37: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:96:80: E501 line too long (86 > 79 characters)
+./gui/PathologyFrame.py:97:67: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:97:77: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:97:80: E501 line too long (87 > 79 characters)
+./gui/PathologyFrame.py:98:80: E501 line too long (96 > 79 characters)
+./gui/PathologyFrame.py:99:80: E501 line too long (86 > 79 characters)
+./gui/PathologyFrame.py:101:80: E501 line too long (96 > 79 characters)
+./gui/PathologyFrame.py:104:46: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:104:80: E501 line too long (100 > 79 characters)
+./gui/PathologyFrame.py:109:15: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:109:80: E501 line too long (92 > 79 characters)
+./gui/PathologyFrame.py:113:80: E501 line too long (94 > 79 characters)
+./gui/PathologyFrame.py:114:42: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:115:42: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:118:75: E502 the backslash is redundant between brackets
+./gui/PathologyFrame.py:121:80: E501 line too long (94 > 79 characters)
+./gui/PathologyFrame.py:122:36: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:123:72: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:123:80: E501 line too long (92 > 79 characters)
+./gui/PathologyFrame.py:123:82: E226 missing whitespace around arithmetic operator
+./gui/PathologyFrame.py:124:80: E501 line too long (82 > 79 characters)
+./gui/PathologyFrame.py:129:16: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:131:16: E128 continuation line under-indented for visual indent
+./gui/PathologyFrame.py:134:5: E303 too many blank lines (2)
+./gui/PathologyFrame.py:161:80: E501 line too long (96 > 79 characters)
+./gui/PathologyFrame.py:182:80: E501 line too long (89 > 79 characters)
+./gui/PathologyFrame.py:185:80: E501 line too long (87 > 79 characters)
+./gui/PathologyFrame.py:188:80: E501 line too long (90 > 79 characters)
+./gui/PathologyFrame.py:190:80: E501 line too long (85 > 79 characters)
+./gui/PathologyFrame.py:214:80: E501 line too long (87 > 79 characters)
+./gui/PathologyFrame.py:230:80: E501 line too long (89 > 79 characters)
+./gui/PathologyFrame.py:244:80: E501 line too long (87 > 79 characters)
+./gui/PathologyFrame.py:252:80: E501 line too long (81 > 79 characters)
+./gui/PathologyFrame.py:257:80: E501 line too long (85 > 79 characters)
+./gui/PathologyFrame.py:260:5: E303 too many blank lines (2)
+./gui/PathologyFrame.py:266:80: E501 line too long (89 > 79 characters)
+./gui/PathologyFrame.py:268:80: E501 line too long (98 > 79 characters)
+./gui/PathologyFrame.py:269:80: E501 line too long (111 > 79 characters)
+./gui/PathologyFrame.py:269:111: E502 the backslash is redundant between brackets
+./gui/PathologyFrame.py:278:80: E501 line too long (105 > 79 characters)
+./gui/PathologyFrame.py:280:80: E501 line too long (85 > 79 characters)
+./gui/PathologyFrame.py:284:80: E501 line too long (92 > 79 characters)
+./gui/PatientFrame.py:33:80: E501 line too long (91 > 79 characters)
+./gui/PatientFrame.py:40:80: E501 line too long (95 > 79 characters)
+./gui/PatientFrame.py:43:80: E501 line too long (85 > 79 characters)
+./gui/PatientFrame.py:49:80: E501 line too long (86 > 79 characters)
+./gui/PatientFrame.py:55:80: E501 line too long (96 > 79 characters)
+./gui/PatientFrame.py:56:80: E501 line too long (97 > 79 characters)
+./gui/PatientFrame.py:58:80: E501 line too long (80 > 79 characters)
+./gui/PatientFrame.py:59:80: E501 line too long (84 > 79 characters)
+./gui/PatientFrame.py:61:80: E501 line too long (96 > 79 characters)
+./gui/PatientFrame.py:62:77: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:62:80: E501 line too long (96 > 79 characters)
+./gui/PatientFrame.py:63:77: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:63:80: E501 line too long (81 > 79 characters)
+./gui/PatientFrame.py:66:80: E501 line too long (92 > 79 characters)
+./gui/PatientFrame.py:67:80: E501 line too long (93 > 79 characters)
+./gui/PatientFrame.py:71:80: E501 line too long (89 > 79 characters)
+./gui/PatientFrame.py:72:21: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:73:80: E501 line too long (89 > 79 characters)
+./gui/PatientFrame.py:74:21: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:75:80: E501 line too long (89 > 79 characters)
+./gui/PatientFrame.py:76:21: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:77:80: E501 line too long (95 > 79 characters)
+./gui/PatientFrame.py:78:80: E501 line too long (96 > 79 characters)
+./gui/PatientFrame.py:82:80: E501 line too long (84 > 79 characters)
+./gui/PatientFrame.py:83:80: E501 line too long (86 > 79 characters)
+./gui/PatientFrame.py:83:82: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:91:16: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:94:80: E501 line too long (97 > 79 characters)
+./gui/PatientFrame.py:98:44: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:99:44: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:100:44: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:100:80: E501 line too long (82 > 79 characters)
+./gui/PatientFrame.py:101:80: E501 line too long (95 > 79 characters)
+./gui/PatientFrame.py:104:80: E501 line too long (108 > 79 characters)
+./gui/PatientFrame.py:105:67: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:105:77: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:105:80: E501 line too long (87 > 79 characters)
+./gui/PatientFrame.py:106:80: E501 line too long (88 > 79 characters)
+./gui/PatientFrame.py:107:37: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:108:67: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:108:77: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:108:80: E501 line too long (87 > 79 characters)
+./gui/PatientFrame.py:109:80: E501 line too long (82 > 79 characters)
+./gui/PatientFrame.py:116:80: E501 line too long (83 > 79 characters)
+./gui/PatientFrame.py:121:43: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:122:43: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:125:75: E502 the backslash is redundant between brackets
+./gui/PatientFrame.py:130:80: E501 line too long (92 > 79 characters)
+./gui/PatientFrame.py:131:73: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:131:80: E501 line too long (93 > 79 characters)
+./gui/PatientFrame.py:131:83: E226 missing whitespace around arithmetic operator
+./gui/PatientFrame.py:132:80: E501 line too long (84 > 79 characters)
+./gui/PatientFrame.py:133:80: E501 line too long (86 > 79 characters)
+./gui/PatientFrame.py:136:80: E501 line too long (98 > 79 characters)
+./gui/PatientFrame.py:142:80: E501 line too long (94 > 79 characters)
+./gui/PatientFrame.py:146:80: E501 line too long (85 > 79 characters)
+./gui/PatientFrame.py:150:9: E265 block comment should start with '# '
+./gui/PatientFrame.py:153:9: E265 block comment should start with '# '
+./gui/PatientFrame.py:189:80: E501 line too long (87 > 79 characters)
+./gui/PatientFrame.py:191:80: E501 line too long (80 > 79 characters)
+./gui/PatientFrame.py:194:80: E501 line too long (85 > 79 characters)
+./gui/PatientFrame.py:198:80: E501 line too long (94 > 79 characters)
+./gui/PatientFrame.py:199:80: E501 line too long (107 > 79 characters)
+./gui/PatientFrame.py:199:107: E502 the backslash is redundant between brackets
+./gui/PatientFrame.py:200:39: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:201:39: E128 continuation line under-indented for visual indent
+./gui/PatientFrame.py:228:80: E501 line too long (84 > 79 characters)
+./gui/PatientFrame.py:251:80: E501 line too long (80 > 79 characters)
+./gui/PatientFrame.py:255:80: E501 line too long (88 > 79 characters)
+./gui/PatientFrame.py:256:80: E501 line too long (85 > 79 characters)
+./gui/PatientFrame.py:260:80: E501 line too long (88 > 79 characters)
+./gui/PortionFrame.py:21:80: E501 line too long (80 > 79 characters)
+./gui/PortionFrame.py:35:80: E501 line too long (99 > 79 characters)
+./gui/PortionFrame.py:42:80: E501 line too long (91 > 79 characters)
+./gui/PortionFrame.py:45:80: E501 line too long (102 > 79 characters)
+./gui/PortionFrame.py:47:80: E501 line too long (99 > 79 characters)
+./gui/PortionFrame.py:50:80: E501 line too long (91 > 79 characters)
+./gui/PortionFrame.py:53:80: E501 line too long (99 > 79 characters)
+./gui/PortionFrame.py:59:21: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:59:80: E501 line too long (83 > 79 characters)
+./gui/PortionFrame.py:61:21: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:61:80: E501 line too long (92 > 79 characters)
+./gui/PortionFrame.py:63:21: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:63:80: E501 line too long (93 > 79 characters)
+./gui/PortionFrame.py:65:80: E501 line too long (100 > 79 characters)
+./gui/PortionFrame.py:66:80: E501 line too long (88 > 79 characters)
+./gui/PortionFrame.py:67:80: E501 line too long (92 > 79 characters)
+./gui/PortionFrame.py:70:80: E501 line too long (86 > 79 characters)
+./gui/PortionFrame.py:73:16: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:78:80: E501 line too long (98 > 79 characters)
+./gui/PortionFrame.py:80:80: E501 line too long (96 > 79 characters)
+./gui/PortionFrame.py:81:80: E501 line too long (83 > 79 characters)
+./gui/PortionFrame.py:83:80: E501 line too long (89 > 79 characters)
+./gui/PortionFrame.py:84:22: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:84:80: E501 line too long (92 > 79 characters)
+./gui/PortionFrame.py:85:22: E126 continuation line over-indented for hanging indent
+./gui/PortionFrame.py:85:80: E501 line too long (88 > 79 characters)
+./gui/PortionFrame.py:86:80: E501 line too long (88 > 79 characters)
+./gui/PortionFrame.py:87:80: E501 line too long (89 > 79 characters)
+./gui/PortionFrame.py:89:80: E501 line too long (82 > 79 characters)
+./gui/PortionFrame.py:90:80: E501 line too long (94 > 79 characters)
+./gui/PortionFrame.py:91:80: E501 line too long (93 > 79 characters)
+./gui/PortionFrame.py:92:80: E501 line too long (85 > 79 characters)
+./gui/PortionFrame.py:96:25: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:97:25: E126 continuation line over-indented for hanging indent
+./gui/PortionFrame.py:98:80: E501 line too long (97 > 79 characters)
+./gui/PortionFrame.py:98:97: E225 missing whitespace around operator
+./gui/PortionFrame.py:100:80: E501 line too long (83 > 79 characters)
+./gui/PortionFrame.py:100:83: E225 missing whitespace around operator
+./gui/PortionFrame.py:108:16: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:110:16: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:112:16: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:118:80: E501 line too long (91 > 79 characters)
+./gui/PortionFrame.py:124:80: E501 line too long (88 > 79 characters)
+./gui/PortionFrame.py:130:80: E501 line too long (82 > 79 characters)
+./gui/PortionFrame.py:138:80: E501 line too long (84 > 79 characters)
+./gui/PortionFrame.py:143:80: E501 line too long (91 > 79 characters)
+./gui/PortionFrame.py:146:80: E501 line too long (90 > 79 characters)
+./gui/PortionFrame.py:151:80: E501 line too long (85 > 79 characters)
+./gui/PortionFrame.py:163:80: E501 line too long (80 > 79 characters)
+./gui/PortionFrame.py:166:80: E501 line too long (98 > 79 characters)
+./gui/PortionFrame.py:167:80: E501 line too long (80 > 79 characters)
+./gui/PortionFrame.py:169:80: E501 line too long (91 > 79 characters)
+./gui/PortionFrame.py:170:80: E501 line too long (96 > 79 characters)
+./gui/PortionFrame.py:171:80: E501 line too long (82 > 79 characters)
+./gui/PortionFrame.py:173:80: E501 line too long (83 > 79 characters)
+./gui/PortionFrame.py:195:80: E501 line too long (91 > 79 characters)
+./gui/PortionFrame.py:196:80: E501 line too long (90 > 79 characters)
+./gui/PortionFrame.py:197:80: E501 line too long (98 > 79 characters)
+./gui/PortionFrame.py:198:39: E128 continuation line under-indented for visual indent
+./gui/PortionFrame.py:198:80: E501 line too long (99 > 79 characters)
+./gui/PortionFrame.py:198:99: E502 the backslash is redundant between brackets
+./gui/PortionFrame.py:199:39: E126 continuation line over-indented for hanging indent
+./gui/PortionFrame.py:199:80: E501 line too long (85 > 79 characters)
+./gui/PortionFrame.py:204:80: E501 line too long (98 > 79 characters)
+./gui/PortionFrame.py:212:80: E501 line too long (85 > 79 characters)
+./gui/PortionFrame.py:218:80: E501 line too long (86 > 79 characters)
+./gui/PortionInfoChooser.py:24:80: E501 line too long (80 > 79 characters)
+./gui/PortionInfoChooser.py:51:80: E501 line too long (88 > 79 characters)
+./gui/PortionInfoChooser.py:52:80: E501 line too long (89 > 79 characters)
+./gui/PortionInfoChooser.py:59:80: E501 line too long (91 > 79 characters)
+./gui/PortionInfoChooser.py:61:16: E128 continuation line under-indented for visual indent
+./gui/PortionInfoChooser.py:61:80: E501 line too long (81 > 79 characters)
+./gui/PortionInfoChooser.py:67:67: E226 missing whitespace around arithmetic operator
+./gui/PortionInfoChooser.py:67:73: E225 missing whitespace around operator
+./gui/PortionInfoChooser.py:67:74: E502 the backslash is redundant between brackets
+./gui/PortionInfoChooser.py:68:61: E222 multiple spaces after operator
+./gui/PortionInfoChooser.py:68:80: E501 line too long (86 > 79 characters)
+./gui/PortionInfoChooser.py:68:86: E502 the backslash is redundant between brackets
+./gui/PortionInfoChooser.py:73:9: E303 too many blank lines (2)
+./gui/PortionInfoChooser.py:73:80: E501 line too long (88 > 79 characters)
+./gui/PortionInfoChooser.py:74:80: E501 line too long (89 > 79 characters)
+./gui/PortionInfoChooser.py:75:80: E501 line too long (89 > 79 characters)
+./gui/PortionInfoChooser.py:79:80: E501 line too long (88 > 79 characters)
+./gui/PortionInfoChooser.py:83:9: E303 too many blank lines (2)
+./gui/PortionInfoChooser.py:84:16: E128 continuation line under-indented for visual indent
+./gui/PortionInfoChooser.py:84:80: E501 line too long (81 > 79 characters)
+./gui/PortionInfoChooser.py:89:80: E501 line too long (98 > 79 characters)
+./gui/PortionInfoChooser.py:91:39: E128 continuation line under-indented for visual indent
+./gui/PortionInfoChooser.py:91:80: E501 line too long (97 > 79 characters)
+./gui/PortionInfoChooser.py:92:39: E128 continuation line under-indented for visual indent
+./gui/PortionInfoChooser.py:94:80: E501 line too long (80 > 79 characters)
+./gui/PortionInfoChooser.py:95:36: E128 continuation line under-indented for visual indent
+./gui/PortionInfoChooser.py:96:62: E226 missing whitespace around arithmetic operator
+./gui/PortionInfoChooser.py:96:72: E226 missing whitespace around arithmetic operator
+./gui/PortionInfoChooser.py:96:80: E501 line too long (82 > 79 characters)
+./gui/PortionInfoChooser.py:104:80: E501 line too long (91 > 79 characters)
+./gui/PortionInfoChooser.py:105:80: E501 line too long (92 > 79 characters)
+./gui/PortionInfoChooser.py:116:80: E501 line too long (92 > 79 characters)
+./gui/PortionInfoChooser.py:117:80: E501 line too long (94 > 79 characters)
+./gui/PortionInfoChooser.py:118:80: E501 line too long (84 > 79 characters)
+./gui/PortionInfoChooser.py:119:80: E501 line too long (95 > 79 characters)
+./gui/PortionInfoChooser.py:123:25: E261 at least two spaces before inline comment
+./gui/PortionInfoChooser.py:128:80: E501 line too long (94 > 79 characters)
+./gui/PortionInfoChooser.py:142:80: E501 line too long (87 > 79 characters)
+./gui/PortionInfoChooser.py:151:80: E501 line too long (85 > 79 characters)
+./gui/PortionInfoChooser.py:160:80: E501 line too long (96 > 79 characters)
+./gui/PortionInfoChooser.py:165:80: E501 line too long (98 > 79 characters)
+./gui/PortionInfoChooser.py:186:80: E501 line too long (82 > 79 characters)
+./gui/PortionInfoChooser.py:187:80: E501 line too long (82 > 79 characters)
+./gui/PortionInfoChooser.py:188:80: E501 line too long (94 > 79 characters)
+./gui/PortionInfoChooser.py:191:80: E501 line too long (94 > 79 characters)
+./gui/PortionInfoChooser.py:192:25: E128 continuation line under-indented for visual indent
+./gui/PortionInfoChooser.py:192:80: E501 line too long (97 > 79 characters)
+./gui/PortionInfoChooser.py:192:97: E502 the backslash is redundant between brackets
+./gui/PortionInfoChooser.py:193:25: E126 continuation line over-indented for hanging indent
+./gui/PortionInfoChooser.py:193:72: E502 the backslash is redundant between brackets
+./gui/PortionInfoChooser.py:194:80: E501 line too long (81 > 79 characters)
+./gui/PortionInfoChooser.py:194:81: E502 the backslash is redundant between brackets
+./gui/PortionInfoChooser.py:195:49: E221 multiple spaces before operator
+./gui/PortionInfoChooser.py:195:74: E502 the backslash is redundant between brackets
+./gui/PortionInfoChooser.py:196:57: E221 multiple spaces before operator
+./gui/PortionInfoChooser.py:196:80: E501 line too long (91 > 79 characters)
+./gui/PortionInfoChooser.py:204:80: E501 line too long (96 > 79 characters)
+./gui/PortionInfoChooser.py:208:80: E501 line too long (95 > 79 characters)
+./gui/SearchFoodFrame.py:31:80: E501 line too long (87 > 79 characters)
+./gui/SearchFoodFrame.py:32:80: E501 line too long (82 > 79 characters)
+./gui/SearchFoodFrame.py:33:33: E261 at least two spaces before inline comment
+./gui/SearchFoodFrame.py:39:80: E501 line too long (81 > 79 characters)
+./gui/SearchFoodFrame.py:42:80: E501 line too long (88 > 79 characters)
+./gui/SearchFoodFrame.py:42:82: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:42:87: E225 missing whitespace around operator
+./gui/SearchFoodFrame.py:42:88: E502 the backslash is redundant between brackets
+./gui/SearchFoodFrame.py:43:80: E501 line too long (89 > 79 characters)
+./gui/SearchFoodFrame.py:43:83: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:43:88: E225 missing whitespace around operator
+./gui/SearchFoodFrame.py:43:89: E502 the backslash is redundant between brackets
+./gui/SearchFoodFrame.py:44:80: E501 line too long (100 > 79 characters)
+./gui/SearchFoodFrame.py:49:80: E501 line too long (103 > 79 characters)
+./gui/SearchFoodFrame.py:50:80: E501 line too long (98 > 79 characters)
+./gui/SearchFoodFrame.py:68:66: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:70:80: E501 line too long (95 > 79 characters)
+./gui/SearchFoodFrame.py:74:64: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:76:80: E501 line too long (81 > 79 characters)
+./gui/SearchFoodFrame.py:77:62: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:81:80: E501 line too long (91 > 79 characters)
+./gui/SearchFoodFrame.py:82:80: E501 line too long (90 > 79 characters)
+./gui/SearchFoodFrame.py:86:16: E128 continuation line under-indented for visual indent
+./gui/SearchFoodFrame.py:88:17: E128 continuation line under-indented for visual indent
+./gui/SearchFoodFrame.py:92:80: E501 line too long (95 > 79 characters)
+./gui/SearchFoodFrame.py:95:80: E501 line too long (88 > 79 characters)
+./gui/SearchFoodFrame.py:96:25: E128 continuation line under-indented for visual indent
+./gui/SearchFoodFrame.py:97:25: E128 continuation line under-indented for visual indent
+./gui/SearchFoodFrame.py:97:80: E501 line too long (89 > 79 characters)
+./gui/SearchFoodFrame.py:98:25: E126 continuation line over-indented for hanging indent
+./gui/SearchFoodFrame.py:98:80: E501 line too long (90 > 79 characters)
+./gui/SearchFoodFrame.py:99:80: E501 line too long (87 > 79 characters)
+./gui/SearchFoodFrame.py:101:80: E501 line too long (81 > 79 characters)
+./gui/SearchFoodFrame.py:102:80: E501 line too long (92 > 79 characters)
+./gui/SearchFoodFrame.py:103:80: E501 line too long (92 > 79 characters)
+./gui/SearchFoodFrame.py:104:80: E501 line too long (84 > 79 characters)
+./gui/SearchFoodFrame.py:108:25: E128 continuation line under-indented for visual indent
+./gui/SearchFoodFrame.py:109:25: E126 continuation line over-indented for hanging indent
+./gui/SearchFoodFrame.py:110:80: E501 line too long (97 > 79 characters)
+./gui/SearchFoodFrame.py:110:97: E225 missing whitespace around operator
+./gui/SearchFoodFrame.py:112:80: E501 line too long (83 > 79 characters)
+./gui/SearchFoodFrame.py:112:83: E225 missing whitespace around operator
+./gui/SearchFoodFrame.py:125:80: E501 line too long (82 > 79 characters)
+./gui/SearchFoodFrame.py:141:80: E501 line too long (84 > 79 characters)
+./gui/SearchFoodFrame.py:146:80: E501 line too long (88 > 79 characters)
+./gui/SearchFoodFrame.py:147:80: E501 line too long (86 > 79 characters)
+./gui/SearchFoodFrame.py:153:80: E501 line too long (85 > 79 characters)
+./gui/SearchFoodFrame.py:171:80: E501 line too long (84 > 79 characters)
+./gui/SearchFoodFrame.py:179:76: E221 multiple spaces before operator
+./gui/SearchFoodFrame.py:179:80: E501 line too long (101 > 79 characters)
+./gui/SearchFoodFrame.py:180:80: E501 line too long (90 > 79 characters)
+./gui/SearchFoodFrame.py:183:80: E501 line too long (85 > 79 characters)
+./gui/SearchFoodFrame.py:198:80: E501 line too long (82 > 79 characters)
+./gui/SearchFoodFrame.py:200:80: E501 line too long (91 > 79 characters)
+./gui/SearchFoodFrame.py:201:61: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:203:80: E501 line too long (95 > 79 characters)
+./gui/SearchFoodFrame.py:205:80: E501 line too long (94 > 79 characters)
+./gui/SearchFoodFrame.py:206:61: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:208:80: E501 line too long (97 > 79 characters)
+./gui/SearchFoodFrame.py:209:38: E128 continuation line under-indented for visual indent
+./gui/SearchFoodFrame.py:209:57: E226 missing whitespace around arithmetic operator
+./gui/SearchFoodFrame.py:212:80: E501 line too long (99 > 79 characters)
+./gui/SearchFoodFrame.py:213:80: E501 line too long (83 > 79 characters)
+./gui/SearchFoodFrame.py:216:80: E501 line too long (87 > 79 characters)
+./gui/SearchFoodFrame.py:217:80: E501 line too long (87 > 79 characters)
+./gui/SearchFoodFrame.py:218:80: E501 line too long (99 > 79 characters)
+./gui/SearchFoodFrame.py:221:80: E501 line too long (99 > 79 characters)
+./gui/SearchFoodFrame.py:223:80: E501 line too long (93 > 79 characters)
+./gui/SearchFoodFrame.py:226:80: E501 line too long (80 > 79 characters)
+./gui/SearchFoodFrame.py:227:80: E501 line too long (83 > 79 characters)
+./gui/SearchFoodFrame.py:229:9: W191 indentation contains tabs
+./gui/SearchFoodFrame.py:229:9: E101 indentation contains mixed spaces and tabs
+./gui/SearchFoodFrame.py:229:10: E116 unexpected indentation (comment)
+./gui/SearchFoodFrame.py:231:80: E501 line too long (83 > 79 characters)
+./gui/StartFrame.py:32:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:34:80: E501 line too long (91 > 79 characters)
+./gui/StartFrame.py:36:80: E501 line too long (102 > 79 characters)
+./gui/StartFrame.py:41:80: E501 line too long (91 > 79 characters)
+./gui/StartFrame.py:45:80: E501 line too long (81 > 79 characters)
+./gui/StartFrame.py:48:80: E501 line too long (82 > 79 characters)
+./gui/StartFrame.py:49:36: E128 continuation line under-indented for visual indent
+./gui/StartFrame.py:50:62: E226 missing whitespace around arithmetic operator
+./gui/StartFrame.py:50:72: E226 missing whitespace around arithmetic operator
+./gui/StartFrame.py:50:80: E501 line too long (82 > 79 characters)
+./gui/StartFrame.py:53:80: E501 line too long (82 > 79 characters)
+./gui/StartFrame.py:60:80: E501 line too long (93 > 79 characters)
+./gui/StartFrame.py:62:34: E128 continuation line under-indented for visual indent
+./gui/StartFrame.py:65:36: E128 continuation line under-indented for visual indent
+./gui/StartFrame.py:65:80: E501 line too long (81 > 79 characters)
+./gui/StartFrame.py:67:80: E501 line too long (90 > 79 characters)
+./gui/StartFrame.py:68:34: E128 continuation line under-indented for visual indent
+./gui/StartFrame.py:72:80: E501 line too long (92 > 79 characters)
+./gui/StartFrame.py:73:80: E501 line too long (83 > 79 characters)
+./gui/StartFrame.py:83:44: E222 multiple spaces after operator
+./gui/StartFrame.py:99:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:100:80: E501 line too long (82 > 79 characters)
+./gui/StartFrame.py:110:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:116:80: E501 line too long (91 > 79 characters)
+./gui/StartFrame.py:124:80: E501 line too long (83 > 79 characters)
+./gui/StartFrame.py:125:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:130:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:134:80: E501 line too long (82 > 79 characters)
+./gui/StartFrame.py:149:80: E501 line too long (88 > 79 characters)
+./gui/StartFrame.py:150:80: E501 line too long (84 > 79 characters)
+./gui/StartFrame.py:151:80: E501 line too long (94 > 79 characters)
+./gui/StartFrame.py:152:80: E501 line too long (95 > 79 characters)
+./gui/StartFrame.py:153:80: E501 line too long (92 > 79 characters)
+./gui/StartFrame.py:154:80: E501 line too long (94 > 79 characters)
+./gui/StartFrame.py:162:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:171:80: E501 line too long (95 > 79 characters)
+./gui/StartFrame.py:176:80: E501 line too long (88 > 79 characters)
+./gui/StartFrame.py:186:80: E501 line too long (85 > 79 characters)
+./gui/StartFrame.py:193:80: E501 line too long (81 > 79 characters)
+./gui/StartFrame.py:196:80: E501 line too long (81 > 79 characters)
+./gui/StartFrame.py:198:80: E501 line too long (80 > 79 characters)
+./gui/StartFrame.py:199:80: E501 line too long (80 > 79 characters)
+./gui/StartFrame.py:201:80: E501 line too long (98 > 79 characters)
+./gui/StartFrame.py:201:98: E502 the backslash is redundant between brackets
+./gui/StartFrame.py:207:80: E501 line too long (95 > 79 characters)
+./gui/StartFrame.py:209:80: E501 line too long (85 > 79 characters)
+./gui/TableTreeView.py:54:80: E501 line too long (92 > 79 characters)
+./gui/TableTreeView.py:55:80: E501 line too long (91 > 79 characters)
+./gui/TableTreeView.py:57:80: E501 line too long (93 > 79 characters)
+./gui/TableTreeView.py:61:80: E501 line too long (86 > 79 characters)
+./gui/TableTreeView.py:67:80: E501 line too long (90 > 79 characters)
+./gui/TableTreeView.py:69:61: E261 at least two spaces before inline comment
+./gui/TableTreeView.py:72:80: E501 line too long (87 > 79 characters)
+./gui/TableTreeView.py:84:80: E501 line too long (88 > 79 characters)
+./gui/TableTreeView.py:96:80: E501 line too long (84 > 79 characters)
+./gui/TableTreeView.py:103:80: E501 line too long (89 > 79 characters)
+./gui/TableTreeView.py:114:80: E501 line too long (97 > 79 characters)
+./gui/TableTreeView.py:132:80: E501 line too long (83 > 79 characters)
+./gui/TableTreeView.py:139:44: E502 the backslash is redundant between brackets
+./gui/TableTreeView.py:141:5: E125 continuation line with same indent as next logical line
+./gui/TableTreeView.py:143:80: E501 line too long (94 > 79 characters)
+./gui/TableTreeView.py:154:44: E502 the backslash is redundant between brackets
+./gui/TableTreeView.py:156:5: E125 continuation line with same indent as next logical line
+./gui/TableTreeView.py:165:80: E501 line too long (99 > 79 characters)
+./gui/TableTreeView.py:171:80: E501 line too long (81 > 79 characters)
+./gui/TableTreeView.py:177:80: E501 line too long (81 > 79 characters)
+./gui/TableTreeView.py:194:80: E501 line too long (93 > 79 characters)
+./gui/TableTreeView.py:201:51: E222 multiple spaces after operator
+./gui/TableTreeView.py:201:80: E501 line too long (91 > 79 characters)
+./gui/TableTreeView.py:205:80: E501 line too long (98 > 79 characters)
+./gui/TableTreeView.py:251:80: E501 line too long (92 > 79 characters)
+./gui/TableTreeView.py:263:80: E501 line too long (95 > 79 characters)
+./gui/TableTreeView.py:280:21: E126 continuation line over-indented for hanging indent
+./gui/TableTreeView.py:284:80: E501 line too long (90 > 79 characters)
+./gui/TableTreeView.py:295:80: E501 line too long (88 > 79 characters)
+./gui/TkSimpleDialog.py:19:9: E265 block comment should start with '# '
+./gui/TkSimpleDialog.py:51:80: E501 line too long (96 > 79 characters)
+./gui/TkSimpleDialog.py:53:80: E501 line too long (80 > 79 characters)
+./gui/TkSimpleDialog.py:66:43: E261 at least two spaces before inline comment
+./gui/WaterEnergyFrame.py:21:80: E501 line too long (80 > 79 characters)
+./gui/WaterEnergyFrame.py:25:80: E501 line too long (82 > 79 characters)
+./gui/WaterEnergyFrame.py:29:80: E501 line too long (93 > 79 characters)
+./gui/WaterEnergyFrame.py:32:15: E128 continuation line under-indented for visual indent
+./gui/WaterEnergyFrame.py:33:80: E501 line too long (91 > 79 characters)
+./gui/WaterEnergyFrame.py:39:80: E501 line too long (84 > 79 characters)
+./gui/WaterEnergyFrame.py:50:80: E501 line too long (83 > 79 characters)
+./gui/WaterEnergyFrame.py:57:80: E501 line too long (85 > 79 characters)
+./gui/WaterEnergyFrame.py:69:80: E501 line too long (88 > 79 characters)
+./model/CalculatorFrameModel.py:44:80: E501 line too long (89 > 79 characters)
+./model/CalculatorFrameModel.py:57:80: E501 line too long (86 > 79 characters)
+./model/CalculatorFrameModel.py:58:80: E501 line too long (83 > 79 characters)
+./model/CalculatorFrameModel.py:62:80: E501 line too long (84 > 79 characters)
+./model/CalculatorFrameModel.py:64:80: E501 line too long (81 > 79 characters)
+./model/CalculatorFrameModel.py:69:80: E501 line too long (91 > 79 characters)
+./model/CalculatorFrameModel.py:70:52: E261 at least two spaces before inline comment
+./model/CalculatorFrameModel.py:74:80: E501 line too long (97 > 79 characters)
+./model/CalculatorFrameModel.py:86:80: E501 line too long (84 > 79 characters)
+./model/CalculatorFrameModel.py:101:80: E501 line too long (85 > 79 characters)
+./model/CalculatorFrameModel.py:105:80: E501 line too long (100 > 79 characters)
+./model/CalculatorFrameModel.py:110:80: E501 line too long (89 > 79 characters)
+./model/CalculatorFrameModel.py:115:80: E501 line too long (92 > 79 characters)
+./model/CalculatorFrameModel.py:119:80: E501 line too long (86 > 79 characters)
+./model/CalculatorFrameModel.py:120:80: E501 line too long (96 > 79 characters)
+./model/CalculatorFrameModel.py:125:80: E501 line too long (96 > 79 characters)
+./model/CalculatorFrameModel.py:127:80: E501 line too long (97 > 79 characters)
+./model/CalculatorFrameModel.py:131:80: E501 line too long (100 > 79 characters)
+./model/CalculatorFrameModel.py:139:80: E501 line too long (81 > 79 characters)
+./model/CalculatorFrameModel.py:140:80: E501 line too long (85 > 79 characters)
+./model/CalculatorFrameModel.py:141:80: E501 line too long (82 > 79 characters)
+./model/CalculatorFrameModel.py:144:80: E501 line too long (89 > 79 characters)
+./model/CalculatorFrameModel.py:149:80: E501 line too long (101 > 79 characters)
+./model/CalculatorFrameModel.py:155:80: E501 line too long (83 > 79 characters)
+./model/CalculatorFrameModel.py:159:80: E501 line too long (92 > 79 characters)
+./model/CalculatorFrameModel.py:164:80: E501 line too long (89 > 79 characters)
+./model/CalculatorFrameModel.py:167:80: E501 line too long (95 > 79 characters)
+./model/CalculatorFrameModel.py:170:80: E501 line too long (93 > 79 characters)
+./model/CalculatorFrameModel.py:189:80: E501 line too long (85 > 79 characters)
+./model/CalculatorFrameModel.py:194:80: E501 line too long (80 > 79 characters)
+./model/CalculatorFrameModel.py:210:80: E501 line too long (93 > 79 characters)
+./model/CalculatorFrameModel.py:212:80: E501 line too long (80 > 79 characters)
+./model/CalculatorFrameModel.py:221:80: E501 line too long (82 > 79 characters)
+./model/CalculatorFrameModel.py:224:80: E501 line too long (90 > 79 characters)
+./model/CalculatorFrameModel.py:244:80: E501 line too long (92 > 79 characters)
+./model/CalculatorFrameModel.py:263:80: E501 line too long (87 > 79 characters)
+./model/CalculatorFrameModel.py:270:80: E501 line too long (82 > 79 characters)
+./model/CalculatorFrameModel.py:274:80: E501 line too long (86 > 79 characters)
+./model/CalculatorFrameModel.py:277:80: E501 line too long (96 > 79 characters)
+./model/CalculatorFrameModel.py:285:80: E501 line too long (103 > 79 characters)
+./model/CalculatorFrameModel.py:297:80: E501 line too long (105 > 79 characters)
+./model/CalculatorFrameModel.py:320:80: E501 line too long (85 > 79 characters)
+./model/CalculatorFrameModel.py:321:80: E501 line too long (84 > 79 characters)
+./model/CalculatorFrameModel.py:333:80: E501 line too long (86 > 79 characters)
+./model/CalculatorFrameModel.py:355:80: E501 line too long (82 > 79 characters)
+./model/CalculatorFrameModel.py:356:80: E501 line too long (98 > 79 characters)
+./model/CalculatorFrameModel.py:368:80: E501 line too long (82 > 79 characters)
+./model/CalculatorFrameModel.py:369:80: E501 line too long (81 > 79 characters)
+./model/CalculatorFrameModel.py:370:80: E501 line too long (86 > 79 characters)
+./model/CalculatorFrameModel.py:371:80: E501 line too long (103 > 79 characters)
+./model/CalculatorFrameModel.py:374:80: E501 line too long (81 > 79 characters)
+./model/CalculatorFrameModel.py:380:80: E501 line too long (84 > 79 characters)
+./model/CalculatorFrameModel.py:394:80: E501 line too long (87 > 79 characters)
+./model/CalculatorFrameModel.py:405:80: E501 line too long (87 > 79 characters)
+./model/CalculatorFrameModel.py:434:80: E501 line too long (91 > 79 characters)
+./model/CalculatorFrameModel.py:435:80: E501 line too long (94 > 79 characters)
+./model/CalculatorFrameModel.py:443:80: E501 line too long (98 > 79 characters)
+./model/CalculatorFrameModel.py:455:80: E501 line too long (87 > 79 characters)
+./model/CalculatorFrameModel.py:466:80: E501 line too long (84 > 79 characters)
+./model/CalculatorFrameModel.py:467:80: E501 line too long (90 > 79 characters)
+./model/CalculatorFrameModel.py:468:80: E501 line too long (94 > 79 characters)
+./model/CalculatorFrameModel.py:470:80: E501 line too long (86 > 79 characters)
+./model/CalculatorFrameModel.py:471:80: E501 line too long (91 > 79 characters)
+./model/CalculatorFrameModel.py:500:80: E501 line too long (96 > 79 characters)
+./model/CalculatorFrameModel.py:501:80: E501 line too long (81 > 79 characters)
+./model/Component.py:35:80: E501 line too long (81 > 79 characters)
+./model/Component.py:39:80: E501 line too long (96 > 79 characters)
+./model/Component.py:47:80: E501 line too long (83 > 79 characters)
+./model/Component.py:66:80: E501 line too long (80 > 79 characters)
+./model/Component.py:78:80: E501 line too long (105 > 79 characters)
+./model/Component.py:78:105: E502 the backslash is redundant between brackets
+./model/Foodstuff.py:51:80: E501 line too long (100 > 79 characters)
+./model/Foodstuff.py:62:80: E501 line too long (81 > 79 characters)
+./model/Foodstuff.py:67:80: E501 line too long (90 > 79 characters)
+./model/Foodstuff.py:71:80: E501 line too long (100 > 79 characters)
+./model/Foodstuff.py:75:80: E501 line too long (99 > 79 characters)
+./model/Foodstuff.py:83:80: E501 line too long (82 > 79 characters)
+./model/Foodstuff.py:92:80: E501 line too long (99 > 79 characters)
+./model/Foodstuff.py:93:80: E501 line too long (90 > 79 characters)
+./model/Foodstuff.py:94:80: E501 line too long (83 > 79 characters)
+./model/Foodstuff.py:95:80: E501 line too long (94 > 79 characters)
+./model/Foodstuff.py:99:80: E501 line too long (100 > 79 characters)
+./model/Foodstuff.py:104:80: E501 line too long (84 > 79 characters)
+./model/Foodstuff.py:108:5: E303 too many blank lines (2)
+./model/Foodstuff.py:109:80: E501 line too long (100 > 79 characters)
+./model/Foodstuff.py:111:80: E501 line too long (92 > 79 characters)
+./model/Foodstuff.py:112:80: E501 line too long (80 > 79 characters)
+./model/Foodstuff.py:117:80: E501 line too long (89 > 79 characters)
+./model/Foodstuff.py:118:80: E501 line too long (83 > 79 characters)
+./model/Foodstuff.py:120:80: E501 line too long (96 > 79 characters)
+./model/Foodstuff.py:123:80: E501 line too long (96 > 79 characters)
+./model/Patient.py:57:80: E501 line too long (84 > 79 characters)
+./model/Patient.py:73:80: E501 line too long (84 > 79 characters)
+./model/Patient.py:80:19: E128 continuation line under-indented for visual indent
+./model/Patient.py:80:80: E501 line too long (83 > 79 characters)
+./model/Patient.py:87:19: E128 continuation line under-indented for visual indent
+./model/Patient.py:87:80: E501 line too long (87 > 79 characters)
+./model/Patient.py:93:19: E128 continuation line under-indented for visual indent
+./model/Patient.py:99:80: E501 line too long (89 > 79 characters)
+./model/Patient.py:100:80: E501 line too long (97 > 79 characters)
+./model/Patient.py:107:80: E501 line too long (84 > 79 characters)
+./model/Patient.py:122:80: E501 line too long (89 > 79 characters)
+./model/PatientFrameModel.py:41:80: E501 line too long (89 > 79 characters)
+./model/PatientFrameModel.py:67:45: E502 the backslash is redundant between brackets
+./model/PatientFrameModel.py:69:80: E501 line too long (93 > 79 characters)
+./model/PatientFrameModel.py:77:80: E501 line too long (100 > 79 characters)
+./model/PatientFrameModel.py:101:32: E711 comparison to None should be 'if cond is not None:'
+./model/PatientFrameModel.py:101:80: E501 line too long (98 > 79 characters)
+./model/SearchThreadedTask.py:56:80: E501 line too long (84 > 79 characters)
+./model/SearchThreadedTask.py:57:80: E501 line too long (89 > 79 characters)
+./model/SearchThreadedTask.py:60:80: E501 line too long (82 > 79 characters)
+./model/SearchThreadedTask.py:61:80: E501 line too long (83 > 79 characters)
+./model/SearchThreadedTask.py:68:80: E501 line too long (91 > 79 characters)
+./model/SearchThreadedTask.py:69:80: E501 line too long (86 > 79 characters)
+./model/SearchThreadedTask.py:81:67: E222 multiple spaces after operator
+./model/SearchThreadedTask.py:81:80: E501 line too long (91 > 79 characters)
+./model/SearchThreadedTask.py:84:80: E501 line too long (92 > 79 characters)
+./model/SearchThreadedTask.py:96:80: E501 line too long (107 > 79 characters)
+./model/SearchThreadedTask.py:97:80: E501 line too long (98 > 79 characters)
+./model/SearchThreadedTask.py:97:82: E128 continuation line under-indented for visual indent
+./model/SearchThreadedTask.py:99:34: E261 at least two spaces before inline comment
+./model/SearchThreadedTask.py:99:80: E501 line too long (107 > 79 characters)
+./model/SearchThreadedTask.py:100:80: E501 line too long (80 > 79 characters)
+./model/SearchThreadedTask.py:106:80: E501 line too long (88 > 79 characters)
+./model/SearchThreadedTask.py:111:51: E225 missing whitespace around operator
+./model/SearchThreadedTask.py:111:80: E501 line too long (84 > 79 characters)
+./model/SearchThreadedTask.py:112:27: E126 continuation line over-indented for hanging indent
+./model/SearchThreadedTask.py:112:80: E501 line too long (98 > 79 characters)
+./model/SearchThreadedTask.py:115:80: E501 line too long (85 > 79 characters)
+./model/TotalLine.py:63:80: E501 line too long (98 > 79 characters)
+./model/TotalLine.py:68:80: E501 line too long (81 > 79 characters)
+./model/TotalLine.py:75:80: E501 line too long (86 > 79 characters)
+./model/TotalLine.py:79:80: E501 line too long (82 > 79 characters)
+./model/TotalLine.py:80:80: E501 line too long (80 > 79 characters)
+./model/TotalLine.py:81:80: E501 line too long (80 > 79 characters)
+./model/TotalLine.py:82:80: E501 line too long (82 > 79 characters)
+./model/TotalLine.py:87:80: E501 line too long (85 > 79 characters)
+./model/TotalLine.py:94:18: E261 at least two spaces before inline comment
+./model/TotalLine.py:105:80: E501 line too long (91 > 79 characters)
+./model/TotalLine.py:107:80: E501 line too long (93 > 79 characters)
+./model/TotalLine.py:108:80: E501 line too long (93 > 79 characters)
+./model/TotalLine.py:112:5: E303 too many blank lines (2)
+./model/TotalLine.py:117:80: E501 line too long (82 > 79 characters)
+./model/TotalLine.py:118:80: E501 line too long (94 > 79 characters)
+./model/TotalLine.py:121:13: E125 continuation line with same indent as next logical line
+./model/TotalLine.py:123:21: E126 continuation line over-indented for hanging indent
+./model/TotalLine.py:124:80: E501 line too long (84 > 79 characters)
+./model/TotalLine.py:125:80: E501 line too long (100 > 79 characters)
+./model/TotalLine.py:142:80: E501 line too long (88 > 79 characters)
+./unittest/test_Data_DateUtil.py:26:80: E501 line too long (83 > 79 characters)
+./unittest/test_Data_DateUtil.py:46:80: E501 line too long (85 > 79 characters)
+./unittest/test_Data_DateUtil.py:54:46: E128 continuation line under-indented for visual indent
+./unittest/test_Data_DateUtil.py:55:46: E126 continuation line over-indented for hanging indent
+./unittest/test_Data_DateUtil.py:76:80: E501 line too long (81 > 79 characters)
+./unittest/test_Database_Pathologies.py:27:80: E501 line too long (84 > 79 characters)
+./unittest/test_Database_Pathologies.py:58:80: E501 line too long (86 > 79 characters)
+./unittest/test_Database_Pathologies.py:100:80: E501 line too long (96 > 79 characters)
+./unittest/test_Database_Pathologies.py:112:80: E501 line too long (95 > 79 characters)
+./unittest/test_Database_Pathologies.py:137:80: E501 line too long (83 > 79 characters)
+./unittest/test_Database_Pathologies.py:144:80: E501 line too long (83 > 79 characters)
+./unittest/test_Database_Pathologies.py:155:80: E501 line too long (83 > 79 characters)
+./unittest/test_Database_Pathologies.py:158:39: F841 local variable 'e' is assigned to but never used
+./unittest/test_Database_Pathologies.py:178:80: E501 line too long (83 > 79 characters)
+./unittest/test_Database_Pathologies.py:184:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_BaseData.py:26:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_BaseData.py:48:5: E128 continuation line under-indented for visual indent
+./unittest/test_Model_BaseData.py:49:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_BaseData.py:50:80: E501 line too long (80 > 79 characters)
+./unittest/test_Model_BaseData.py:62:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_BaseData.py:78:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_BaseData.py:102:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_BaseData.py:114:21: E203 whitespace before ':'
+./unittest/test_Model_BaseData.py:114:38: E203 whitespace before ':'
+./unittest/test_Model_BaseData.py:131:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:26:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:52:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:53:80: E501 line too long (80 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:105:80: E501 line too long (85 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:106:80: E501 line too long (104 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:107:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:118:80: E501 line too long (104 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:122:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:124:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:175:80: E501 line too long (84 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:178:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:201:80: E501 line too long (84 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:206:80: E501 line too long (84 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:207:80: E501 line too long (85 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:213:80: E501 line too long (84 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:214:80: E501 line too long (85 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:265:80: E501 line too long (95 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:279:17: E126 continuation line over-indented for hanging indent
+./unittest/test_Model_CalculatorFrameModel.py:279:55: E225 missing whitespace around operator
+./unittest/test_Model_CalculatorFrameModel.py:285:80: E501 line too long (95 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:290:80: E501 line too long (85 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:292:80: E501 line too long (91 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:292:91: E502 the backslash is redundant between brackets
+./unittest/test_Model_CalculatorFrameModel.py:312:80: E501 line too long (89 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:340:80: E501 line too long (89 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:369:80: E501 line too long (89 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:370:5: F841 local variable 'line0' is assigned to but never used
+./unittest/test_Model_CalculatorFrameModel.py:371:5: F841 local variable 'line1' is assigned to but never used
+./unittest/test_Model_CalculatorFrameModel.py:389:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:413:80: E501 line too long (89 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:451:80: E501 line too long (89 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:472:80: E501 line too long (81 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:496:80: E501 line too long (91 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:505:80: E501 line too long (89 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:510:80: E501 line too long (91 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:528:80: E501 line too long (91 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:569:80: E501 line too long (95 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:590:80: E501 line too long (101 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:602:80: E501 line too long (101 > 79 characters)
+./unittest/test_Model_CalculatorFrameModel.py:614:80: E501 line too long (101 > 79 characters)
+./unittest/test_Model_Component.py:26:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_Component.py:50:5: E128 continuation line under-indented for visual indent
+./unittest/test_Model_Component.py:51:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Component.py:52:80: E501 line too long (80 > 79 characters)
+./unittest/test_Model_Component.py:66:80: E501 line too long (94 > 79 characters)
+./unittest/test_Model_Component.py:87:80: E501 line too long (94 > 79 characters)
+./unittest/test_Model_Component.py:97:5: E128 continuation line under-indented for visual indent
+./unittest/test_Model_Component.py:98:6: E121 continuation line under-indented for hanging indent
+./unittest/test_Model_Component.py:104:6: E123 closing bracket does not match indentation of opening bracket's line
+./unittest/test_Model_Component.py:114:80: E501 line too long (94 > 79 characters)
+./unittest/test_Model_Component.py:133:80: E501 line too long (94 > 79 characters)
+./unittest/test_Model_Foodstuff.py:26:80: E501 line too long (83 > 79 characters)
+./unittest/test_Model_Foodstuff.py:50:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:51:80: E501 line too long (80 > 79 characters)
+./unittest/test_Model_Foodstuff.py:67:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:71:80: E501 line too long (86 > 79 characters)
+./unittest/test_Model_Foodstuff.py:93:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:97:80: E501 line too long (101 > 79 characters)
+./unittest/test_Model_Foodstuff.py:98:80: E501 line too long (88 > 79 characters)
+./unittest/test_Model_Foodstuff.py:118:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:140:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:160:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:185:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:206:80: E501 line too long (82 > 79 characters)
+./unittest/test_Model_Foodstuff.py:210:29: E261 at least two spaces before inline comment
+./unittest/test_Model_Foodstuff.py:210:80: E501 line too long (86 > 79 characters)
+./util/DateUtil.py:38:80: E501 line too long (99 > 79 characters)
+./util/Observable.py:8:80: E501 line too long (80 > 79 characters)
+./util/Observable.py:9:80: E501 line too long (82 > 79 characters)
+./util/Observable.py:13:80: E501 line too long (89 > 79 characters)
+./util/Observable.py:35:80: E501 line too long (83 > 79 characters)
+./util/Observable.py:55:80: E501 line too long (81 > 79 characters)

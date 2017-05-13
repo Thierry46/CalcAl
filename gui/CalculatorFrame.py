@@ -70,13 +70,18 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.nameToSearch = tkinter.StringVar()
         self.nameToSearch.trace_variable("w", self.validateNameToSearchEntry)
         self.nameToSearchEntry = tkinter.Entry(upperLeftFrameUp, textvariable=self.nameToSearch,
-                                               width=35)
+                                               width=30)
         self.nameToSearchEntry.pack(side=tkinter.LEFT)
         CallTypWindow.createToolTip(self.nameToSearchEntry,
                   _("Use Wildcards :\n* replaces n chars\n? replaces 1 only")+"\n"+\
                   _("Ex.:fr*s -> fruits, frais,...")+"\n"+\
                   _("Use ? for character letters like é, â, ô..."),
                                     self.delaymsTooltips * 2)
+
+        tkinter.Button(upperLeftFrameUp, text=_('+'),
+                       command=self.getMoreResults).pack(side=tkinter.LEFT, padx=10)
+        tkinter.Button(upperLeftFrameUp, text=_('-'),
+                       command=self.clearName).pack(side=tkinter.RIGHT, padx=10)
 
         listNamesFrame = tkinter.Frame(upperLeftFrame)
         listNamesFrame.pack(side=tkinter.TOP, padx=5, pady=5)
@@ -349,7 +354,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
 
         nbDays = int(self.nbDaysCombobox.get())
-        if nbDays >= 1:
+        if nbDays > 1:
             totalName, quantity, dictComponents = self.calculatorFrameModel.getTotalLineStr(nbDays)
             columnsValues = [quantity] + self.getColumnValues(dictComponents)
             self.foodTable.insertOrCreateRow(totalName, columnsValues, tag='totalRow')
@@ -418,7 +423,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                  for index in self.componentsListbox.curselection()]
         columnsValues = [dictComponents[componentCode]
                          for componentCode in listUserComponentCode]
-        self.logger.debug("CalculatorFrame/getColumnValues() :columnsValues = " +
+        self.logger.debug("CalculatorFrame/getColumnValues() : columnsValues = " +
                           str(columnsValues))
         return columnsValues
 
@@ -453,7 +458,8 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodTable.deleteRow(foodNameUngrouped)
 
         # Add or update ungrouped parts
-        for foodName, quantity, dictComponents in self.calculatorFrameModel.getListFoodModifiedInTable():
+        for foodName, quantity, dictComponents in \
+            self.calculatorFrameModel.getListFoodModifiedInTable():
             columnsValues = [quantity] + self.getColumnValues(dictComponents)
             self.foodTable.insertOrCreateRow(foodName, columnsValues)
 
@@ -484,7 +490,8 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         # Update modified food lines
         tableContent = []
-        for foodName, quantity, dictComponents in self.calculatorFrameModel.getListFoodModifiedInTable():
+        for foodName, quantity, dictComponents in \
+            self.calculatorFrameModel.getListFoodModifiedInTable():
             tableContent.append([foodName, [quantity] + self.getColumnValues(dictComponents)])
         self.foodTable.insertGroupRow(tableContent)
 
@@ -515,7 +522,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.mainWindow.setStatusText(_("Components selected"))
 
 
-    def validateNameToSearchEntry(self, *args):
+    def validateNameToSearchEntry(self, *dummy):
         """ File self.foundNamesListbox with products that match nameToSearchEntry content"""
         foodNamePart = self.nameToSearch.get()
 
@@ -532,7 +539,35 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         else:
             self.foundNamesListbox.delete(0, tkinter.END)
 
-    def updateNbDays(self, *args):
+    def getMoreResults(self):
+        """ Replace vowels letters with ? and blanks with * to find more results
+            when searching fodstuf by name """
+        isStrChanged = False
+        foodNamePart = self.nameToSearch.get()
+        if len(foodNamePart) > 0:
+            isStrChanged = False
+            for letter in "aeiouy":
+                if letter in foodNamePart:
+                    isStrChanged = True
+                    foodNamePart = foodNamePart.replace(letter, '?')
+            if " " in foodNamePart:
+                isStrChanged = True
+                foodNamePart = foodNamePart.replace(" ", '*')
+        if isStrChanged:
+            self.nameToSearch.set(foodNamePart)
+            self.logger.debug("Replace food name part " + self.nameToSearch.get() + " by " +
+                                  foodNamePart)
+            self.mainWindow.setStatusText(_("More results may be displayed"))
+        else:
+            self.mainWindow.setStatusText(_("Please type something more in name field"),
+                                          isError=True)
+
+    def clearName(self):
+        """ Efface le champ nom """
+        self.nameToSearch.set("")
+        self.mainWindow.setStatusText(_("Name field cleared"))
+
+    def updateNbDays(self, *dummy):
         """ User changes nb days to eat portion """
         nbDays = int(self.nbDaysCombobox.get())
         self.calculatorFrameModel.updateNbDays(nbDays)
@@ -560,7 +595,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         self.nbDaysCombobox.set(nbDays)
 
-    def updatefoodstuffName(self, *args):
+    def updatefoodstuffName(self, *dummy):
         """ Update foodstuff list name """
         database = self.databaseManager.getDatabase()
         assert (database is not None), "CalculatorFrame/updatefoodstuffName() : no open database !"
@@ -572,7 +607,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.foodstuffNameCombobox['values'] = listFoodstuffName
         self.foodstuffNameCombobox.current(0)
 
-    def clicNamesListbox(self, evt=None):
+    def clicNamesListbox(self, dummy=None):
         """ Update food definition with new components chosen """
         # Get selection
         selectedNames = list(self.foundNamesListbox.curselection())
@@ -582,7 +617,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             # Update foodstuffFrame comboboxes
             self.updateFoodstuffFrame(foodName)
 
-    def clicComponentsListbox(self, evt=None):
+    def clicComponentsListbox(self, dummy=None):
         """ Update model with new components chosen """
         listUserComponentCode = set([self.listComponents[index][0]
                                      for index in self.componentsListbox.curselection()])
@@ -590,7 +625,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         # Send users choosen codeComponents to model
         self.calculatorFrameModel.updateFollowedComponents(listUserComponentCode)
 
-    def addFoodInTable(self, event=None):
+    def addFoodInTable(self, dummy=None):
         """ Called when hitting Retun key in foodstuffQuantity entry """
         # Check User's input data
         foodName = self.foodstuffNameCombobox.get()
@@ -663,7 +698,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
-    def copySelectionInDefinitionFrame(self, event=None):
+    def copySelectionInDefinitionFrame(self, dummy=None):
         """ Copy name and quatity of first element selected in foodTable
             to meal definition frame """
         try:
@@ -683,7 +718,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
-    def copyInClipboard(self, event=None):
+    def copyInClipboard(self, dummy=None):
         "Copy selected food in clipboard"
         try:
             text = self.foodTable.getTableAsText()
@@ -692,7 +727,7 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             message = _("Error") + " : " + str(exc) + " !"
             self.mainWindow.setStatusText(message, True)
 
-    def infoFood(self, event=None):
+    def infoFood(self, dummy=None):
         "v0.30 : 22-23/8/2016 : Display information on selected food"
         maxNameLengthInPopup = int(self.configApp.get("Limits", "maxNameLengthInPopup"))
         listSelectedRows = self.foodTable.getSelectedItems(excludeRowWithTitle=_("Total"))
@@ -707,9 +742,9 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             # Format information
             title = _("Info") + " "
             if dictInfoFood["isGroup"]:
-                title += _("about Foodstuff group")
+                title += _("about foodstuff group")
             else:
-                title += _("about foodstuf")
+                title += _("about foodstuff")
             tooLongName = ""
             if len(dictInfoFood["name"]) > maxNameLengthInPopup:
                 tooLongName = "..."
@@ -732,9 +767,10 @@ class CalculatorFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                     tooLongName = ""
                     if len(dictGroup["namePart"]) > maxNameLengthInPopup:
                         tooLongName = "..."
+                    # 13/2/2017 : Round % to 1 digit
                     message += "\n- " +  dictGroup["namePart"][:maxNameLengthInPopup] + \
                             tooLongName + "\n\t" + \
-                            str(dictGroup["percentPart"]) + " %"
+                            self.formatFloatValue.format(dictGroup["percentPart"]) + " %"
             else:
                 message += "\n" + \
                             _("Source") + " : " + dictInfoFood["source"] + "\n" + \

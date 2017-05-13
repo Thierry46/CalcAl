@@ -174,10 +174,10 @@ class USDA_28_Reader():
         # Read USDA constituants description in file
         constituants = []
         dictConstituantsPosition = dict()
-        USDAConstituantsFilePath = os.path.join(self.databaseRefDir,
+        uSDAConstitFilePath = os.path.join(self.databaseRefDir,
                                                 self.configApp.get('USDA',
                                                                    'USDAConstituantsFilePath'))
-        with open(USDAConstituantsFilePath, 'r', encoding='utf-8') as fileConstituants:
+        with open(uSDAConstitFilePath, 'r', encoding='utf-8') as fileConstituants:
             for line in fileConstituants.read().splitlines():
                 # Eliminate comment
                 posComment = line.find('#')
@@ -198,7 +198,7 @@ class USDA_28_Reader():
         fileConstituants.close()
 
         # Record in constituants names table
-        assert len(constituants) > 0, USDAConstituantsFilePath + " : bad file"
+        assert len(constituants) > 0, uSDAConstitFilePath + " : bad file"
         cursor.executemany("""
                             INSERT INTO constituantsNames(code, name, unit, shortcut)
                             VALUES(?, ?, ?, ?)

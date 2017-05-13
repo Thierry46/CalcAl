@@ -14,6 +14,7 @@ import tkinter
 from tkinter.ttk import Combobox
 
 from model import SearchThreadedTask
+from util import CalcalExceptions
 from . import CallTypWindow
 from . import FrameBaseCalcAl
 from . import TableTreeView
@@ -46,15 +47,16 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
         buttonFiltersFrame = tkinter.Frame(topFrame)
         buttonFiltersFrame.pack(side=tkinter.LEFT, padx=5, pady=5)
-        resultsFrame = tkinter.LabelFrame(self, text=_("Foodstufs matching filters (values for 100g)"))
+        resultsFrame = tkinter.LabelFrame(self,
+                                          text=_("Foodstufs matching filters (values for 100g)"))
         resultsFrame.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=tkinter.YES, padx=5, pady=2)
         resultsFrame.grid_rowconfigure(0, weight=1)
         resultsFrame.grid_columnconfigure(0, weight=1)
 
         # filtersFrame components definition
         listLabel = [_("Components"), _("Operator"), _("Levels")]
-        for numCol in range(len(listLabel)):
-            tkinter.Label(filtersFrame, text=listLabel[numCol]).grid(row=0, column=numCol)
+        for numCol, label in enumerate(listLabel):
+            tkinter.Label(filtersFrame, text=label).grid(row=0, column=numCol)
 
         self.listConboboxComponents = []
         self.listOperatorCombobox = []
@@ -128,7 +130,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 message = _("Error") + " : " + str(exc) + " !"
                 self.mainWindow.setStatusText(message, True)
 
-    def eraseEmptyRows(self, evt):
+    def eraseEmptyRows(self, dummy):
         """ Erase filter line if its operator is empty """
         for numLine in range(self.numberFilter):
             if self.listOperatorCombobox[numLine].get() == "":
@@ -137,7 +139,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                 if lenValueInEntry > 0:
                     self.listUserValueEntry[numLine].delete(0, lenValueInEntry)
 
-    def putInCalculator(self, event=None):
+    def putInCalculator(self, dummy=None):
         """ Update food definition in calculator pane with new components chosen """
         try:
             # Get selection
@@ -152,7 +154,7 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         except ValueError as exc:
             self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 
-    def copyInClipboard(self, event=None):
+    def copyInClipboard(self, dummy=None):
         "Copy search results in clipboard"
         try:
             text = self.searchResultTable.getTableAsText()
@@ -176,8 +178,10 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         valuesConboboxComponents = []
         for component in self.listComponents:
             valuesConboboxComponents.append(component[1] +
-                                            " [ " + str(component[3]) + " "  + component[2] + " ; " +
-                                            str(component[4]) + " " + component[2] + "] ")
+                                            " [ " + str(component[3]) + " "  +
+                                            component[2] + " ; " +
+                                            str(component[4]) + " " +
+                                            component[2] + "] ")
 
         for numLine in range(self.numberFilter):
             self.listConboboxComponents[numLine]['values'] = valuesConboboxComponents
@@ -218,11 +222,11 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                         listTitle4Components.append(constituantName + " (" + constituantUnit + ")")
 
                     # Append current filter to the list
-                    listFilters.append([constituantCode, selectedOperator, level])
+                    listFilters.append([constituantCode, selectedOperator, level, constituantName])
 
-           # Clean result table
+            self.logger.debug("SearchFoodFrame/search() : listFilters = " + str(listFilters))
+            # Clean result table
             self.searchResultTable.deleteAllRows()
-            self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
             # Update table header line with components names selected in filters
             self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
 

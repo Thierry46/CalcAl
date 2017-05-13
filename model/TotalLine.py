@@ -45,9 +45,9 @@ class TotalLine(ModelBaseData.ModelBaseData):
         self.setData("dictComponentsQualifierQuantity", dict())
 
         # table for qualification reduction rules
-        self.QRulesS = self.configApp.get('QualifValue', 'QRulesS').split(";")
-        self.QRules0 = self.configApp.get('QualifValue', 'QRules0').split(";")
-        self.QRulesO = self.configApp.get('QualifValue', 'QRulesO').split(";")
+        self.qRulesS = self.configApp.get('QualifValue', 'QRulesS').split(";")
+        self.qRules0 = self.configApp.get('QualifValue', 'QRules0').split(";")
+        self.qRulesO = self.configApp.get('QualifValue', 'QRulesO').split(";")
 
         self.logger.debug("Created in model" + str(self))
 
@@ -90,11 +90,11 @@ class TotalLine(ModelBaseData.ModelBaseData):
         while nbReduction < 5 and len(qualifResult) > 1:
             # Apply rules
             if value >= float(self.configApp.get("Limits", "near0")):
-                QRule2apply = self.QRulesS
+                qRule2apply = self.qRulesS
             else: # For value near 0
-                QRule2apply = self.QRules0
-            QRule2apply = QRule2apply + self.QRulesO
-            for rule in QRule2apply:
+                qRule2apply = self.qRules0
+            qRule2apply = qRule2apply + self.qRulesO
+            for rule in qRule2apply:
                 if rule[0] in qualifResult and rule[1] in qualifResult:
                     qualifResult = qualifResult.replace(rule[0], rule[2])
                     qualifResult = qualifResult.replace(rule[1], rule[2])

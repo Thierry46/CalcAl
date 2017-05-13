@@ -134,7 +134,7 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
         self.dateVar.set("")
         self.patientCodeCombobox.set("")
 
-    def clicExistingPortion(self, evt):
+    def clicExistingPortion(self, dummy):
         """ Update portion input field with chosen listbox item """
         # Get selection
         selectedExistingPortion = list(self.portionListBox.curselection())
@@ -154,7 +154,7 @@ class PortionInfoChooser(TkSimpleDialog.TkSimpleDialog):
             self.portionTypeVar.set(nameDate[3])
             self.periodCombobox.set(nameDate[4])
 
-    def updatePortionListBox(self, *args):
+    def updatePortionListBox(self, *dummy):
         """ Update portionListBox filtering with id frame fields content """
         self.portionListBox.delete(0, tkinter.END)
         userIdFilters = [self.nameVar.get(), self.dateVar.get(), self.patientCodeCombobox.get()]

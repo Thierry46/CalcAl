@@ -101,7 +101,8 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                                                          'colorPatientEditor'))
         self.patientNotesTextEditor.bind('<FocusOut>', self.modifyPatient)
         self.patientNotesTextEditor.grid(row=2, columnspan=2)
-        scrollbarRightNotes = tkinter.Scrollbar(patientNoteFrame, command=self.patientNotesTextEditor.yview)
+        scrollbarRightNotes = tkinter.Scrollbar(patientNoteFrame,
+                                                command=self.patientNotesTextEditor.yview)
         scrollbarRightNotes.grid(row=2, column=2, sticky=tkinter.W+tkinter.N+tkinter.S)
         scrollbarBottom = tkinter.Scrollbar(patientNoteFrame, orient=tkinter.HORIZONTAL,
                                     command=self.patientNotesTextEditor.xview)
@@ -132,7 +133,7 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.pathologiesListbox.config(yscrollcommand=scrollbarRightPathologies.set)
         self.pathologiesListbox.bind('<ButtonRelease-1>', self.clicPathologiesListbox)
 
-    def changePatient(self, *args):
+    def changePatient(self, *dummy):
         """ Inform model that patient has changed by clicking on combobox or changing its value"""
         try:
             self.logger.debug("PatientFrame/changePatient()")
@@ -183,7 +184,7 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         for pathology in self.listPathologies:
             self.pathologiesListbox.insert(tkinter.END, pathology)
 
-    def modifyPatient(self, *args):
+    def modifyPatient(self, *dummy):
         """ Modify patient info in database """
         try:
             listInfoPatient = [self.patientCodeVar.get(), self.birthYearCombobox.get(),
@@ -196,7 +197,7 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     def deletePatient(self):
         """ Delete patient info in database """
         isDestructionOk = messagebox.askyesno(_("Deleting selected user element in database"),
-                                              _("Do you really want to delete selection in database ?") + \
+                                      _("Do you really want to delete selection in database ?") + \
                                       "\n" + self.patientCodeVar.get(),
                                       icon='warning')
         if isDestructionOk:
@@ -210,7 +211,7 @@ class PatientFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.patientCodeCombobox['values'] = listCodes
         self.initListPathologies()
 
-    def clicPathologiesListbox(self, evt=None):
+    def clicPathologiesListbox(self, dummy=None):
         """ Add or remove pathologies for this patient """
         selectedIndex = list(self.pathologiesListbox.curselection())
         if len(selectedIndex) > 0:

@@ -46,3 +46,7 @@ class FrameBaseCalcAl(tkinter.Frame):
     def getMainWindow(self):
         """ Return mainWindow """
         return self.mainWindow
+
+    def getDirProject(self):
+        """ Return path of project installation directory """
+        return self.dirProject
