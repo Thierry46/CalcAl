@@ -1,5 +1,5 @@
-# messages.po : French translation file for CalcAl project.
-# Date : 10/3/2016 - 16/4/2016
+# messages.po : French translation file for CalcAl project labels.
+# Date : 10/3/2016 - 21/8/2016
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
 # Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
@@ -56,6 +56,9 @@ msgstr "Onglet"
 msgid "selected"
 msgstr "activé"
 
+msgid "Based on Nutrial components database Ciqual 2013"
+msgstr "Basé sur les composants nutritionnels de la base Ciqual 2013"
+
 ###############
 # Database
 ###############
@@ -63,7 +66,7 @@ msgid "Traces"
 msgstr "Traces"
 
 ########################
-# Menues
+# CalcAlGUIMenu
 ########################
 msgid "Selection"
 msgstr "Sélection"
@@ -79,6 +82,27 @@ msgstr "Dégrouper"
 
 msgid "Delete"
 msgstr "Supprimer"
+
+msgid "Plugins"
+msgstr "Modules"
+
+msgid "Ciqual Reader"
+msgstr "Lecteur Ciqual"
+
+msgid "Download Ciqual reader"
+msgstr "Téléchargez le lecteur Ciqual"
+
+msgid "Installation canceled"
+msgstr "Installation annulée"
+
+msgid "Plugin"
+msgstr "Module"
+
+msgid "has already been installed"
+msgstr "déjà installé"
+
+msgid "installed"
+msgstr "installé"
 
 ########################
 # Start frame
@@ -149,12 +173,6 @@ msgstr "Consultez sa documentation pour plus d'information."
 msgid "New database"
 msgstr "Nouvelle base de données"
 
-msgid "this database already exists"
-msgstr "cette base de données existe déjà"
-
-msgid "Invalid database name"
-msgstr "Nom de base de données invalide"
-
 msgid "Error"
 msgstr "Erreur"
 
@@ -173,15 +191,102 @@ msgstr "détruite"
 msgid "Please select a database"
 msgstr "Veuillez sélectionner une base de données"
 
-msgid "Ciqual file : invalid header field"
-msgstr "Fichier Ciqual : champ d'entête invalide"
+msgid "Initialize a  database"
+msgstr "Initialisation d'une base de données"
 
-msgid "instead of"
-msgstr "au lieu de"
+msgid "New database canceled"
+msgstr "Nouvelle base de données annulée"
+
+msgid "Can't create database"
+msgstr "Impossible de créer la base"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "information displayed"
+msgstr "informations affichées"
+
+msgid "about database"
+msgstr "à propos de la base"
+
+msgid "Database name"
+msgstr "Nom de la base de données"
+
+msgid "Number of foodstuffs"
+msgstr "Nombre d'aliments"
+
+msgid "Number of food families"
+msgstr "Nombre de familles d'aliments"
+
+msgid "Number of food groups"
+msgstr "Nombre de groupes d'aliments"
+
+msgid "Number of food constituants"
+msgstr "Nombre de composants"
+
+msgid "At lest 2 database are needed to join them"
+msgstr "Il faut au moins 2 bases de données pour une fusion"
+
+msgid "Join"
+msgstr "Fusionner"
+
+msgid "Please choose master database for joinning"
+msgstr "Veuillez sélectionner la base principale pour la fusion"
+
+msgid "Join a database to"
+msgstr "Fusionner une base de données avec"
+
+msgid "Database joined in"
+msgstr "Bases de données fusionnées dans"
 
 # -- Tooltips --
 msgid "Select a database\nand click startbutton"
 msgstr "Selectionner une base de données\npuis cliquer sur le bouton Démarrer"
+
+##############################
+# DatabaseInitialiser windows
+##############################
+msgid "Enter a new database name"
+msgstr "Entrer le nom de la nouvelle base de données"
+
+msgid "Invalid database name"
+msgstr "Nom de base de données invalide"
+
+msgid "Database type"
+msgstr "Type de base de données"
+
+msgid "Database init file"
+msgstr "Fichier pour init de la base"
+
+msgid "Please give a name for your new database"
+msgstr "Donnez un nom pour votre nouvelle base de données"
+
+msgid "this database already exists"
+msgstr "cette base de données existe déjà"
+
+msgid "Please give a filename containing data to import"
+msgstr "Donnez un nom de fichier contenant les données à importer"
+
+msgid "Bad input"
+msgstr "Valeur incorecte"
+
+msgid "Choose a file"
+msgstr "Choisissez un fichier"
+
+msgid "Download a database with your WEB browser"
+msgstr "Téléchargez une base de données avec votre navigateur"
+
+msgid "Copy WEB link in clipboard"
+msgstr "Copier le lien WEB dans le presse-papier"
+
+##############################
+# DatabaseJoinDialog windows
+##############################
+msgid "Please choose secondary database"
+msgstr "Choisissez une base secondaire"
+
+msgid "Enter a result database name"
+msgstr "Entrez le nom de la base de données résultat"
 
 ########################
 # Calculator frame
@@ -267,8 +372,8 @@ msgstr "La quantité doit être plus grande que zéro"
 msgid "Deleting selected food in table"
 msgstr "Suppression d'aliments dans le tableau"
 
-msgid "Do you want to delete selection ?"
-msgstr "Voulez-vous supprimer la selection ?"
+msgid "Do you really want to delete selection in database ?"
+msgstr "Voulez-vous détruire la selection\ndans la base de données ?"
 
 msgid "List of food"
 msgstr "Liste des aliments"
@@ -320,6 +425,46 @@ msgstr "Presse-papier"
 
 msgid "Group recording canceled"
 msgstr "Enregistrement du groupe annulé"
+
+msgid "removed from above table"
+msgstr "effacé de la table au dessus"
+
+msgid "about foodstuf"
+msgstr "à propos de l'aliment"
+
+msgid "about foodstuff group"
+msgstr "à propos du groupe d'aliment"
+
+msgid "Foodstuff group"
+msgstr "Groupe d'aliment"
+
+msgid "Code"
+msgstr "Code"
+
+msgid "Source"
+msgstr "Référence"
+
+msgid "Input Date"
+msgstr "Date d'entrée"
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Number of constituants"
+msgstr "Nombre de composants"
+
+msgid "Group details"
+msgstr "Composition du groupe"
+
+msgid "Number of items"
+msgstr "Nombre d'éléments"
+
+msgid "Deleting selected user element in database"
+msgstr "Suppression de l'éléments sélectionné dans la base de données"
+
+msgid "User element is deleted"
+msgstr "L'élément est détruit"
+
 
 # -- Tooltips --
 msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
@@ -397,6 +542,10 @@ msgstr "résultats pour ces filtres"
 msgid "Copy"
 msgstr "Copier"
 
+msgid "Searching in database"
+msgstr "Recherche dans la base de données"
+
+
 # -- Tooltips --
 msgid "Set logical expressions on filters lines"
 msgstr "Remplissez les expressions sur les lignes de filtres"
@@ -409,7 +558,27 @@ msgstr "Cliquer sur l'entête de la 1ère colone pour tout sélectionner"
 msgid "Click on a component column header to sort by this component values"
 msgstr "Cliquer sur une entête de colonne composant pour la trier par valeurs"
 msgid "Click on a result line to put it in calculator"
-msgstr "Cliquer sur un résultat pour le mettre dans le calulateur"
+msgstr "Cliquer sur un résultat pour le mettre dans le calculateur"
+
+########################
+# TableTreeView
+########################
+msgid "Please select at least one line in list of food"
+msgstr "Veuillez choisir au moins une ligne dans la liste des aliments"
+
+########################
+# DatabaseManager
+########################
+
+msgid "The database"
+msgstr "La base de données"
+
+msgid "can't be deleted"
+msgstr "ne peux pas être détruite"
+
+msgid "doesn't exist"
+msgstr "n'existe pas"
+
 
 ########################
 # Database
@@ -428,6 +597,52 @@ msgstr "Impossible de dégrouper"
 
 msgid "not a group"
 msgstr "ce n'est pas un groupe"
+
+msgid "Can't delete"
+msgstr "Impossible de détruire"
+
+msgid "Not created by user"
+msgstr "Non créé par un utilisateur"
+
+msgid "used by"
+msgstr "utilisé par"
+
+########################
+# DatabaseReaderFactory
+########################
+msgid "Reader for base"
+msgstr "Le lecteur pour la base"
+
+msgid "not found"
+msgstr "n'a pas été trouvé"
+
+msgid "can not be loaded"
+msgstr "ne peut pas être installé"
+
+msgid "Please contact support team"
+msgstr "Veuillez contacter le support technique"
+
+msgid "or"
+msgstr "ou"
+
+########################
+# Ciqual_2013_Reader
+########################
+msgid "Only .zip or .csv files allowed"
+msgstr "Seul les fichiers .zip ou .csv sont acceptés"
+
+msgid "Ciqual file : invalid header field"
+msgstr "Fichier Ciqual : champ d'entête invalide"
+
+msgid "instead of"
+msgstr "au lieu de"
+
+
+########################
+# USDA_28_Reader
+########################
+msgid "Only .zip files allowed"
+msgstr "Seul les fichiers .zip sont acceptés"
 
 ##########################
 # TkSimpleDialog

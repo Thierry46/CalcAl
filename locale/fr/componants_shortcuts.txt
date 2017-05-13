@@ -42,8 +42,8 @@
 40000 = Lipides
 40302 = AG saturés
 40303 = AG monoinsaturés
-40304 = Polyinsaturés
-40400 = AG  butyrique
+40304 = AG Polyinsaturés
+40400 = AG Butyrique
 40600 = AG caproïque
 40800 = AG caprylique
 41000 = AG caprique
@@ -74,3 +74,18 @@
 60000 = Alcool
 65000 = Acides organ.
 75100 = Cholestérol
+
+# Codes added for USDA specifics components
+100000 = Cendres
+100001 = Folate, total
+100002 = Folique, acide
+100003 = Folate, alimentaire
+100004 = Folate, équiv. folate diet.
+100005 = Choline, total
+100006 = Vitamine A
+100007 = Vitamine A Retinol équiv.
+100008 = Alpha-Carotène
+100009 = Beta-Cryptoxanthin
+100010 = Lycopene
+100011 = Lutein+zeazanthin
+100012 = Vitamine K

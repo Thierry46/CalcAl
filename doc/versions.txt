@@ -1,11 +1,66 @@
 CalcAl - versions summary
 ==========================
 
+CalcAl_v0.30 : 27/8/2016 :
+- 3436 lines py code
+- DatabaseManager class to manage database operations for CalcAl software
+- Info button on database
+- Solve problem vO.29 : groups and usda products codes are in the same range >= 1000000
+    minCompositionProductCode -> startGroupProductCodes
+    all users codes are now negatives : groups codes start below 0
+    modif CalcAl.ini and Database.py
+- Solve old ungrouping problem :
+    When ungrouping and one or more members of the group already present in the list,
+    the quantity of this previous element is replace instead of added with ungrouped parts
+- Info button for food in CalculatorFrame
+- Change field name productCodeCiqual -> productCodePart in compositionProducts table
+    + productCodeUSDA -> productCodePart
+- Suppress double quotes in familyName when importing Ciqual database
+- Bouton to delete user elements in CalculatorFrame : group
+- Correction Language detection problems in CalcAl.py
+- Translation of shortcut table in english : locale/en/componants_shortcuts.txt
+- Message in SearchFrame while searching in database.
+    But the message don't appear ??? Search block GUI process
+- Join button added : products and constituants values and names 
+    from 2 databases are merged but user groups are ignored
+
+CalcAl_v0.29 : 30/7/2016 :
+- 2974 lines py code
+- Add USDA_28_Reader.py to read USDA abreviated database
+- Add file usda_constituants.txt to match Ciqual constituants name
+
+CalcAl_v0.28 : 28/7/2016 :
+- 2732 lines py code
+- Empty value (-) for unknown constituants are not recorded in databases
+- Results of getComponentsValuesRaw4Food() are now sorted by its parameter
+    listComponentsCodes order
+- SearchFoodFrame : constituants are displayed according filters order
+- SearchFoodFrame/search() : Déplacement génération code SQL de condition de recherche
+    dans module Database Database/getProductComponents4Filters
+
+CalcAl_v0.27 : 11/7/2016 :
+- 2692 lines py code
+- Simplify constructors parameter by passing dirProject
+- Database reader as plugins : message to contact support if missing
+- Add support Emails in About box
+- Read .csv or .csv.zip file for ciqual database
+- Copy database provider URL in clipboard in DatabaseInitialiser.py
+- Install a Ciqual Reader plugin present on the computer
+
+CalcAl_v0.26 : 24/6/2016 :
+- 2627 lines py code
+- Database is choosen with a file chooser : class DatabaseInitialiser.py
+- Correction of bug if change database : init pane calculator
+- Suppress btn search by component in pane calculator
+- Ciqual init file out of sources
+- Demo.db database with only "Aliments moyens"
+- prevent to delete Demo.db database
+
 CalcAl_v0.25 : 18/6/2016 :
 - 2563 lines py code
 - Bypass for python error message when start button icon is disabled
 - Module database : implement design pattern factory to structure this module
-New class : DatabaseReaderFactory.py + CiqualReader.py
+- New class : DatabaseReaderFactory.py + CiqualReader.py
 
 CalcAl_v0.24 : 3/6/2016 :
 - 2463 lines py code

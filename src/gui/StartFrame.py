@@ -3,30 +3,36 @@
 ************************************************************************************
 Class  : StartFrame
 Author : Thierry Maillard (TMD)
-Date  : 12/3/2016 - 18/6/2016
+Date  : 12/3/2016 - 26/8/2016
 
 Role : Define start frame content.
 ************************************************************************************
 """
 from tkinter import *
+from tkinter import messagebox
 
+import os
 import os.path
 
 from gui import CallTypWindow
-
+from gui import DatabaseInitialiser
+from gui import DatabaseJoinDialog
 from gui import FrameBaseCalcAl
 from database import Database
-from tkinter import simpledialog
-from tkinter import messagebox
 
 class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
     """ Welcome frame used to choose database to use """
 
-    def __init__(self, master, mainWindow, dirProject, logoFrame):
+    def __init__(self, master, mainWindow, logoFrame):
         """ Initialize welcome Frame """
-        super(StartFrame, self).__init__(master, mainWindow, dirProject, logoFrame)
+        super(StartFrame, self).__init__(master, mainWindow, logoFrame)
 
-        Label(self, text=_(self.configApp.get('Version', 'CiqualNote'))).pack(side=TOP)
+        ressourcePath = os.path.join(self.dirProject,
+                                     self.configApp.get('Resources', 'ResourcesDir'))
+        self.databaseDirPath = os.path.join(ressourcePath,
+                                    self.configApp.get('Resources', 'DatabaseDir'))
+
+        Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=TOP)
         centerFrame = Frame(self)
         centerFrame.pack(side=TOP)
         buttonFrame = Frame(centerFrame)
@@ -48,9 +54,14 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseListbox.bind('<ButtonRelease-1>', self.clicListBoxItem)
 
         Button(buttonFrame, text=_('New'), command=self.newDB).pack(side=TOP)
+        self.infoButton = Button(buttonFrame, text=_('Info'),
+                                 command=self.infoDB, state=DISABLED)
+        self.infoButton.pack(side=TOP)
         self.deleteButton = Button(buttonFrame, text=_('Delete'),
                                    command=self.deleteDB, state=DISABLED)
         self.deleteButton.pack(side=TOP)
+        self.joinButton = Button(buttonFrame, text=_('Join'), command=self.joinDB, state=DISABLED)
+        self.joinButton.pack(side=TOP)
 
         self.startButton = self.mainWindow.createButtonImage(centerFrame,
                                                              imageRessourceName='btn_start',
@@ -67,6 +78,8 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.logger.info(dbName + " " +  _('chosen'))
             self.startButton.configure(state=NORMAL)
             self.deleteButton.configure(state=NORMAL)
+            self.infoButton.configure(state=NORMAL)
+            self.joinButton.configure(state=NORMAL)
             self.mainWindow.closeDatabase()
             self.mainWindow.enableTabCalculator(False)
 
@@ -76,13 +89,10 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         if index:
             self.mainWindow.closeDatabase()
             dbName = self.databaseListbox.get(index)
-            self.logger.info(dbName + " " + _('chosen'))
-            extDB = self.configApp.get('Resources', 'DatabaseExt')
-            dbName = dbName + extDB
-            databasePath = os.path.join(self.databaseDirPath, dbName)
-            database = Database.Database(self.configApp, self.ressourcePath, databasePath, False,
-                                         self.localDirPath)
-            self.mainWindow.setDatabase(database)
+            self.mainWindow.closeDatabase()
+            self.databaseManager.openDatabase(dbName)
+            self.mainWindow.setTitle(dbName)
+            self.mainWindow.enableTabSearch()
             self.mainWindow.enableTabCalculator(True)
             message = _("Start calculator with database") + ' ' + dbName
             self.mainWindow.setStatusText(message)
@@ -91,62 +101,110 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
 
     def newDB(self):
         """ Create a new database """
-        dbName = simpledialog.askstring(_("New database"), _("Enter its name :"))
-        extDB = self.configApp.get('Resources', 'DatabaseExt')
-        if dbName:
-            try:
-                dbName = dbName.lower().strip()
-                if len(dbName) == 0 or not dbName.isalnum():
-                    raise ValueError(_("Invalid database name") + " : " + dbName)
+        dialog = DatabaseInitialiser.DatabaseInitialiser(self, self.configApp,
+                                                         self.databaseManager,
+                                                         title=_("Initialize a  database"))
+        results = dialog.getResult()
+        database = None
+        try:
+            if results == None:
+                raise ValueError(_("New database canceled"))
 
-                dbName = dbName + extDB
-                databasePath = os.path.join(self.databaseDirPath, dbName)
-                # Check if database exists
-                if os.path.exists(databasePath):
-                    raise ValueError(_("this database already exists") + " : " + dbName)
+            self.mainWindow.closeDatabase()
+            dbname = results[0]
+            self.databaseManager.initDBFromFile(results[0], results[1], results[2])
+            self.mainWindow.setStatusText(_("Database initialised") + " : " + dbname)
+            self.updateDatabaseListbox()
+        except ValueError as exc:
+            if results is not None:
+                self.databaseManager.deleteDatabase(results[0])
+            self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
+        except ImportError as exc:
+            messagebox.showwarning(_("Can't create database"), str(exc))
+            self.databaseManager.deleteDatabase(results[0])
+            self.mainWindow.setStatusText(_("Can't create database") + " !", True)
 
-                self.mainWindow.closeDatabase()
-                database = Database.Database(self.configApp, self.ressourcePath,
-                                             databasePath, True, self.localDirPath)
-                database.close()
-                self.mainWindow.setStatusText(_("Database initialised") + " : " + dbName)
-                self.updateDatabaseListbox()
+    def infoDB(self):
+        """ Provide information on a database
+            V0.30 : 21-22/8/2016 """
+        index = self.databaseListbox.curselection()
+        if index:
+            # Get Info on this database
+            dbName = self.databaseListbox.get(index)
+            self.mainWindow.closeDatabase()
+            self.databaseManager.openDatabase(dbName)
+            database = self.databaseManager.getDatabase()
+            dictCounters = database.getInfoDatabase()
 
-            except ValueError as exc:
-                self.mainWindow.setStatusText(_("Error") + " : " + str(exc) + " !", True)
+            # Format information
+            title = _("Info") + " " + _("about database") + " " + dictCounters["dbName"]
+            message = _("Database name") + " : " + dictCounters["dbName"] + "\n" + \
+                _("Number of foodstuffs") + " : " + str(dictCounters["nbProducts"]) + "\n" + \
+                _("Number of food families") + " : " + str(dictCounters["nbFamily"]) + "\n" + \
+                _("Number of food groups") + " : " + str(dictCounters["nbGroup"]) + "\n" + \
+                _("Number of food constituants") + " : " + str(dictCounters["nbConstituants"])
+
+            # Display information's counters in a standard dialog
+            messagebox.showinfo(title=title, message=message)
+            self.mainWindow.copyInClipboard(message)
+
+            self.mainWindow.closeDatabase()
+        else:
+            self.mainWindow.setStatusText(_("Please select a database") + " !", True)
 
     def deleteDB(self):
         """ Delete a database """
         index = self.databaseListbox.curselection()
         if index:
             dbName = self.databaseListbox.get(index)
-            extDB = self.configApp.get('Resources', 'DatabaseExt')
-            isOK = messagebox.askokcancel(_("Database"),
-                                          _("Do you realy want to delete this database ?"))
-            if isOK:
-                try:
+            try:
+                isOK = messagebox.askokcancel(_("Database"),
+                                              _("Do you realy want to delete this database ?"))
+                if isOK:
                     self.mainWindow.closeDatabase()
-                    dbName = dbName + extDB
-                    databasePath = os.path.join(self.databaseDirPath, dbName)
-                    os.remove(databasePath)
+                    self.databaseManager.deleteDatabase(dbName)
                     self.updateDatabaseListbox()
                     self.mainWindow.setStatusText(_("Database") + " : " + dbName + " " + _("deleted"))
                     # Python error because DISABLED icon is not define
                     #self.startButton.configure(state=DISABLED)
-                except OSError as exc:
-                    message = _("Error") + " : " + str(exc) + " !"
-                    self.mainWindow.setStatusText(message, True)
+            except OSError as exc:
+                message = _("Error") + " : " + str(exc) + " !"
+                self.mainWindow.setStatusText(message, True)
+            except ValueError as exc:
+                message = _("Error") + " : " + str(exc) + " !"
+                self.mainWindow.setStatusText(message, True)
         else:
             self.mainWindow.setStatusText(_("Please select a database") + " !", True)
-        print("sortie de deleteDB")
+
+    def joinDB(self):
+        """ Join two database
+        V0.30 : 24-26/8/2016 """
+        try:
+            if self.databaseListbox.size() < 2:
+                raise ValueError(_("At lest 2 database are needed to join them"))
+            index = self.databaseListbox.curselection()
+            if not index:
+                raise ValueError(_("Please choose master database for joinning"))
+            dbNameMaster = self.databaseListbox.get(index)
+            dialog = DatabaseJoinDialog.DatabaseJoinDialog(self, self.configApp,
+                                                           self.databaseManager,
+                                                           dbNameMaster,
+                                                           title=_("Join a database to") + " " + \
+                                                                dbNameMaster)
+            results = dialog.getResult()
+            if results == None:
+                raise ValueError(_("New database canceled"))
+            self.mainWindow.closeDatabase()
+            self.databaseManager.joinDatabase(dbNameMaster, results[0], results[1])
+            self.updateDatabaseListbox()
+            self.mainWindow.setStatusText(_("Database joined in") + " " + results[1])
+        except ValueError as exc:
+            message = _("Error") + " : " + str(exc) + " !"
+            self.mainWindow.setStatusText(message, True)
 
     def updateDatabaseListbox(self):
         """ update databaseListbox with names in ressouces dir """
-        extDB = self.configApp.get('Resources', 'DatabaseExt')
-        listDBFiles = [filename.replace(extDB, '')
-                       for filename in os.listdir(self.databaseDirPath)
-                       if filename.endswith(extDB)]
-        listDBFiles.sort()
         self.databaseListbox.delete(0, END)
-        for dbFile in listDBFiles:
+        for dbFile in self.databaseManager.getListDatabaseInDir():
             self.databaseListbox.insert(END, dbFile)
+

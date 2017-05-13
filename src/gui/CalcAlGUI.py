@@ -4,7 +4,7 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2016 - 8/6/2016
+Date : 7/5/2016 - 31/7/2016
 
 Role : GUI for CalcAl Food Calculator project.
 
@@ -44,7 +44,7 @@ from gui import SearchFoodFrame
 class CalcAlGUI(Tk):
     """ Main GUI class """
 
-    def __init__(self, configApp, dirProject):
+    def __init__(self, configApp, dirProject, databaseManager):
         """
         Constructor : Define all GUIs widgets
         parameters :
@@ -53,14 +53,11 @@ class CalcAlGUI(Tk):
         """
         Tk.__init__(self, None)
         self.configApp = configApp
+        self.dirProject = dirProject
+        self.databaseManager = databaseManager
 
         ressourcePath = os.path.join(dirProject, self.configApp.get('Resources', 'ResourcesDir'))
-        self.imagesDirPath = os.path.join(ressourcePath,
-                                          self.configApp.get('Resources', 'ImagesDir'))
-        self.databaseDirPath = os.path.join(ressourcePath,
-                          self.configApp.get('Resources', 'DatabaseDir'))
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
-        self.database = None
         self.logger.info(_("Starting GUI") + "...")
 
         # Adapt to screen size
@@ -83,20 +80,17 @@ class CalcAlGUI(Tk):
         self.note.bind_all("<<NotebookTabChanged>>", self.tabChangedEvent)
 
         # Create panels contents
-        self.startFrame = StartFrame.StartFrame(self.note, self,
-                                           dirProject, 'logoStartFrame')
+        self.startFrame = StartFrame.StartFrame(self.note, self, 'logoStartFrame')
         self.note.add(self.startFrame, text = _("Welcome"))
-        self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self,
-                                                          dirProject, 'logoCalculator')
+        self.calculatorFrame = CalculatorFrame.CalculatorFrame(self.note, self, 'logoCalculator')
         self.note.add(self.calculatorFrame, text = _("Calculator"), state="disabled")
 
-        self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self,
-                                                       dirProject, 'logoSearchFood')
+        self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self, 'logoSearchFood')
         self.note.add(self.searchFoodFrame, text = _("Search"), state="disabled")
         self.note.pack(side=TOP)
 
         # Add menu bar
-        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self, dirProject)
+        self.menuCalcAl = CalcAlGUIMenu.CalcAlGUIMenu(self)
         self.config(menu=self.menuCalcAl)
 
         # Create Status frame at the bottom of the sceen
@@ -142,6 +136,14 @@ class CalcAlGUI(Tk):
         """ Return configuration resources of the project """
         return self.configApp
 
+    def getDirProject(self):
+        """ Return project main installation directory """
+        return self.dirProject
+
+    def getDataBaseManager(self):
+        """ Return database manager of the project """
+        return self.databaseManager
+
     def tabChangedEvent(self, event):
         """ Callback called when user changes tab """
         newTab = event.widget.tab(event.widget.index("current"), "text")
@@ -151,27 +153,12 @@ class CalcAlGUI(Tk):
             self.menuCalcAl.enableDatabaseMenu(event.widget.index("current") == 0)
             self.menuCalcAl.enableSelectionMenu(event.widget.index("current") == 1)
 
-    def setDatabase(self, database):
-        """ Set database """
-        dbname = None
-        if database :
-            dbname = database.getDbname()
-        self.database = database
-        self.setTitle(dbname)
-
-    def getDatabase(self):
-        """ get database """
-        return self.database
-
     def closeDatabase(self):
         """ Close database """
-        database = self.getDatabase()
-        if database:
-            database.close()
-            self.enableTabCalculator(False)
-            self.enableTabSearch(False)
-            self.database = None
-            self.setTitle(None)
+        self.databaseManager.closeDatabase()
+        self.enableTabCalculator(False)
+        self.enableTabSearch(False)
+        self.setTitle(None)
 
     def enableTabCalculator(self, isEnable, init=True):
         """ Activate or desactivate calculator tab """
@@ -218,7 +205,10 @@ class CalcAlGUI(Tk):
                                            text4Image=self.configApp.get('Version', 'Author'))
         labelLogo.pack(side=TOP)
 
-        Label(window, text=_(self.configApp.get('Version', 'CiqualNote'))).pack(side=TOP)
+        emails = self.configApp.get('Version', 'EmailSupport1')  + ", " +\
+                 self.configApp.get('Version', 'EmailSupport2')
+        Label(window, text=emails).pack(side=TOP)
+        Label(window, text=_(self.configApp.get('Ciqual', 'CiqualNote'))).pack(side=TOP)
 
         versionPython = "Python : " + platform.python_version() + ", Tk : " + str(TkVersion)
         Label(window, text=versionPython).pack(side=TOP)
@@ -230,9 +220,11 @@ class CalcAlGUI(Tk):
         compoundValue = 'image'
         if text4Image:
             compoundValue = 'top'
-        imageMessagePath = os.path.join(self.imagesDirPath,
-                                        self.configApp.get('Resources', imageRessourceName))
-        imgobj = PhotoImage(file=imageMessagePath)
+        ressourcePath = os.path.join(self.dirProject,
+                                     self.configApp.get('Resources', 'ResourcesDir'))
+        imagesDirPath = os.path.join(ressourcePath, self.configApp.get('Resources', 'ImagesDir'))
+        imagePath = os.path.join(imagesDirPath, self.configApp.get('Resources', imageRessourceName))
+        imgobj = PhotoImage(file=imagePath)
         buttonImage = ttk.Button(parent, image=imgobj, compound=compoundValue, text=text4Image)
         buttonImage.img = imgobj # store a reference to the image as an attribute of the widget
         return buttonImage
