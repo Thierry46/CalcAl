@@ -26,6 +26,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+###############
+# CalcAlGUI
+###############
+msgid "Starting GUI"
+msgstr "Démarrage de l'IHM"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "On"
+msgstr "Sur"
+
+msgid "characters copied and available in clipboard"
+msgstr "caractères copiés et disponibles dans le presse-papier"
+
+msgid "Welcome"
+msgstr "Bienvenue"
+
+msgid "Calculator"
+msgstr "Calculateur"
+
+msgid "Search"
+msgstr "Recherche"
+
+msgid "Tab"
+msgstr "Onglet"
+
+msgid "selected"
+msgstr "activé"
+
+###############
+# Database
+###############
+msgid "Traces"
+msgstr "Traces"
+
 ########################
 # Menues
 ########################
@@ -47,8 +83,8 @@ msgstr "Supprimer"
 ########################
 # Start frame
 ########################
-msgid "Welcome"
-msgstr "Bienvenue"
+msgid "Based on Nutrial components database  Ciqual 2013"
+msgstr "Basé sur les données de la table de composition nutritionnelle des aliments Ciqual 2013"
 
 msgid "Choose a database to use"
 msgstr "Choisissez une base de données à utiliser"
@@ -64,12 +100,6 @@ msgstr "choisie"
 
 msgid "New..."
 msgstr "Nouveau..."
-
-msgid "Tab"
-msgstr "Onglet"
-
-msgid "selected"
-msgstr "activé"
 
 msgid "Ready"
 msgstr "Prêt"
@@ -100,9 +130,6 @@ msgstr "A propos..."
 
 msgid "Help..."
 msgstr "Aide..."
-
-msgid "On"
-msgstr "Sur"
 
 msgid "description"
 msgstr "description"
@@ -159,9 +186,6 @@ msgstr "Selectionner une base de données\npuis cliquer sur le bouton Démarrer"
 ########################
 # Calculator frame
 ########################
-msgid "Calculator"
-msgstr "Calculateur"
-
 msgid "Menu definition"
 msgstr "Définition d'un menu"
 
@@ -204,14 +228,14 @@ msgstr "Qté (g)"
 msgid "Too many components selected"
 msgstr "Trop de composants selectionnés"
 
-msgid "Please select one and only one line in list of food"
-msgstr "Veuillez sélectionner une ligne et une seule dans la liste des aliments"
+msgid "Please select one and only one line in food table"
+msgstr "Veuillez sélectionner une ligne et une seule dans la table des aliments"
 
-msgid "Please select at least one line in list of food"
-msgstr "Veuillez sélectionner au moins une ligne dans la liste des aliments"
+msgid "Please select at least one line in food table"
+msgstr "Veuillez sélectionner au moins une ligne dans la table des aliments"
 
-msgid "Please select more than one foodstuff in list of food"
-msgstr "Veuillez sélectionner plus d'une ligne dans la liste des aliments"
+msgid "Please select more than one foodstuff in food table"
+msgstr "Veuillez sélectionner plus d'une ligne dans la table des aliments"
 
 msgid "maximum"
 msgstr "maximum"
@@ -270,11 +294,8 @@ msgstr "Eau apportée par les aliments"
 msgid "selected and copied"
 msgstr "selectionné et copié"
 
-msgid "Save selected food group in database"
+msgid "Save group in database"
 msgstr "Sauvegarder ce groupe d'élément dans la base de données"
-
-msgid "Enter the name of new product"
-msgstr "Entrez le nom du nouveau produit"
 
 msgid "Enter the family name of new product"
 msgstr "Entrez le nom de la famille du nouveau produit"
@@ -294,29 +315,42 @@ msgstr "Produit composé"
 msgid "ungrouped"
 msgstr "dégroupé"
 
+msgid "Clipboard"
+msgstr "Presse-papier"
+
+msgid "Group recording canceled"
+msgstr "Enregistrement du groupe annulé"
 
 # -- Tooltips --
 msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
 msgstr "Utiliser les jokers :\n* pour n caractère\n? pour un seul"
-msgid "\nEx.:fr*s -> fruits, frais,..."
-msgstr "\nEx.:fr*s -> fruits, frais,..."
-msgid "\nUse ? for character letters like é, â, ô..."
-msgstr "\nUtiliser ? à la place des caractères accentués : é,â,ô..."
+msgid "Ex.:fr*s -> fruits, frais,..."
+msgstr "Ex.:fr*s -> fruits, frais,..."
+msgid "Use ? for character letters like é, â, ô..."
+msgstr "Utiliser ? à la place des caractères accentués : é,â,ô..."
 
-msgid "Use Ctrl and Shift keys\nfor multiple selection"
-msgstr "Utiliser les touches Ctrl et Maj\npour la sélection multiple"
+msgid "Click on food name to copy it in definition frame"
+msgstr "Cliquer sur un nom d'aliment pour le copier dans le cadre de définition"
+
+msgid "Use Ctrl and Shift keys"
+msgstr "Utiliser les touches Ctrl et Maj"
+msgid "for multiple selection"
+msgstr "pour la sélection multiple"
+msgid "Clic on header :"
+msgstr "Cliquer sur les entêtes :"
+msgid "- of 1st column to select or unselect all"
+msgstr "- de la première cololonne pour selectionner ou déselectionner tout"
+msgid "- of other column to sort rows"
+msgstr "- des autres colonnes pour trier les lignes"
 
 ########################
 # SearchFoodFrame
 ########################
-msgid "Search"
-msgstr "Recherche"
-
 msgid "Filters definition"
 msgstr "Définition des filtres"
 
-msgid "Foodstufs matching filters"
-msgstr "Aliments correspondants à la sélection"
+msgid "Foodstufs matching filters (values for 100g)"
+msgstr "Aliments correspondants à la sélection (valeurs pour 100g)"
 
 msgid "Operator"
 msgstr "Opérateur"
@@ -324,8 +358,8 @@ msgstr "Opérateur"
 msgid "Levels"
 msgstr "Seuils"
 
-msgid "Search in database"
-msgstr "Rechercher dans la base de données"
+msgid "Search in data"
+msgstr "Rechercher"
 
 msgid "Reset filters"
 msgstr "Effacement des filtres"
@@ -339,13 +373,43 @@ msgstr "Le seuil doit être un nombre décimal pour le filtre numéro"
 msgid "Level must be greater than zero for filter number"
 msgstr "Le seuil doit être supérieur à zéro pour le filtre numéro"
 
+msgid "Send to calculator"
+msgstr "Placer dans le calculateur"
+
+msgid "Please select at least one operator in a filter line"
+msgstr "Sélectionnez au moins un opérator sur une ligne de filtre"
+
+msgid "Too many results"
+msgstr "Trop de résultats"
+
+msgid "on"
+msgstr "sur"
+
+msgid "displayed"
+msgstr "affichés"
+
+msgid "Please improve filters"
+msgstr "Veuillez amméliorer les fitres"
+
+msgid "results matching filters"
+msgstr "résultats pour ces filtres"
+
+msgid "Copy"
+msgstr "Copier"
+
 # -- Tooltips --
 msgid "Set logical expressions on filters lines"
 msgstr "Remplissez les expressions sur les lignes de filtres"
-msgid "\nFilter line are combined with logical AND"
-msgstr "\nLes lignes de filtres sont combinés par un ET logique"
-msgid "\nTo deselect a filter line, set its operator to empty value"
-msgstr "\nPour déselectionner une ligne de filtre, effacez son opérateur"
+msgid "Filter line are combined with logical AND"
+msgstr "Les lignes de filtres sont combinées par un ET logique"
+msgid "To deselect a filter line, set its operator to empty value"
+msgstr "Pour déselectionner une ligne de filtre, effacez son opérateur"
+msgid "Click on first column header to select all"
+msgstr "Cliquer sur l'entête de la 1ère colone pour tout sélectionner"
+msgid "Click on a component column header to sort by this component values"
+msgstr "Cliquer sur une entête de colonne composant pour la trier par valeurs"
+msgid "Click on a result line to put it in calculator"
+msgstr "Cliquer sur un résultat pour le mettre dans le calulateur"
 
 ########################
 # Database
@@ -364,4 +428,25 @@ msgstr "Impossible de dégrouper"
 
 msgid "not a group"
 msgstr "ce n'est pas un groupe"
+
+##########################
+# TkSimpleDialog
+##########################
+msgid "OK"
+msgstr "OK"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+##########################
+# FamilyNameChooser
+##########################
+msgid "Please give a family"
+msgstr "Veuillez entrer une famille"
+
+msgid "Please give a food name"
+msgstr "Veuillez entrer un nom d'aliment"
+
+msgid "Please give a food name that doesn't exist in database"
+msgstr "Veuillez entrer un nom d'aliment qui n'existe pas dans la base"
 

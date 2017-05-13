@@ -42,11 +42,18 @@ class CalcAlGUIMenu(Menu):
         self.configApp = self.master.getConfigApp()
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
 
+        self.databaseMenu = Menu(self, tearoff=0)
+        self.databaseMenu.add_command(label=_("New"),
+                                      command=self.master.getStartFrame().newDB)
+        self.databaseMenu.add_command(label=_("Delete"),
+                                      command=self.master.getStartFrame().deleteDB)
+        self.add_cascade(label=_("Database"), menu=self.databaseMenu)
+
 
         self.selectionMenu = Menu(self, tearoff=0)
         self.selectionMenu.add_command(label=_("Modify"),
                                        state=DISABLED,
-                                       command=self.master.getCalculatorFrame().CopySelection)
+                                       command=self.master.getCalculatorFrame().copySelectionInDefinitionFrame)
         self.selectionMenu.add_command(label=_("Group"),
                                        state=DISABLED,
                                        command=self.master.getCalculatorFrame().groupFood)
@@ -56,6 +63,9 @@ class CalcAlGUIMenu(Menu):
         self.selectionMenu.add_command(label=_("Delete"),
                                        state=DISABLED,
                                        command=self.master.getCalculatorFrame().deleteFood)
+        self.selectionMenu.add_command(label=_("Clipboard"),
+                                       state=DISABLED,
+                                       command=self.master.getCalculatorFrame().copyInClipboard)
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
 
         otherMenu = Menu(self, tearoff=0)
@@ -83,13 +93,21 @@ class CalcAlGUIMenu(Menu):
             streamHandler.setLevel(logging.WARNING)
             self.logger.info(_("Logging in file with mode INFO and on console in mode WARNING."))
 
+    def enableDatabaseMenu(self, isEnabled):
+        """ Autorise ou non les options de configuration du menu Fichier """
+        if isEnabled:
+            etat = NORMAL
+        else:
+            etat = DISABLED
+        for itemMenu in range(5):
+            self.databaseMenu.entryconfigure(itemMenu, state=etat)
+
     def enableSelectionMenu(self, isEnabled):
         """ Autorise ou non les options de configuration du menu Fichier """
         if isEnabled:
             etat = NORMAL
         else:
             etat = DISABLED
-        for itemMenu in range(4):
+        for itemMenu in range(5):
             self.selectionMenu.entryconfigure(itemMenu, state=etat)
-
 

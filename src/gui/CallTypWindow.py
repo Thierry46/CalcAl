@@ -40,8 +40,10 @@ class ToolTip(object):
         try:
             x, y, cx, cy = self.widget.bbox("active")
             x = x + self.widget.winfo_rootx() + 27
-            y = y + cy + self.widget.winfo_rooty() +27
+            y = y + cy + self.widget.winfo_rooty() + 27
             self.tipwindow = tw = Toplevel(self.widget)
+            # Prevent Windows Manager to decorate this Toplevel objet
+            # It will not have a title or a border, and cannot be moved or closed via ordinary means
             tw.wm_overrideredirect(1)
             tw.wm_geometry("+%d+%d" % (x, y))
             try:
