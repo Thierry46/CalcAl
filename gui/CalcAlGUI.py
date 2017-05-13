@@ -4,7 +4,7 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2016 - 31/7/2016
+Date : 7/5/2016 - 28/9/2016
 
 Role : GUI for CalcAl Food Calculator project.
 
@@ -36,10 +36,11 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import font
 
-from gui import CalcAlGUIMenu
-from gui import StartFrame
-from gui import CalculatorFrame
-from gui import SearchFoodFrame
+from . import CalcAlGUIMenu
+from . import StartFrame
+from . import CalculatorFrame
+from . import SearchFoodFrame
+from . import PortionFrame
 
 class CalcAlGUI(Tk):
     """ Main GUI class """
@@ -68,6 +69,8 @@ class CalcAlGUI(Tk):
                          ", screenheight=" + str(screenheight) +
                          ", bigScreen=" + str(self.bigScreen))
 
+        self.deiconify()
+
         # Set handler called when closing main window
         self.protocol("WM_DELETE_WINDOW", self.onClosing)
 
@@ -87,6 +90,10 @@ class CalcAlGUI(Tk):
 
         self.searchFoodFrame = SearchFoodFrame.SearchFoodFrame(self.note, self, 'logoSearchFood')
         self.note.add(self.searchFoodFrame, text = _("Search"), state="disabled")
+        self.note.pack(side=TOP)
+
+        self.portionFrame = PortionFrame.PortionFrame(self.note, self, 'logoPortion')
+        self.note.add(self.portionFrame, text = _("Portions"), state="disabled")
         self.note.pack(side=TOP)
 
         # Add menu bar
@@ -158,6 +165,7 @@ class CalcAlGUI(Tk):
         self.databaseManager.closeDatabase()
         self.enableTabCalculator(False)
         self.enableTabSearch(False)
+        self.enableTabPortion(False)
         self.setTitle(None)
 
     def enableTabCalculator(self, isEnable, init=True):
@@ -175,7 +183,7 @@ class CalcAlGUI(Tk):
             self.note.select(1)
 
     def enableTabSearch(self, isEnable=True):
-        """ Activate or desactivate calculator tab """
+        """ Activate or desactivate search tab """
         if isEnable:
             stateTab = 'normal'
         else:
@@ -184,6 +192,17 @@ class CalcAlGUI(Tk):
         if isEnable:
             self.searchFoodFrame.init()
             self.note.select(2)
+
+    def enableTabPortion(self, isEnable=True):
+        """ Activate or desactivate portion tab """
+        if isEnable:
+            stateTab = 'normal'
+        else:
+            stateTab='disabled'
+        self.note.tab(3, state=stateTab)
+        if isEnable:
+            self.portionFrame.init()
+            self.note.select(3)
 
     def isBigScreen(self):
         return self.bigScreen

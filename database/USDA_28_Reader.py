@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : USDA_28_Reader
 Author : Thierry Maillard (TMD)
-Date  : 29/7/2016 - 23/8/2016
+Date  : 29/7/2016 - 2/10/2016
 
 Role : Read a USDA 2013 database from CSV or CSVzipped text file.
 ************************************************************************************
@@ -26,9 +26,8 @@ class USDA_28_Reader():
         self.localDirPath = os.path.join(dirProject,
                                          self.configApp.get('Resources', 'LocaleDir'))
         self.localDirPath = os.path.join(self.localDirPath, locale.getlocale()[0][:2])
-        self.databaseDir = os.path.join(dirProject,
-                                        self.configApp.get('Resources', 'ResourcesDir'))
-        self.databaseDir = os.path.join(self.databaseDir,
+        self.databaseRefDir = os.path.join(dirProject,
+                                        self.configApp.get('Resources', 'ResourcesDir'),
                                         self.configApp.get('Resources', 'DatabaseDir'))
         self.connDB = connDB
         self.dbname = dbname
@@ -61,14 +60,6 @@ class USDA_28_Reader():
                 value REAL,
                 qualifValue TEXT
                 )""")
-
-        # V0.30 : change field name productCodePart
-        cursor.execute("""
-                CREATE TABLE IF NOT EXISTS compositionProducts(
-                    productCode INTEGER,
-                    productCodePart INTEGER,
-                    quantityPercent REAL
-                    )""")
 
         if pathZipFileInit.endswith(".zip"):
             with zipfile.ZipFile(pathZipFileInit, "r") as zfile:
@@ -118,8 +109,8 @@ class USDA_28_Reader():
                 if numField == 1:
                     productCode = str(int(field) + shiftCodeProduct)
                 elif numField == 2:
-                    familyName = field.split(',')[0]
-                    productName = field
+                    familyName = field.split(',')[0].capitalize()
+                    productName = field.capitalize()
                     # Duplicated products names are not allowed in database
                     if productName in productNameList:
                         self.logger.warning("analyseProductUSDA() : productName=" + productName +
@@ -181,7 +172,7 @@ class USDA_28_Reader():
         # Read USDA constituants description in file
         constituants = []
         dictConstituantsPosition = dict()
-        USDAConstituantsFilePath = os.path.join(self.databaseDir,
+        USDAConstituantsFilePath = os.path.join(self.databaseRefDir,
                                                 self.configApp.get('USDA',
                                                                    'USDAConstituantsFilePath'))
         with open(USDAConstituantsFilePath, 'r', encoding='utf-8') as fileConstituants:

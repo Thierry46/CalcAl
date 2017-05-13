@@ -3,7 +3,7 @@
 ************************************************************************************
 programme : CalcAlGUIMenu
 Auteur : Thierry Maillard (TMD)
-Date : 12/3/2016 - 7/7/2016
+Date : 12/3/2016 - 11/10/2016
 
 Role : Menu bar for CalcAl Food Calculator project.
 
@@ -68,7 +68,10 @@ class CalcAlGUIMenu(Menu):
         self.selectionMenu.add_command(label=_("Ungroup"),
                                        state=DISABLED,
                                        command=self.master.getCalculatorFrame().UngroupFood)
-        self.selectionMenu.add_command(label=_("Delete"),
+        self.selectionMenu.add_command(label=_("Erase line"),
+                                       state=DISABLED,
+                                       command=self.master.getCalculatorFrame().eraseFood)
+        self.selectionMenu.add_command(label=_("Delete in database"),
                                        state=DISABLED,
                                        command=self.master.getCalculatorFrame().deleteFood)
         self.selectionMenu.add_command(label=_("Clipboard"),
@@ -76,12 +79,17 @@ class CalcAlGUIMenu(Menu):
                                        command=self.master.getCalculatorFrame().copyInClipboard)
         self.selectionMenu.add_command(label=_("Info"),
                                        state=DISABLED,
-                                       command=self.master.getCalculatorFrame().infoFood)
+        command=self.master.getCalculatorFrame().infoFood)
+        self.selectionMenu.add_command(label=_("Save portion"),
+                                       state=DISABLED,
+        command=self.master.getCalculatorFrame().savePortion)
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
 
         self.pluginsMenu = Menu(self, tearoff=0)
-        self.pluginsMenu.add_command(label=_("Ciqual Reader"),
-        command=self.installCiqualReader)
+        listPlugins = ["Ciqual_2013_Reader", "USDA_28_Reader"]
+        for plugin in listPlugins:
+            self.pluginsMenu.add_command(label=plugin,
+                                         command=lambda plug=plugin:self.installReader(plug+".py"))
         self.add_cascade(label=_("Plugins"), menu=self.pluginsMenu)
 
         otherMenu = Menu(self, tearoff=0)
@@ -115,7 +123,8 @@ class CalcAlGUIMenu(Menu):
             etat = NORMAL
         else:
             etat = DISABLED
-        for itemMenu in range(6):
+        last = self.databaseMenu.index("end")
+        for itemMenu in range(last+1):
             self.databaseMenu.entryconfigure(itemMenu, state=etat)
 
     def enableSelectionMenu(self, isEnabled):
@@ -124,16 +133,16 @@ class CalcAlGUIMenu(Menu):
             etat = NORMAL
         else:
             etat = DISABLED
-        for itemMenu in range(6):
+        last = self.selectionMenu.index("end")
+        for itemMenu in range(last+1):
             self.selectionMenu.entryconfigure(itemMenu, state=etat)
 
-    def installCiqualReader(self):
-        """ Download Ciqual reader """
+    def installReader(self, pluginName):
+        """ Install a plugin whose name is given in parameter """
         try:
-            pluginDir = os.path.join(self.master.getDirProject(),
-                                     self.configApp.get("Resources", "ReadersDir"))
-            pluginName = "CiqualReader.py"
-            pluginPath = os.path.join(pluginDir, pluginName)
+            pluginPath = os.path.join(self.master.getDirProject(),
+                                      self.configApp.get("Resources", "ReadersDir"),
+                                      pluginName)
             if os.path.isfile(pluginPath):
                 raise ValueError(_("Plugin") + " " + pluginName + " " +
                                  _("has already been installed"))
@@ -144,6 +153,7 @@ class CalcAlGUIMenu(Menu):
                 raise ValueError(_("Installation canceled"))
             shutil.copy2(filename, pluginPath)
             self.master.setStatusText(_("Plugin") + " " + pluginName + " " + _("installed"))
+            self.logger.info(_("Plugin") + " " + pluginName + " " + _("installed"))
         except ValueError as exc:
             self.master.setStatusText(_("Error") + " : " + str(exc) + " !", True)
 

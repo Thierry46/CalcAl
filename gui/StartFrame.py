@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : StartFrame
 Author : Thierry Maillard (TMD)
-Date  : 12/3/2016 - 26/8/2016
+Date  : 12/3/2016 - 29/8/2016
 
 Role : Define start frame content.
 ************************************************************************************
@@ -14,10 +14,10 @@ from tkinter import messagebox
 import os
 import os.path
 
-from gui import CallTypWindow
-from gui import DatabaseInitialiser
-from gui import DatabaseJoinDialog
-from gui import FrameBaseCalcAl
+from . import CallTypWindow
+from . import DatabaseInitialiser
+from . import DatabaseJoinDialog
+from . import FrameBaseCalcAl
 from database import Database
 
 class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
@@ -52,6 +52,9 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
                                     _("Select a database\nand click startbutton"),
                                     self.delaymsTooltips)
         self.databaseListbox.bind('<ButtonRelease-1>', self.clicListBoxItem)
+        # V0.33 : bind return keys
+        self.databaseListbox.bind('<Return>', self.start)
+        self.databaseListbox.bind('<KP_Enter>', self.start)
 
         Button(buttonFrame, text=_('New'), command=self.newDB).pack(side=TOP)
         self.infoButton = Button(buttonFrame, text=_('Info'),
@@ -83,7 +86,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.mainWindow.closeDatabase()
             self.mainWindow.enableTabCalculator(False)
 
-    def start(self):
+    def start(self, event=None):
         """ start calculator frame with chosen database """
         index = self.databaseListbox.curselection()
         if index:
@@ -93,6 +96,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.databaseManager.openDatabase(dbName)
             self.mainWindow.setTitle(dbName)
             self.mainWindow.enableTabSearch()
+            self.mainWindow.enableTabPortion(True)
             self.mainWindow.enableTabCalculator(True)
             message = _("Start calculator with database") + ' ' + dbName
             self.mainWindow.setStatusText(message)

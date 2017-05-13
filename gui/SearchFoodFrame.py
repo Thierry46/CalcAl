@@ -3,25 +3,28 @@
 ************************************************************************************
 Class  : SearchFoodFrame
 Author : Thierry Maillard (TMD)
-Date  : 27/4/2016
+Date  : 27/4/2016 - 15/9/2016
 
 Role : Define search food frame content.
 ************************************************************************************
 """
+import queue
+import threading
+
 from tkinter import *
 from tkinter.ttk import Combobox
 
-from gui import CallTypWindow
+from . import CallTypWindow
 
-from gui import FrameBaseCalcAl
-from gui import TableTreeView
+from . import FrameBaseCalcAl
+from . import TableTreeView
 from database import Database
 
 class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
-    """ Welcome frame used to choose database to use """
+    """ Search frame used to choose food according a component selection """
 
     def __init__(self, master, mainWindow, logoFrame):
-        """ Initialize welcome Frame """
+        """ Initialize Search Frame """
         super(SearchFoodFrame, self).__init__(master, mainWindow, logoFrame)
         self.numberFilter = int(self.configApp.get('Search', 'numberFilter'))
         self.nbMaxResultSearch = int(self.configApp.get('Limits', 'nbMaxResultSearch'))
@@ -70,11 +73,11 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.listUserValueEntry[numLine].grid(row=numLine+1, column=2)
 
         # buttonFiltersFrame
-        btnSearch = self.mainWindow.createButtonImage(buttonFiltersFrame,
+        self.btnSearch = self.mainWindow.createButtonImage(buttonFiltersFrame,
                                                       imageRessourceName='btn_search',
                                                       text4Image=_("Search in data"))
-        btnSearch.configure(command=self.search)
-        btnSearch.pack(side=TOP)
+        self.btnSearch.configure(command=self.search)
+        self.btnSearch.pack(side=TOP)
         Button(buttonFiltersFrame, text=_("Reset filters"),
                command=self.reset).pack(side=TOP)
         Button(buttonFiltersFrame, text=_("Clipboard"),
@@ -94,14 +97,16 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.searchResultTable.setBinding('<Double-Button-1>', self.putInCalculator)
         self.searchResultTable.setBinding('<Command-c>', self.copyInClipboard)
         self.searchResultTable.setBinding('<Control-c>', self.copyInClipboard)
-
         CallTypWindow.createToolTip(self.searchResultTable,
                         _("Click on first column header to select all") +
                         "\n" +
                         _("Click on a component column header to sort by this component values")+
                         "\n" +
-                        _("Click on a result line to put it in calculator"),
+                        _("Double-click on a result line to put it in calculator")+
+                        "\n" +
+                        _("Ctrl-C to put in clipboard"),
                         2 * self.delaymsTooltips)
+
 
     def eraseEmptyRows(self, evt):
         """ Erase filter line if its operator is empty """
@@ -156,78 +161,107 @@ class SearchFoodFrame(FrameBaseCalcAl.FrameBaseCalcAl):
             self.listConboboxComponents[numLine]['values'] = valuesConboboxComponents
 
     def search(self):
-        """ Search products that match filters in DB """
-        # Search message
+        """ Search products that match filters in DB
+            V0.31 : Thread use"""
+        #self.btnSearch.configure(state=DISABLED)
         self.mainWindow.setStatusText(_("Searching in database") + "...")
+        self.queue = queue.Queue()
+        ThreadedTask(self.queue, self).start()
+        self.master.after(100, self.process_queue)
 
+    def process_queue(self):
+        """ Display messages that thread have put in the queue """
+        try:
+            msg = self.queue.get(0)
+            error = msg.endswith("!")
+            self.mainWindow.setStatusText(msg, error)
+        except queue.Empty:
+            self.master.after(100, self.process_queue)
+
+    def reset(self):
+        """ Reset filters in DB """
+        for numLine in range(self.numberFilter):
+            self.listOperatorCombobox[numLine].current(0)
+
+class ThreadedTask(threading.Thread):
+    """ V0.31 : Thread used to search food in database without blocking GUI """
+    def __init__(self, queue, parent):
+        threading.Thread.__init__(self)
+        self.queue = queue
+        self.parent = parent
+    def run(self):
+        self.runSearch()
+
+    def runSearch(self):
         listSelectedComponentsCodes = []
         listTitle4Components = []
 
         # Clean result table
-        self.searchResultTable.deleteAllRows()
-        self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
-        database = self.databaseManager.getDatabase()
+        self.parent.searchResultTable.deleteAllRows()
+        self.parent.searchResultTable.updateVariablesColumns(listTitle4Components, [])
+
+        # Database must be reopen in this thread
+        databasePath = self.parent.databaseManager.getDatabase().getDatabasePath()
+        database = Database.Database(self.parent.configApp, self.parent.dirProject)
+        database.open(databasePath)
 
         try:
             listFilters = []
-            for numLine in range(self.numberFilter):
-               selectedOperator = self.listOperatorCombobox[numLine].get()
-               if len(selectedOperator) > 0:
+            for numLine in range(self.parent.numberFilter):
+                selectedOperator = self.parent.listOperatorCombobox[numLine].get()
+                if len(selectedOperator) > 0:
                     isAtLeast1Filter = True
                     # Check fields for active filter lines
-                    selectedComponent = self.listConboboxComponents[numLine].get()
+                    selectedComponent = self.parent.listConboboxComponents[numLine].get()
                     if len(selectedComponent) == 0:
                         raise ValueError(_("Please select a component for filter number") +
                                          " : " + str(numLine+1))
                     try :
-                        level = float(self.listUserValueEntry[numLine].get().replace(",", "."))
+                        level = float(self.parent.listUserValueEntry[numLine].get().replace(",", "."))
                     except ValueError as excName:
                         raise ValueError(_("Level must be a float number for filter number") +
                                          " : " + str(numLine+1))
                     if level < 0.0:
                         raise ValueError(_("Level must be greater than zero for filter number") +
-                                         " : " + str(numLine+1))
+                                     " : " + str(numLine+1))
                     # Get constituantCode
                     indexChoosenComponent = \
-                        self.listConboboxComponents[numLine]['values'].index(selectedComponent)
-                    constituantCode = self.listComponents[indexChoosenComponent][0]
+                            self.parent.listConboboxComponents[numLine]['values'].index(selectedComponent)
+                    constituantCode = self.parent.listComponents[indexChoosenComponent][0]
                     if constituantCode not in listSelectedComponentsCodes:
                         listSelectedComponentsCodes.append(constituantCode)
-                        constituantName = self.listComponents[indexChoosenComponent][1]
-                        constituantUnit = self.listComponents[indexChoosenComponent][2]
+                        constituantName = self.parent.listComponents[indexChoosenComponent][1]
+                        constituantUnit = self.parent.listComponents[indexChoosenComponent][2]
                         listTitle4Components.append(constituantName + " (" + constituantUnit + ")")
 
                     # Append current filter to the list
                     listFilters.append([constituantCode, selectedOperator, level])
 
             # Update table header line with components names selected in filters
-            self.searchResultTable.updateVariablesColumns(listTitle4Components, [])
+            self.parent.searchResultTable.updateVariablesColumns(listTitle4Components, [])
 
             # Get components values for product selected by filters
             nbFoundProducts, listComponentsValues = \
-                    database.getProductComponents4Filters(listFilters,
-                                                          listSelectedComponentsCodes)
+                                database.getProductComponents4Filters(listFilters,
+                                                                      listSelectedComponentsCodes)
 
             # Update table content with results
             for foodName, componentsValues in listComponentsValues:
-                self.searchResultTable.insertOrCreateRow(foodName, componentsValues,
-                                                         seeItem=False)
+                    self.parent.searchResultTable.insertOrCreateRow(foodName, componentsValues,
+                                                                    seeItem=False)
 
             # Check number of results
-            if (nbFoundProducts > self.nbMaxResultSearch):
-                self.mainWindow.setStatusText(_("Too many results") +" : " +
-                                              str(self.nbMaxResultSearch) +
-                                              " " + _("on") + " " + str(nbFoundProducts) +
-                                              " " + _("displayed") + ". " +
-                                              _("Please improve filters") + " !", True)
+            if (nbFoundProducts > self.parent.nbMaxResultSearch):
+                message = _("Too many results") +" : " + str(self.parent.nbMaxResultSearch) + \
+                          " " + _("on") + " " + str(nbFoundProducts) + " " + _("displayed") + \
+                          ". " + _("Please improve filters") + " !"
             else:
-                self.mainWindow.setStatusText(str(nbFoundProducts) + " " +
-                                          _("results matching filters"))
+                message = str(nbFoundProducts) + " " + _("results matching filters")
+            self.queue.put(message)
         except ValueError as exc:
-            message = _("Error") + " : " + str(exc) + " !"
-            self.mainWindow.setStatusText(message, True)
+            self.queue.put(_("Error") + " : " + str(exc) + " !")
+        finally:
+            database.close()
+                                                                
+        #self.parent.btnSearch.configure(state=NORMAL)
 
-    def reset(self):
-        """ Reset filters in DB """
-        for numLine in range(self.numberFilter):
-            self.listOperatorCombobox[numLine].current(0)

@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Database
 Author : Thierry Maillard (TMD)
-Date  : 23/3/2016 - 23/8/2016
+Date  : 23/3/2016 - 2/10/2016
 
 Role : Define a database and method to create, consult and save it.
 ************************************************************************************
@@ -14,7 +14,7 @@ import sqlite3
 import re
 import time
 
-from database import DatabaseReaderFactory
+from . import DatabaseReaderFactory
 
 class Database():
     """ Define a database """
@@ -42,9 +42,11 @@ class Database():
 
     def open(self, databasePath):
         """ Open or create a sqlite database """
+        self.databasePath = databasePath
         self.connDB = sqlite3.connect(databasePath)
         self.dbname = os.path.basename(databasePath)
         self.logger.info("Database : " + databasePath + " opened.")
+        self.createUserTables() # V0.32
 
     def close(self):
          """ Close database """
@@ -52,6 +54,9 @@ class Database():
             self.connDB.close()
             self.connDB = None
             self.logger.info("Database : " + self.getDbname() + " closed.")
+
+    def getDatabasePath(self):
+        return self.databasePath
 
     def getDbname(self):
         return self.dbname
@@ -210,22 +215,33 @@ class Database():
         return qualifResult
 
     def formatListComponentsValues(self, listComponentsValuesRaw):
-        """ Format components values according values qualifiers """
-        listComponentsValuesFormated = []
+        """ Format components values according values qualifiers
+            v0.34 : call formatListQualifiersValues to avoid code duplication """
+        listQualifier = []
+        listValues = []
         for constituantCode, value, qualifier in listComponentsValuesRaw:
+            listQualifier.append(qualifier)
+            listValues.append(value)
+        listValuesFormated = self.formatListQualifiersValues(listQualifier, listValues)
+        return listValuesFormated
+
+    def formatListQualifiersValues(self, listQualifier, listValues):
+        """ Format qualifiers and values list """
+        listValuesFormated = []
+        for index, qualifier in enumerate(listQualifier):
             if qualifier == "N" :
-                resultValue = self.formatFloatValue.format(value)
+                resultValue = self.formatFloatValue.format(listValues[index])
             elif qualifier == "-" :
                 resultValue = "-"
             elif qualifier == "T" :
                 resultValue = _("Traces")
             elif qualifier == "<" :
-                resultValue = "< " + self.formatFloatValue.format(value)
+                resultValue = "< " + self.formatFloatValue.format(listValues[index])
             else:
-                raise ValueError("formatListComponentsValues : unknown value qualifier : " +\
-                                qualifier)
-            listComponentsValuesFormated.append(resultValue)
-        return listComponentsValuesFormated
+                raise ValueError("formatListQualifiersValues : unknown value qualifier : " +\
+                                 qualifier)
+            listValuesFormated.append(resultValue)
+        return listValuesFormated
 
     def getFamily4FoodName(self, foodName):
         """ Given a foodName return its family name """
@@ -416,6 +432,7 @@ class Database():
     def getInfoDatabase(self):
         """ Return a dictionnary of counters for elements in this database
             V0.30 : 21-22/8/2016 """
+        self.logger.debug("Database : getInfoDatabase")
         startGroupProductCodes = int(self.configApp.get('Limits', 'startGroupProductCodes'))
         dictCounters = dict()
         dictCounters["dbName"] = self.getDbname()
@@ -435,6 +452,7 @@ class Database():
     def getInfoFood(self, foodName):
         """ Return a dictionnary of info for a given foodname in this database
         V0.30 : 22/8/2016 """
+        self.logger.debug("Database : getInfoFood for product " + foodName)
         dictInfoFood = dict()
         dictInfoFood["isGroup"] = False
         cursor = self.connDB.cursor()
@@ -482,6 +500,7 @@ class Database():
     def deleteUserProduct(self, foodName):
         """ Delete a given user foodname in this database
         V0.30 : 23/8/2016 """
+        self.logger.debug("Database : deleteUserProduct for product " + foodName)
         cursor = self.connDB.cursor()
 
         # Get foodName code
@@ -520,6 +539,7 @@ class Database():
         """ Join this database to an other : dbNameSecondary
             intersection, current = master database has the priority
             in v0.30 : groups created by user are not merged"""
+        self.logger.debug("Database : joinDatabase with " + dbNameSecondary)
         cursor = self.connDB.cursor()
         cursor.execute("ATTACH DATABASE ? AS secondDB", (dbNameSecondary,))
         cursor.execute("""INSERT INTO main.products
@@ -540,4 +560,167 @@ class Database():
                                 FROM main.constituantsNames)""")
         self.connDB.commit()
         cursor.close()
+
+    def createUserTables(self):
+        """ V0.32 : Create al user tables """
+        self.logger.debug("Database : createUserTables")
+        cursor = self.connDB.cursor()
+
+        # Controls how strings are encoded and stored in the database
+        cursor.execute('PRAGMA encoding = "UTF-8"')
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS compositionProducts(
+                productCode INTEGER,
+                productCodePart INTEGER,
+                quantityPercent REAL
+                )""")
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS portions(
+                code INTEGER PRIMARY KEY UNIQUE,
+                name TEXT,
+                date TEXT,
+                patient TEXT,
+                type TEXT,
+                period TEXT
+                )""")
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS portionsDetails(
+                portionCode INTEGER,
+                productCode INTEGER,
+                quantity REAL
+                )""")
+
+        self.connDB.commit()
+        cursor.close()
+
+    def getPortions(self, withCode=False):
+        """ Return all portions registred in database """
+        cursor = self.connDB.cursor()
+        fields = "name, date, patient, type, period"
+        if withCode:
+            fields = "code, " + fields
+        cursor.execute("SELECT " + fields + " FROM portions ORDER BY name, date, patient")
+        portionIdAll = cursor.fetchall()
+        cursor.close()
+        self.logger.info(str(len(portionIdAll)) + " portions available.")
+        return portionIdAll
+
+    def getPortionsFiltred(self, listUserFilters, withCode=False):
+        """ Return portions registred in database and filtered according userFilters fields"""
+        portionIdFiltered = []
+        for portionId in self.getPortions(withCode):
+            condTotal = True
+            for num, input in enumerate(listUserFilters):
+                numField = num
+                if withCode:
+                    numField = numField + 1
+                cond = input == "" or input.upper() in portionId[numField].upper()
+                condTotal = condTotal and cond
+            if condTotal:
+                portionIdFiltered.append(portionId)
+        self.logger.debug(str(len(portionIdFiltered)) + " portions selected.")
+        return portionIdFiltered
+
+    def getPortionCode(self, portionName, portionDate, portionPatient):
+        """ Return the code in database for the portion given its Ids and True if it exists """
+        cursor = self.connDB.cursor()
+        cursor.execute("""SELECT code from portions 
+                          WHERE UPPER(name)=? and UPPER(date)=? and UPPER(patient)=?""",
+                       (portionName.upper(), portionDate.upper(), portionPatient.upper()))
+        results = cursor.fetchone()
+        exist = results is not None and len(results) == 1
+        if exist:
+            code = results[0]
+        else:
+            # Generate a new code
+            # Find a free code number for this new portion
+            cursor.execute("SELECT code from portions ORDER BY code")
+            listeCodes = [codePortion[0] for codePortion in cursor.fetchall()]
+            if len(listeCodes) == 0:
+                code = 1
+            else:
+                listeCodesSet = set(listeCodes)
+                sequence = set(range(1, listeCodes[-1] + 2))
+                missing = sequence - listeCodesSet
+                code = list(missing)[0]
+
+        cursor.close()
+        self.logger.debug("getPortionCode : portionCode=" + str(code) + ", exist=" + str(exist))
+        return code, exist
+
+    def insertPortion(self, fields4ThisPortion, listNamesQties):
+        """ Insert or modify a portion in database """
+        portionCode, exist = self.getPortionCode(fields4ThisPortion[0], fields4ThisPortion[1],
+                                                 fields4ThisPortion[2],)
+        cursor = self.connDB.cursor()
+        if exist :
+            # Delete existing products for this portion
+            cursor.execute("DELETE FROM portionsDetails WHERE portionCode=?",
+                           (portionCode,))
+            fields4ThisPortion.append(portionCode)
+            # Even 3 Ids field must be modified because of char case
+            cursor.execute("""
+                UPDATE portions
+                    SET name=?, date=?, patient=?, type=?, period=?
+                    WHERE code=?
+                """, fields4ThisPortion)
+            self.logger.debug("insertPortion : portionCode=" + str(portionCode) + " modified")
+        else:
+            fields4ThisPortion.insert(0, portionCode)
+            cursor.execute("""
+                INSERT INTO portions(code, name, date, patient, type, period)
+                VALUES(?, ?, ?, ?, ?, ?)
+                """, fields4ThisPortion)
+            self.logger.debug("insertPortion : portionCode=" + str(portionCode) + " created")
+
+        # Get products code that compose this portion and prepare inserting
+        fieldsPortionsDetails = []
+        for element in listNamesQties:
+            cursor.execute("SELECT code FROM products WHERE name=?", (element[0],))
+            results = cursor.fetchone()
+            fieldsPortionsDetails.append([portionCode, results[0], element[1]])
+        self.logger.debug("insertPortion : " + str(len(fieldsPortionsDetails)) +
+                          " products to insert for portion " + str(portionCode))
+
+        # Save in portionsDetails table products and quantities composing this portion
+        cursor.executemany(""" INSERT INTO portionsDetails(portionCode, productCode, quantity)
+                                      VALUES(?, ?, ?)""",
+                           fieldsPortionsDetails)
+
+        self.connDB.commit()
+        cursor.close()
+        self.logger.debug("insertPortion : saved")
+
+    def getFoodNameAndQuantity4Portion(self, portionCode):
+        """ Return a list of (FoodName, Quantity) contained in portion which code is given """
+        cursor = self.connDB.cursor()
+        cursor.execute("""SELECT products.name, quantity
+                        FROM portionsDetails
+                        INNER JOIN products
+                        WHERE productCode=products.code AND portionCode=? """,
+                       (portionCode,) )
+        listFoodNameQuantity = cursor.fetchall()
+        cursor.close()
+        self.logger.debug("getFoodNameAndQuantity4Portion : get " +
+                            str(len(listFoodNameQuantity)) + " items for portion " +
+                            str(portionCode))
+        return listFoodNameQuantity
+
+    def deletePortion(self, portionCode):
+        """ Delete a given portion in this database
+        V0.32 : 28/9/2016 """
+        self.logger.debug("Database : deletePortion for portion " + portionCode)
+        cursor = self.connDB.cursor()
+
+        # Delete elements values
+        cursor.execute("DELETE FROM portionsDetails WHERE portionCode=?", (portionCode,))
+        cursor.execute("DELETE FROM portions WHERE code=?", (portionCode,))
+
+        # Commit to be seen by other database connexion
+        self.connDB.commit()
+        cursor.close()
+        self.logger.debug("deletePortion : portion " + portionCode + " " + _("deleted"))
 

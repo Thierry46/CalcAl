@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Ciqual_2013_Reader
 Author : Thierry Maillard (TMD)
-Date  : 13/6/2016 - 23/8/2016
+Date  : 13/6/2016 - 22/9/2016
 
 Role : Read a Ciqual 2013 database from CSV or CSVzipped text file.
 ************************************************************************************
@@ -25,7 +25,9 @@ class Ciqual_2013_Reader():
         self.configApp = configApp
         self.localDirPath = os.path.join(dirProject,
                                         self.configApp.get('Resources', 'LocaleDir'))
-        self.localDirPath = os.path.join(self.localDirPath, locale.getlocale()[0][:2])
+        curLocale = locale.getlocale()[0][:2]
+
+        self.localDirPath = os.path.join(self.localDirPath, curLocale)
         self.connDB = connDB
         self.dbname = dbname
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
@@ -59,13 +61,6 @@ class Ciqual_2013_Reader():
                 value REAL,
                 qualifValue TEXT
                 )""")
-        # V0.30 : change field name productCodePart
-        cursor.execute("""
-                CREATE TABLE IF NOT EXISTS compositionProducts(
-                    productCode INTEGER,
-                    productCodePart INTEGER,
-                    quantityPercent REAL
-                    )""")
 
         if pathZipFileInit.endswith(".zip"):
             with zipfile.ZipFile(pathZipFileInit, "r") as zfile:

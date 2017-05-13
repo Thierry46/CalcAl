@@ -10,11 +10,10 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import Combobox
 
-from gui import CallTypWindow
+from . import CallTypWindow
+from . import TkSimpleDialog
 
 import os.path
-
-from gui import TkSimpleDialog
 
 class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
     """ Dialog box to choose a food name and family """
@@ -60,6 +59,7 @@ class DatabaseJoinDialog(TkSimpleDialog.TkSimpleDialog):
                 raise ValueError(_("this database already exists") + " : " + self.dbNameResult)
             isOK = True
         except ValueError as exc:
+            self.bell()
             messagebox.showwarning(_("Bad input"), message = _("Error") + " : " + str(exc) + " !")
         return isOK
 

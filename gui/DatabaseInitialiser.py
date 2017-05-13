@@ -10,11 +10,11 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import filedialog
 
-from gui import CallTypWindow
+from . import CallTypWindow
 
 import os.path
 
-from gui import TkSimpleDialog
+from . import TkSimpleDialog
 
 class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
     """ Dialog box to choose a food name and family """
@@ -98,6 +98,7 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
                 raise ValueError(_("Please give a filename containing data to import"))
             isOK = True
         except ValueError as exc:
+            self.bell()
             messagebox.showwarning(_("Bad input"), message = _("Error") + " : " + str(exc) + " !")
         return isOK
 

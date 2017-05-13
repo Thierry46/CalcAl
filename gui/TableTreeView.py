@@ -4,7 +4,7 @@
     *********************************************************
     Class : Table
     Auteur : Thierry Maillard (TMD)
-    Date : 8/5/2016 - 21/5/2016
+    Date : 8/5/2016 - 15/10/2016
 
     Role : Table widget.
 
@@ -104,6 +104,11 @@ class TableTreeView(Frame):
         if seeItem:
          self.treeview.see(self.searchItem(name))
 
+    def insertGroupRow(self, listNameListColumn):
+        """ V0.35 For speeding up : insert a group of row """
+        for name, columnsValues in listNameListColumn:
+            self.treeview.insert('', 'end', text=name, values=columnsValues, tags=('normalRow',))
+
     def deleteRow(self, name):
         """ Delete a row given its item name """
         foundItem = self.searchItem(name)
@@ -134,8 +139,18 @@ class TableTreeView(Frame):
                 listValues.append(valuesRow)
         return listValues
 
+    def getAllColumnsValues(self, excludeRowWithTitle=None):
+        """ V0.33 : Return all values for optional columns """
+        numberOfColumns = len(self.treeview['columns'])
+        listValues = []
+        for rowItem in self.treeview.get_children():
+            if not excludeRowWithTitle or self.getTextForItemIndex(rowItem) != excludeRowWithTitle:
+                valuesRow = self.treeview.item(rowItem, option='values')
+                listValues.append(valuesRow)
+        return numberOfColumns, listValues
+
     def getColumnsValues(self):
-        """ Return all column values for all rows"""
+        """ Return number of columns values and all column values for all rows"""
         listValues = []
         for rowItem in self.treeview.get_children():
             listValues.append(self.treeview.item(rowItem, option='values'))
@@ -250,7 +265,7 @@ class TableTreeView(Frame):
         textBuffer = ""
         selectedItems = self.getSelectedItems()
         if len(selectedItems) == 0:
-            raise ValueError(_("Please select at least one line in list of food"))
+            raise ValueError(_("Please select at least one line in table"))
         # Get headers titles
         titleCols = []
         titleCols.append(self.treeview.heading("#0", option='text'))

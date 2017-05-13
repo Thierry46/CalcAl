@@ -1,10 +1,12 @@
 # messages.po : French translation file for CalcAl project labels.
-# Date : 10/3/2016 - 21/8/2016
+# Date : 10/3/2016 - 12/10/2016
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
 # Thierry Maillard <Thierry.Maillard500@orange.fr>, 2016.
 #
-# Conversion in .mo format to be used by gettext : msgfmt messages.po
+# Conversion in .mo format to be used by gettext :
+# cd locale/fr/LC_MESSAGES
+# msgfmt messages.po
 #
 # Installation of gettext package on Linux or Mac :
 # Download :http://ftp.gnu.org/gnu/gettext/gettext-latest.tar.gz
@@ -25,6 +27,39 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+###############
+# CalcAl
+###############
+msgid "Error : 0 parameter allowed"
+msgstr "Erreur : aucun paramètre autorisé"
+
+msgid "Directory created"
+msgstr "Répertoire créé"
+
+msgid "Starting"
+msgstr "Démarrage"
+
+msgid "Thanks to you"
+msgstr "Merci à vous"
+
+msgid "for using this software"
+msgstr "d'utiliser ce logiciel"
+
+msgid "End of"
+msgstr "Fin de"
+
+msgid "Messages now logged in"
+msgstr "Les messages sont enregistrés dans"
+
+msgid "To contact authors"
+msgstr "Pour contacter les auteurs"
+
+msgid "Detected language and encoding on this computer"
+msgstr "Langue et encodage détectés sur cet ordinateur"
+
+msgid "Demo DB copied"
+msgstr "Base demo copiée"
 
 ###############
 # CalcAlGUI
@@ -80,14 +115,14 @@ msgstr "Grouper"
 msgid "Ungroup"
 msgstr "Dégrouper"
 
-msgid "Delete"
-msgstr "Supprimer"
+msgid "Delete in database"
+msgstr "Supprimer de la base "
+
+msgid "Erase line"
+msgstr "Effacer la ligne"
 
 msgid "Plugins"
 msgstr "Modules"
-
-msgid "Ciqual Reader"
-msgstr "Lecteur Ciqual"
 
 msgid "Download Ciqual reader"
 msgstr "Téléchargez le lecteur Ciqual"
@@ -465,6 +500,23 @@ msgstr "Suppression de l'éléments sélectionné dans la base de données"
 msgid "User element is deleted"
 msgstr "L'élément est détruit"
 
+msgid "Portions"
+msgstr "Rations et ingestas"
+
+msgid "Save portion"
+msgstr "Sauver la ration"
+
+msgid "No food to save"
+msgstr "Aucun aliment à sauver"
+
+msgid "Save portion in database"
+msgstr "Sauver la ration dans la base"
+
+msgid "Portion recording canceled"
+msgstr "Enregistrement de la portion annulé"
+
+msgid "Portion saved in database"
+msgstr "Ration sauvée dans la base de données"
 
 # -- Tooltips --
 msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
@@ -534,7 +586,7 @@ msgid "displayed"
 msgstr "affichés"
 
 msgid "Please improve filters"
-msgstr "Veuillez amméliorer les fitres"
+msgstr "Veuillez améliorer les filtres"
 
 msgid "results matching filters"
 msgstr "résultats pour ces filtres"
@@ -554,16 +606,20 @@ msgstr "Les lignes de filtres sont combinées par un ET logique"
 msgid "To deselect a filter line, set its operator to empty value"
 msgstr "Pour déselectionner une ligne de filtre, effacez son opérateur"
 msgid "Click on first column header to select all"
-msgstr "Cliquer sur l'entête de la 1ère colone pour tout sélectionner"
+msgstr "Cliquez sur l'entête de la 1ère colone pour tout sélectionner"
 msgid "Click on a component column header to sort by this component values"
-msgstr "Cliquer sur une entête de colonne composant pour la trier par valeurs"
-msgid "Click on a result line to put it in calculator"
-msgstr "Cliquer sur un résultat pour le mettre dans le calculateur"
+msgstr "Cliquez sur une entête de colonne composant pour la trier par valeurs"
+msgid "Double-click on a result line to put it in calculator"
+msgstr "Double-cliquez sur un résultat pour le mettre dans le calculateur"
+msgid "Ctrl-C to put in clipboard"
+msgstr "Ctrl-C pour mettre dans le presse-papier"
+msgid "Double-clic to modify"
+msgstr "Double-cliquez pour modifier"
 
 ########################
 # TableTreeView
 ########################
-msgid "Please select at least one line in list of food"
+msgid "Please select at least one line in table"
 msgstr "Veuillez choisir au moins une ligne dans la liste des aliments"
 
 ########################
@@ -665,3 +721,101 @@ msgstr "Veuillez entrer un nom d'aliment"
 msgid "Please give a food name that doesn't exist in database"
 msgstr "Veuillez entrer un nom d'aliment qui n'existe pas dans la base"
 
+##########################
+# PortionInfoChooser
+##########################
+msgid "Filters"
+msgstr "Filtres"
+
+msgid "Portion name"
+msgstr "Nom de la ration"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Patient code"
+msgstr "Code patient"
+
+msgid "Portion type"
+msgstr "Type de portion"
+
+msgid "Period Of day"
+msgstr "Moment de la journée"
+
+msgid "Erase filters"
+msgstr "Effacer les filtres"
+
+msgid "Filtered existing portions"
+msgstr "Portion existantes filtrées"
+
+msgid "Ration"
+msgstr "Ration"
+
+msgid "Ingesta"
+msgstr "Ingesta"
+
+msgid "Morning"
+msgstr "Matin"
+
+msgid "Noon"
+msgstr "Midi"
+
+msgid "Evening"
+msgstr "Soir"
+
+msgid "Day"
+msgstr "Jour"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Please give a portion name"
+msgstr "Veuillez renseigner le nom de la portion"
+
+msgid "Please give a date"
+msgstr "Veuillez renseigner la date"
+
+msgid "Please give a patient code"
+msgstr "Veuillez renseigner le code patient"
+
+msgid "Please give a portion type"
+msgstr "Veuillez renseigner le type de portion"
+
+msgid "Please give a period"
+msgstr "Veuillez renseigner le moment de la journée"
+
+msgid "Add or modify Portion in database"
+msgstr "Ajouter ou modifier une portion dans la base"
+
+msgid "Do you really want to modify this existing portion in database ?"
+msgstr "Voulez-vous vraiment modifier cette portion dans la base ?"
+
+msgid "Please modify portion identificators"
+msgstr "Veuillez modifier les identifiants de la portion"
+
+##########################
+# PortionFrame
+##########################
+msgid "Portions matching filters"
+msgstr "Rations ou ingestas correspondants aux filtres"
+
+msgid "Selected portion added in calculator"
+msgstr "La ration selectionnée a été ajoutée dans le calculateur"
+
+msgid "All"
+msgstr "Toutes"
+
+msgid "Delete Portion"
+msgstr "Supprimer portion"
+
+msgid "Please select one and only one line in portion table"
+msgstr "Veuillez selectionner une ligne et une seule dans la table des portions"
+
+msgid "Destruction canceled"
+msgstr "Suppression annulée"
+
+msgid "Portion code"
+msgstr "Code ration"
+
+msgid "Portion deleted"
+msgstr "Ration détruite"

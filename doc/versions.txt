@@ -1,6 +1,65 @@
 CalcAl - versions summary
 ==========================
 
+CalcAl_v0.35 : 14/10/2016 : Packaging Mac
+- 4404 lines py code
+- new doc file : packaging.txt
+- import path to package inside gui and database with relative path.
+- __init__.py in package dir gui and database
+- remove directorysrc and move its entries to project base dir
+- Test in Calcal.py if Calcal.ini file is availaible
+- Calcal.py : configApp.read(fileConfigApp, encoding="utf-8") add encoding else crash of app
+- CalcAlGUIMenu/installReader() : bug : add self.configApp.get("Resources", "ReadersDir")
+- Calcal.py/setLocaleCalcal() new function to solve locale setting problems in bundle app
+- Impossible to run plugin import for readers in a Mac app.
+    Solution :
+    Deliver to users versions with or without plugins by adding or deleting pllugin
+    in database directory before packaging Mac app.
+- Speed up portion insertion in calculator frame by adding group of aliments in tables,
+	add functions : CalculatorFrame.py/addFoodGroupInTable() and
+	TableTreeView.py/insertGroupRow()
+
+CalcAl_v0.34 : 2/10/2016 : Don't write in project directory
+- 4310 lines py code
+- Don't write in project directory but in user's home dir for :
+    - Log messages,
+    - databases.
+- Avoid code replication between : Database/formatListComponentsValues() and
+    Database/formatListQualifiersValues()
+- Avoid portability problem : remove a / in key CalcAl.ini/Resources/ReadersDir
+    Create key CalcAl.ini/Resources/SourceDir
+
+CalcAl_v0.33 : 30/9/2016 : speed up
+- 4281 lines py code
+- StartFrame frame :
+    bind return keys on database list
+    failed to bind doubleclic on database list
+- Calculator frame : speed up insertion of a foodstufff in main table food
+    Problem : addTotalRow() exttracts all values for each componant of each foodstuf
+              again from database to be summed.
+    Solution : Sum values from displayed table and not from database
+        TableTreeView : add method getAllColumnsValues()
+        Database :  add methods formatListQualifiersValues
+
+CalcAl_v0.32 : 28/9/2016 : Portion management
+- 4223 lines py code
+- Portion management
+- User table are now not created by readers,
+	but cheched is done each time a database is opened.
+	and created in Database/createUserTables()
+- Language detection and translation :
+    Hack on Windows : ref : http://python.zirael.org/e-localization4.html
+    For gettext.install to detect User language
+- Plugin installation modified in CalcAlGUIMenu.py
+- add more advice on tables Tooltip : Ctrl-c
+
+CalcAl_v0.31 : 18/9/2016 : Thread when search food
+- 3659 lines py code
+- SearchFoodFrame : use thread when searching in database to avoid GUI blocking
+- CalcAlGUIMenu : Add in menu selection of erase item
+- USDA_28_Reader : Capitalize family and product name
+- Change icon for erase line in food calculator : eraseselection.gif
+
 CalcAl_v0.30 : 27/8/2016 :
 - 3436 lines py code
 - DatabaseManager class to manage database operations for CalcAl software
@@ -24,12 +83,12 @@ CalcAl_v0.30 : 27/8/2016 :
 - Join button added : products and constituants values and names 
     from 2 databases are merged but user groups are ignored
 
-CalcAl_v0.29 : 30/7/2016 :
+CalcAl_v0.29 : 30/7/2016 : USDA_28_Reader
 - 2974 lines py code
 - Add USDA_28_Reader.py to read USDA abreviated database
 - Add file usda_constituants.txt to match Ciqual constituants name
 
-CalcAl_v0.28 : 28/7/2016 :
+CalcAl_v0.28 : 28/7/2016 : unknown constituants
 - 2732 lines py code
 - Empty value (-) for unknown constituants are not recorded in databases
 - Results of getComponentsValuesRaw4Food() are now sorted by its parameter
@@ -38,7 +97,7 @@ CalcAl_v0.28 : 28/7/2016 :
 - SearchFoodFrame/search() : Déplacement génération code SQL de condition de recherche
     dans module Database Database/getProductComponents4Filters
 
-CalcAl_v0.27 : 11/7/2016 :
+CalcAl_v0.27 : 11/7/2016 : Reader plugins
 - 2692 lines py code
 - Simplify constructors parameter by passing dirProject
 - Database reader as plugins : message to contact support if missing

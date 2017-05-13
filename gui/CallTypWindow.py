@@ -4,7 +4,7 @@
 File : CallTypWindow.py
 Role : Add tooltips to widgets
 Usage :
-    from gui import CallTypWindow
+    from . import CallTypWindow
     CallTypWindow.createToolTip(self.componentsListbox, "Test tooltip")
 
 Ref : http://www.voidspace.org.uk/python/weblog/arch_d7_2006_07_01.shtml

@@ -8,7 +8,7 @@ Date  : 30/5/2016
 """
 from tkinter import *
 from tkinter import messagebox
-from gui import TkSimpleDialog
+from . import TkSimpleDialog
 
 class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
     """ Dialog box to choose a food name and family """
@@ -78,6 +78,7 @@ class FamilyNameChooser(TkSimpleDialog.TkSimpleDialog):
                 raise ValueError(_("Please give a food name that doesn't exist in database"))
             isOK = True
         except ValueError as exc:
+            self.bell()
             messagebox.showwarning(_("Bad input"), message = _("Error") + " : " + str(exc) + " !")
         return isOK
 

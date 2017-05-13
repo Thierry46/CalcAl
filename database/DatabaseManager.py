@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : DatabaseManager
 Author : Thierry Maillard (TMD)
-Date  : 31/7/2016 - 25/8/2016
+Date  : 31/7/2016 - 2/10/2016
 
 Role : Manage database operations for CalcAl software.
 ************************************************************************************
@@ -12,22 +12,20 @@ import logging
 import os.path
 import shutil
 
-from database import Database
+from . import Database
 
 class DatabaseManager():
     """ Manage database operations for CalcAl software """
 
-    def __init__(self, configApp, dirProject):
+    def __init__(self, configApp, dirProject, baseDirPath):
         """ Initialize a database 
             dirProject : project directory
-            If initDB : import data in a new dataBase
+            baseDirPath : path to user's dataBase
             """
         self.configApp = configApp
         self.dirProject = dirProject
+        self.baseDirPath = baseDirPath
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
-        ressourcePath = os.path.join(dirProject, self.configApp.get('Resources', 'ResourcesDir'))
-        self.databaseDirPath = os.path.join(ressourcePath,
-                                            self.configApp.get('Resources', 'DatabaseDir'))
         self.extDB = self.configApp.get('Resources', 'DatabaseExt')
         self.currentDatabase = None
 
@@ -47,11 +45,11 @@ class DatabaseManager():
     def openDatabase(self, dbName):
         """ open a database which name dbName is given in parameter """
         self.logger.debug("DatabaseManager/openDatabase() : try to open " + dbName + "...")
-        databasePath = os.path.join(self.databaseDirPath, dbName)
+        databasePath = os.path.join(self.baseDirPath, dbName)
         database = Database.Database(self.configApp, self.dirProject)
         database.open(databasePath)
         self.currentDatabase = database
-        self.logger.info("DatabaseManager/openDatabase() : database " + dbName + "opened")
+        self.logger.info("DatabaseManager/openDatabase() : database " + dbName + " opened")
 
     def existsDatabase(self, dbName):
         """ return True if database dbName given exists """
@@ -62,7 +60,7 @@ class DatabaseManager():
         """return full path for short name dbmame """
         if not dbName.endswith(self.extDB):
             dbName = dbName + self.extDB
-        databasePath = os.path.join(self.databaseDirPath, dbName)
+        databasePath = os.path.join(self.baseDirPath, dbName)
         return databasePath
 
     def initDBFromFile(self, dbName, databaseType, initFile):
@@ -74,7 +72,7 @@ class DatabaseManager():
 
     def getListDatabaseInDir(self):
         """ return a list of database names that already exists """
-        listDBFiles = [filename for filename in os.listdir(self.databaseDirPath)
+        listDBFiles = [filename for filename in os.listdir(self.baseDirPath)
                                 if filename.endswith(self.extDB)]
         listDBFiles.sort()
         return listDBFiles
