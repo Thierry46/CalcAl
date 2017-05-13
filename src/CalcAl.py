@@ -4,7 +4,7 @@
 ************************************************************************************
 program : CalcAl
 Author : Thierry Maillard (TMD)
-Date : 10/3/2016
+Date : 10/3/2016 - 8/5/2016
 
 Object : Food Calculator based on CIQUAL Tables.
     https://pro.anses.fr/tableciqual
@@ -83,7 +83,16 @@ def main(argv=None):
             print("Debug mode : verbose.")
 
     # This sets the locale for all categories to the user’s default setting
-    locale.setlocale(locale.LC_ALL, '')
+    # locale.setlocale(locale.LC_ALL, "") doesn't detect locale on windows
+    # locale.getdefaultlocale() seems to detec better...
+    currentLocale = locale.getdefaultlocale()
+    if not currentLocale:
+        print("Can't determine locale to know what langage is used by your computer")
+        print("Please set LANG environnement variable")
+        print("Example on Windows : set LANG=fr_FR.cp1252")
+        print("Example on Mac, Linux, Unix : export LANG=fr_FR.cp1252")
+        sys.exit(1)
+    locale.setlocale(locale.LC_ALL, currentLocale)
 
     # Read configuration properties
     fileConfigApp = os.path.join(dirProject, 'CalcAl.ini')

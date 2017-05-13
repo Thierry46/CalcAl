@@ -3,7 +3,7 @@
 ************************************************************************************
 Class  : Database
 Author : Thierry Maillard (TMD)
-Date  : 23/3/2016 - 30/5/2016
+Date  : 23/3/2016 - 8/5/2016
 
 Role : Define a database antd method to create, consult and save it.
 ************************************************************************************
@@ -118,7 +118,9 @@ class Database():
         shortcutsFilePath = os.path.join(self.localDirPath,
                                          self.configApp.get('Resources', 'ComponentsShortcuts'))
         dicoShortcuts = {}
-        with open(shortcutsFilePath, 'r') as fileShort:
+        # Shortcut file is utf-8 encoded, we have to decode it
+        # No problem on Mac but problem on non utf-8 systems like Windows
+        with open(shortcutsFilePath, 'r', encoding='utf-8') as fileShort:
             for line in fileShort.read().splitlines():
                 # Eliminate comment
                 posComment = line.find('#')
@@ -343,7 +345,7 @@ class Database():
     def insertNewComposedProduct(self, productName, familyName, listNamesQty):
         """ Insert new composed product in database
             return total quantity for all food """
-        totalQuantity = 0
+        totalQuantity = 0.0
 
         if productName is None or  len(productName.strip()) < 2:
             raise ValueError(_("Invalid food name : use more than one letter"))
@@ -370,11 +372,11 @@ class Database():
                 totalCompValues = [0.0 for comp in listeCodesConstituant]
                 fieldsCompositionProducts = []
                 for element in listNamesQty:
-                    totalQuantity = totalQuantity + int(element[1])
+                    totalQuantity = totalQuantity + element[1]
 
                 for element in listNamesQty:
                     cursor.execute("SELECT code FROM products WHERE name=?", (element[0],))
-                    quantityPercent = float(element[1]) * 100.0 / float(totalQuantity)
+                    quantityPercent = element[1] * 100.0 / totalQuantity
                     fieldsCompositionProducts.append([newProductCode,
                                                       cursor.fetchone()[0],
                                                       quantityPercent])
@@ -427,6 +429,7 @@ class Database():
         """ Get part of a composed products given a group of food
             return part names and their quantity according quantity of group
             given in parameter """
+        print('productName=', productName, "quantity=", quantity)
         listNamesQty = []
         cursor = self.connDB.cursor()
         cursor.execute("SELECT code FROM products WHERE name=?", (productName,))
@@ -440,7 +443,7 @@ class Database():
                             WHERE productCodeCiqual=code and productCode=?""",
                        (productCode,))
         for nameQty in cursor.fetchall():
-            quantityPart = int(round(float(nameQty[1]) * float(quantity) / 100.0, 0))
+            quantityPart = round(nameQty[1] * quantity / 100.0, 1)
             listNamesQty.append([nameQty[0], quantityPart])
 
         cursor.close()

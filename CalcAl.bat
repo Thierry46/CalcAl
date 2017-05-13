@@ -1,11 +1,12 @@
 @ECHO off
-REM Name ..... : CalcAl.sh
-REM Object ... : Launch CalcAl software on UNix systems
+REM Name ..... : CalcAl.bat
+REM Object ... : Launch CalcAl software on Windows systems
 REM Parameters : None, -h for help
 REM Author ... : MAILLARD Thierry (TMD)
-REM Date ..... : 10/3/2015
+REM Date ..... : 8/5/2015
 REM Modif .... :
 
 echo "Start CalcAl ..."
 echo "python src/CalcAl.py"
-python3 src\CalcAl.py %1
+REM if error in Calcal detecting locale, set LANG=fr_FR.cp1252
+python src\CalcAl.py %1

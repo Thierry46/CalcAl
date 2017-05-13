@@ -71,6 +71,6 @@
 56500 = Vitamine B6
 56600 = Vitamine B12
 56700 = Vitamine B9
-60000 = Alcool
+60000 = Alcol
 65000 = Acides organ.
 75100 = Cholestérol

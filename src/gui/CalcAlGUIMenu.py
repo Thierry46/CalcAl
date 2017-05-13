@@ -59,6 +59,7 @@ class CalcAlGUIMenu(Menu):
         self.add_cascade(label=_("Selection"), menu=self.selectionMenu)
 
         otherMenu = Menu(self, tearoff=0)
+        otherMenu.add_command(label=_("About"), command=self.master.about)
         self.isLoglevelDebug = BooleanVar()
         self.isLoglevelDebug.set(False)
         # Observer self.setLogLevel on self.isLoglevelDebug called if modified : 'w'

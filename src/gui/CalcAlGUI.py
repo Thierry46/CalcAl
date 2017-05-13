@@ -30,9 +30,11 @@ Copyright (c) 2016 - Thierry Maillard
 """
 import logging
 import os.path
+import platform
 
 from tkinter import *
 from tkinter import ttk
+from tkinter import font
 
 from gui import CalcAlGUIMenu
 from gui import StartFrame
@@ -53,8 +55,8 @@ class CalcAlGUI(Tk):
         self.configApp = configApp
 
         ressourcePath = os.path.join(dirProject, self.configApp.get('Resources', 'ResourcesDir'))
-        self.imagesPath = os.path.join(ressourcePath,
-                                       self.configApp.get('Resources', 'ImagesDir'))
+        self.imagesDirPath = os.path.join(ressourcePath,
+                                          self.configApp.get('Resources', 'ImagesDir'))
         self.databaseDirPath = os.path.join(ressourcePath,
                           self.configApp.get('Resources', 'DatabaseDir'))
         self.logger = logging.getLogger(self.configApp.get('Log', 'LoggerName'))
@@ -178,7 +180,7 @@ class CalcAlGUI(Tk):
             self.calculatorFrame.init()
             self.note.select(1)
 
-    def enableTabSearch(self, isEnable):
+    def enableTabSearch(self, isEnable=True):
         """ Activate or desactivate calculator tab """
         if isEnable:
             stateTab = 'normal'
@@ -191,3 +193,38 @@ class CalcAlGUI(Tk):
 
     def isBigScreen(self):
         return self.bigScreen
+
+    def about(self):
+        """ Display about box """
+        window = Toplevel(self.master)
+
+        appName = self.configApp.get('Version', 'AppName')
+        helv36 = font.Font(family="Helvetica", size=36, weight="bold")
+        Label(window, text=appName, font=helv36, fg="red").pack(side=TOP)
+
+        version = "Version : " + self.configApp.get('Version', 'Number') + ' - ' + \
+        self.configApp.get('Version', 'Date')
+        Label(window, text=version).pack(side=TOP)
+
+        labelLogo = self.createButtonImage(window,
+                                           imageRessourceName='logoAboutBox',
+                                           text4Image=self.configApp.get('Version', 'Author'))
+        labelLogo.pack(side=TOP)
+
+        versionPython = "Python : " + platform.python_version() + \
+                        ", Tk : " + str(TkVersion)
+        Label(window, text=versionPython).pack(side=TOP)
+        osMachine = _("On") + " : " + platform.system() + ", " + platform.release()
+        Label(window, text=osMachine).pack(side=TOP)
+
+    def createButtonImage(self, parent, imageRessourceName=None, text4Image=None):
+        """ Create a button or label with an image and a text dipayed """
+        compoundValue = 'image'
+        if text4Image:
+            compoundValue = 'top'
+        imageMessagePath = os.path.join(self.imagesDirPath,
+        self.configApp.get('Resources', imageRessourceName))
+        imgobj = PhotoImage(file=imageMessagePath)
+        buttonImage = ttk.Button(parent, image=imgobj, compound=compoundValue, text=text4Image)
+        buttonImage.img = imgobj # store a reference to the image as an attribute of the widget
+        return buttonImage

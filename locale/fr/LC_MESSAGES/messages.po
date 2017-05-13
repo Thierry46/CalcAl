@@ -143,8 +143,8 @@ msgstr "Voulez-vous vraiment détruire cette base de données ?"
 msgid "deleted"
 msgstr "détruite"
 
-msgid "Please select a database !"
-msgstr "Veuillez sélectionner une base de données !"
+msgid "Please select a database"
+msgstr "Veuillez sélectionner une base de données"
 
 msgid "Ciqual file : invalid header field"
 msgstr "Fichier Ciqual : champ d'entête invalide"
@@ -204,14 +204,14 @@ msgstr "Qté (g)"
 msgid "Too many components selected"
 msgstr "Trop de composants selectionnés"
 
-msgid "Please select one and only one line in list of food !"
-msgstr "Veuillez sélectionner une ligne et une seule dans la liste des aliments !"
+msgid "Please select one and only one line in list of food"
+msgstr "Veuillez sélectionner une ligne et une seule dans la liste des aliments"
 
-msgid "Please select at least one line in list of food !"
-msgstr "Veuillez sélectionner au moins une ligne dans la liste des aliments !"
+msgid "Please select at least one line in list of food"
+msgstr "Veuillez sélectionner au moins une ligne dans la liste des aliments"
 
-msgid "Please select more than one foodstuff in list of food !"
-msgstr "Veuillez sélectionner plus d'une ligne dans la liste des aliments !"
+msgid "Please select more than one foodstuff in list of food"
+msgstr "Veuillez sélectionner plus d'une ligne dans la liste des aliments"
 
 msgid "maximum"
 msgstr "maximum"
@@ -234,8 +234,8 @@ msgstr "ajouté"
 msgid "Food name must not be empty"
 msgstr "Le nom d'aliment ne doit pas être vide"
 
-msgid "Food quantity must be an integer"
-msgstr "La quantité d'aliment doit être un entier"
+msgid "Food quantity must be a number"
+msgstr "La quantité d'aliment doit être un nombre"
 
 msgid "Qantity must be greater than zero"
 msgstr "La quantité doit être plus grande que zéro"
@@ -284,6 +284,16 @@ msgstr "Nouveau produit"
 
 msgid "saved in database"
 msgstr "sauvegardé dans la base de données"
+
+msgid "copied in modification area"
+msgstr "copié dans la zone de modification"
+
+msgid "Composed product"
+msgstr "Produit composé"
+
+msgid "ungrouped"
+msgstr "dégroupé"
+
 
 # -- Tooltips --
 msgid "Use Wildcards :\n* replaces n chars\n? replaces 1 only"
