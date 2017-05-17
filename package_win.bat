@@ -21,7 +21,7 @@ echo "Erase dist directory ..."
 rmdir /S /Q dist
  
 echo "Create CalcAl.exe ..."
-python setup_win.py py2exe
+python SetupWin.py py2exe
 
 echo "Delete demos files in dist to light distribution ..."
 REM http://stackoverflow.com/questions/3900375/understanding-what-files-in-the-tcl-are-required-for-distributing-frozen-python
