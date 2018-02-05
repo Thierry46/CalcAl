@@ -4,14 +4,13 @@
 ************************************************************************************
 program : CalcAl
 Author : Thierry Maillard (TMD)
-Date : 10/3/2016 - 7/5/2016
+Date : 10/3/2016 - 5/2/2018
 
 Object : Food Calculator based on CIQUAL Tables.
     https://pro.anses.fr/tableciqual
 
 Options :
     -h ou --help : Display this help message.
-    -d ou --debug : Verbose mode when starting
     -b ou --baseDirPath=path : path for databases shared by users
                      on a computer or a network
 
@@ -47,7 +46,7 @@ import os
 import os.path
 import shutil
 import logging
-from logging.handlers import RotatingFileHandler
+import logging.config
 import getpass
 
 from tkinter import TkVersion
@@ -61,7 +60,7 @@ def main(argv=None):
     """
 
     # parse command line options and parameters
-    progName, dirProject, isModeDebug, baseDirPath = parseParameters(argv, __doc__)
+    progName, dirProject, baseDirPath = parseParameters(argv, __doc__)
 
     # Read configuration properties
     configApp = readConfigurationFile(dirProject)
@@ -80,7 +79,7 @@ def main(argv=None):
         print(_("Directory created") + " :", homeCalcAl)
 
     # Start logging message system
-    initLogging(configApp, homeCalcAl, isModeDebug)
+    initLogging(configApp, dirProject, homeCalcAl)
     logger = logging.getLogger(configApp.get('Log', 'LoggerName'))
 
     # Welcome and configuration messages
@@ -118,32 +117,30 @@ def main(argv=None):
     logger.info(_("End of") + " " + progName + " : " + idProg)
     logging.shutdown() # Terminaison of logging system
 
-def initLogging(configApp, homeCalcAl, isModeDebug):
+def initLogging(configApp, dirProject, homeCalcAl):
     """ Start logging message system """
+
+    # v0.53 : define configuration file for log system
+    nameLoggingFileConfigIni = configApp.get('Log', 'NameLoggingFileConfigIni')
+    pathLoggingFileConfigIni = os.path.join(dirProject, nameLoggingFileConfigIni)
+
+    # Create directory for messages in user home directory
     logDir = os.path.join(homeCalcAl, configApp.get('Log', 'DirLog'))
     if not os.path.isdir(logDir):
         os.mkdir(logDir)
         print(_("Directory created") + " :", logDir)
+
+    # Put logging path file in logging to be get when creating handler
     logFileName = configApp.get('Log', 'BaseLogFileName')
     pathLogFileName = os.path.join(logDir, logFileName)
-    print(_("Messages now logged in") + " " + pathLogFileName)
+    logging.messageFilename = pathLogFileName
+    logging.maxBytes = configApp.getint('Log', 'MaxBytes')
+    logging.nbFileLog = configApp.getint('Log', 'NbFileLog')
+
+    # Read configuration definition file for logging system
+    logging.config.fileConfig(pathLoggingFileConfigIni)
     logger = logging.getLogger(configApp.get('Log', 'LoggerName'))
-    if isModeDebug:
-        logger.setLevel(logging.DEBUG)
-    else:
-        logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
-    fileHandler = RotatingFileHandler(pathLogFileName, 'a',
-                                      configApp.getint('Log', 'MaxBytes'), 1)
-    fileHandler.setLevel(logging.DEBUG)
-    fileHandler.setFormatter(formatter)
-    logger.addHandler(fileHandler)
-    streamHandler = logging.StreamHandler()
-    if isModeDebug:
-        streamHandler.setLevel(logging.DEBUG)
-    else:
-        streamHandler.setLevel(logging.WARNING)
-    logger.addHandler(streamHandler)
+    logger.warning(_("Messages now logged in") + " " + pathLogFileName)
 
 def setLocaleCalcal(configApp, dirProject):
     """ V0.35 :Set local : country, region and encoding
@@ -206,15 +203,14 @@ def installUserDatabases(configApp, logger, baseDirPath, dirProject):
 def parseParameters(argv, docCalcal):
     """ Parse command line options and parameters """
 
-    isModeDebug = False
     baseDirPath = None
 
     if argv is None:
         argv = sys.argv
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hdb:",
-                                   ["help", "debug", "baseDirPath="])
+        opts, args = getopt.getopt(argv[1:], "hb:",
+                                   ["help", "baseDirPath="])
     except getopt.error as msg:
         print(msg)
         print("to get help : --help ou -h", file=sys.stderr)
@@ -227,10 +223,7 @@ def parseParameters(argv, docCalcal):
         if option in ("-h", "--help"):
             print(docCalcal)
             sys.exit(0)
-        if option in ("-d", "--debug"):
-            isModeDebug = True
-            print("Debug mode : verbose.")
-        if option in ("-b", "mmodule de démarrage "):
+        if option in ("-b", "--baseDirPath"):
             baseDirPath = arg.strip()
             print("Path for database set to ", baseDirPath)
 
@@ -240,7 +233,7 @@ def parseParameters(argv, docCalcal):
         print(_("Error : 0 parameter allowed" + " !"))
         sys.exit(1)
 
-    return progName, dirProject, isModeDebug, baseDirPath
+    return progName, dirProject, baseDirPath
 
 def readConfigurationFile(dirProject):
     """ Read configuration properties .ini file CalcAl.ini in executable dir """
