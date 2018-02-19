@@ -4,7 +4,7 @@
 Name : test_DataDateUtil.py
 Author : Thierry Maillard (TMD)
 Date : 24/11/2016
-Role : Tests unitaires module DateUtil du projet Calcal avec py.test
+Role : Unit tests for module DateUtil of Calcal project with py.test
 Use : See unittest.sh
 
 Licence : GPLv3
