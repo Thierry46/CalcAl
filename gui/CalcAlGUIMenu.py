@@ -3,7 +3,7 @@
 ************************************************************************************
 programme : CalcAlGUIMenu
 Auteur : Thierry Maillard (TMD)
-Date : 12/3/2016 - 5/3/2017
+Date : 12/3/2016 - 18/2/2018
 
 Role : Menu bar for CalcAl Food Calculator project.
 
@@ -106,12 +106,6 @@ class CalcAlGUIMenu(tkinter.Menu):
         otherMenu = tkinter.Menu(self, tearoff=0)
         otherMenu.add_command(label=_("About") + "...", command=self.master.about)
         otherMenu.add_command(label=_("Documentation") + "...", command=self.documentation)
-        self.isLoglevelDebug = tkinter.BooleanVar()
-        self.isLoglevelDebug.set(False)
-        # Observer self.setLogLevel on self.isLoglevelDebug called if modified : 'w'
-        self.isLoglevelDebug.trace_variable('w', self.setLogLevel)
-        otherMenu.add_checkbutton(label='Debug log', variable=self.isLoglevelDebug,
-                                  onvalue=True, offvalue=False)
         self.add_cascade(label="?", menu=otherMenu)
 
     def updateObserver(self, observable, event):
@@ -126,21 +120,6 @@ class CalcAlGUIMenu(tkinter.Menu):
                                   str(self.allowSelection))
             else:
                 self.logger.debug("CalcAlGUIMenu event ignored")
-
-    def setLogLevel(self, *dummy):
-        """ Set logging level """
-
-        # Get handler to write on console
-        streamHandler = self.logger.handlers[1]
-
-        if self.isLoglevelDebug.get():
-            self.logger.setLevel(logging.DEBUG)
-            streamHandler.setLevel(logging.DEBUG)
-            self.logger.info(_("Debug logging mode : all messages in file and on console."))
-        else:
-            self.logger.setLevel(logging.INFO)
-            streamHandler.setLevel(logging.WARNING)
-            self.logger.info(_("Logging in file with mode INFO and on console in mode WARNING."))
 
     def enableDatabaseMenu(self, isEnabled):
         """ Autorise ou non les options de configuration du menu Fichier """

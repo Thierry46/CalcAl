@@ -6,6 +6,24 @@ Author : Thierry Maillard (TMD)
 Date  : 12/3/2016 - 18/12/2016
 
 Role : Define start frame content.
+
+Licence : GPLv3
+Copyright (c) 2016 - Thierry Maillard
+
+This file is part of CalcAl project.
+
+CalcAl project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CalcAl project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
 import tkinter
@@ -33,7 +51,7 @@ class StartFrame(FrameBaseCalcAl.FrameBaseCalcAl):
         self.databaseDirPath = os.path.join(ressourcePath,
                                             self.configApp.get('Resources', 'DatabaseDir'))
 
-        tkinter.Label(self, text=_(self.configApp.get('Ciqual', 'CiqualNote'))
+        tkinter.Label(self, text=_("Based on Nutrial components database Ciqual 2017")
                       ).pack(side=tkinter.TOP)
         centerFrame = tkinter.Frame(self)
         centerFrame.pack(side=tkinter.TOP)

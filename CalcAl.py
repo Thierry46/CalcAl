@@ -4,7 +4,7 @@
 ************************************************************************************
 program : CalcAl
 Author : Thierry Maillard (TMD)
-Date : 10/3/2016 - 5/2/2018
+Date : 10/3/2016 - 19/2/2018
 
 Object : Food Calculator based on CIQUAL Tables.
     https://pro.anses.fr/tableciqual
@@ -17,7 +17,7 @@ Options :
 Paramèters : None.
 
 Licence : GPLv3
-Copyright (c) 2016 - Thierry Maillard
+Copyright (c) 2018 - Thierry Maillard
 
 
 This file is part of CalcAl project.
@@ -46,7 +46,7 @@ import os
 import os.path
 import shutil
 import logging
-import logging.config
+from logging.handlers import RotatingFileHandler
 import getpass
 
 from tkinter import TkVersion
@@ -79,7 +79,12 @@ def main(argv=None):
         print(_("Directory created") + " :", homeCalcAl)
 
     # Start logging message system
-    initLogging(configApp, dirProject, homeCalcAl)
+    try:
+        initLogging(configApp, homeCalcAl)
+    except Exception as exc:
+        fileError = os.path.join(homeCalcAl, "ErrStartLogCalcal.txt")
+        with open(fileError, mode='w') as hError:
+            hError.write(str(exc))
     logger = logging.getLogger(configApp.get('Log', 'LoggerName'))
 
     # Welcome and configuration messages
@@ -117,30 +122,27 @@ def main(argv=None):
     logger.info(_("End of") + " " + progName + " : " + idProg)
     logging.shutdown() # Terminaison of logging system
 
-def initLogging(configApp, dirProject, homeCalcAl):
+def initLogging(configApp, homeCalcAl):
     """ Start logging message system """
-
-    # v0.53 : define configuration file for log system
-    nameLoggingFileConfigIni = configApp.get('Log', 'NameLoggingFileConfigIni')
-    pathLoggingFileConfigIni = os.path.join(dirProject, nameLoggingFileConfigIni)
-
-    # Create directory for messages in user home directory
     logDir = os.path.join(homeCalcAl, configApp.get('Log', 'DirLog'))
     if not os.path.isdir(logDir):
         os.mkdir(logDir)
         print(_("Directory created") + " :", logDir)
-
-    # Put logging path file in logging to be get when creating handler
     logFileName = configApp.get('Log', 'BaseLogFileName')
     pathLogFileName = os.path.join(logDir, logFileName)
-    logging.messageFilename = pathLogFileName
-    logging.maxBytes = configApp.getint('Log', 'MaxBytes')
-    logging.nbFileLog = configApp.getint('Log', 'NbFileLog')
-
-    # Read configuration definition file for logging system
-    logging.config.fileConfig(pathLoggingFileConfigIni)
+    print(_("Messages now logged in") + " " + pathLogFileName)
     logger = logging.getLogger(configApp.get('Log', 'LoggerName'))
-    logger.warning(_("Messages now logged in") + " " + pathLogFileName)
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
+    fileHandler = RotatingFileHandler(pathLogFileName, 'a',
+                                      configApp.getint('Log', 'MaxBytes'), 1)
+    fileHandler.setLevel(logging.DEBUG)
+    fileHandler.setFormatter(formatter)
+    logger.addHandler(fileHandler)
+    streamHandler = logging.StreamHandler()
+    streamHandler.setLevel(logging.INFO)
+    logger.addHandler(streamHandler)
+
 
 def setLocaleCalcal(configApp, dirProject):
     """ V0.35 :Set local : country, region and encoding
@@ -191,9 +193,9 @@ def installUserDatabases(configApp, logger, baseDirPath, dirProject):
     pathDBDemoSvg = os.path.join(dirProject,
                                  configApp.get('Resources', 'ResourcesDir'),
                                  configApp.get('Resources', 'DatabaseDir'),
-                                 configApp.get('Resources', 'DemoDatabaseName'))
+                                 configApp.get('Resources', 'DemoDatabaseName2017'))
     pathDBDemo = os.path.join(baseDirPath,
-                              configApp.get('Resources', 'DemoDatabaseName'))
+                              configApp.get('Resources', 'DemoDatabaseName2017'))
     if not os.path.exists(pathDBDemo):
         shutil.copyfile(pathDBDemoSvg, pathDBDemo)
         logger.info(_("Demo DB copied") + " : " + pathDBDemo)

@@ -52,7 +52,7 @@ DATA_FILES = ['CalcAl.ini', 'locale', 'resources',
 #   that correct problem with accent
 ##################################################
 OPTIONS = {'argv_emulation': True,
-           'force_system_tk': False,
+           'force_system_tk': True,
            'packages': ['gui', 'database', 'model', 'util'],
            'iconfile': 'resources/images/logo_calcal.icns',
            'report_missing_from_imports': True,

@@ -6,6 +6,24 @@ Author : Thierry Maillard (TMD)
 Date  : 29/7/2016 - 2/10/2016
 
 Role : Read a USDA 2013 database from CSV or CSVzipped text file.
+
+Licence : GPLv3
+Copyright (c) 2016 - Thierry Maillard
+
+This file is part of CalcAl project.
+
+CalcAl project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CalcAl project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
 import logging

@@ -3,7 +3,26 @@
 ************************************************************************************
 Name : DatabaseInitialiser
 Role : Window used to initialize Database
-Date  : 30/5/2016 - 5/3/2017
+Date  : 30/5/2016 - 18/02/2018
+
+Licence : GPLv3
+Copyright (c) 2016 - Thierry Maillard
+
+
+This file is part of CalcAl project.
+
+CalcAl project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CalcAl project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
 import webbrowser
@@ -28,11 +47,10 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
 
     def body(self, master):
         """ Body content of this dialog """
-        allDatabase = ["Ciqual_2016", "USDA_28"]
+        allDatabase = ["Ciqual_2017", "USDA_28"]
 
         tkinter.Button(master, text=_("Get help for this operation"),
-               command=self.getHelpOnImport).grid(row=0, column=0, columnspan=2,
-                                          sticky=tkinter.W+tkinter.E)
+               command=self.getHelpOnImport).grid(row=0, column=1, sticky=tkinter.W)
         tkinter.Label(master, text=_("Enter a new database name") + " :").grid(row=1, column=0,
                                                                                sticky=tkinter.W)
         self.dbNameVar = tkinter.StringVar()
@@ -70,8 +88,8 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
         """ Choose ans initialisation file """
         filename = None
         dbType = self.databaseType.get()
-        if dbType == "Ciqual_2016":
-            filename = filedialog.askopenfilename(filetypes=(("CSV File", "*.csv"),
+        if dbType == "Ciqual_2017":
+            filename = filedialog.askopenfilename(filetypes=(("Excel 97 File", "*.xls"),
                                                              ("All Files", "*.*")),
                                                   title=_("Choose a file"))
 
@@ -90,7 +108,7 @@ class DatabaseInitialiser(TkSimpleDialog.TkSimpleDialog):
             V0.52 : Possibility to cancel web browser launching """
         link = "?"
         dbType = self.databaseType.get()
-        if dbType == "Ciqual_2016":
+        if dbType == "Ciqual_2017":
             link = self.configApp.get('Ciqual', 'CiqualUrl')
             fileInfo = self.configApp.get('Ciqual', 'fileInfo')
         if dbType == "USDA_28":

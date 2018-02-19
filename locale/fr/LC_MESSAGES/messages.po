@@ -1,8 +1,8 @@
 # messages.po : French translation file for CalcAl project labels.
-# Date : 10/3/2016 - 5/3/2017
+# Date : 10/3/2016 - 18/2/2018
 # Copyleft (CL) 2016 - Thierry Maillard
 # This file is distributed under the same license as the CalcAl package.
-# Thierry Maillard <Thierry.Maillard500@orange.fr>, 2017.
+# Thierry Maillard <Thierry.Maillard500@orange.fr>, 2018.
 #
 # Conversion in .mo format to be used by gettext :
 # cd locale/fr/LC_MESSAGES
@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: CalcAl\n"
 "Report-Msgid-Bugs-To: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
 "POT-Creation-Date: 2016-03-10 17:46+0200\n"
-"PO-Revision-Date: 016-03-10 18:15+0100\n"
+"PO-Revision-Date: 2018-02-18 18:47+0100\n"
 "Last-Translator: Thierry Maillard <Thierry.Maillard500@orange.fr>\n"
 "Language-Team: Fr <Thierry.Maillard500@orange.fr>\n"
 "MIME-Version: 1.0\n"
@@ -100,8 +100,8 @@ msgstr "Onglet"
 msgid "selected"
 msgstr "activé"
 
-msgid "Based on Nutrial components databases Ciqual 2013 and 2016"
-msgstr "Basé sur les composants nutritionnels des bases Ciqual 2013 et 2016"
+msgid "Based on Nutrial components database Ciqual 2017"
+msgstr "Basé sur les composants nutritionnels de la base Ciqual 2017"
 
 ########################
 # CalcAlGUIMenu
@@ -738,6 +738,10 @@ msgstr "Energies recalculées par CalcAl"
 msgid "results"
 msgstr "resultats"
 
+msgid "Energies kcal modification for %d products !"
+msgstr "Modification de l'énergie en kcal pour %d produits !"
+
+
 ########################
 # DatabaseReaderFactory
 ########################
@@ -762,8 +766,8 @@ msgstr "ou"
 msgid "Ciqual version not supported"
 msgstr "Version Ciqual non autorisée"
 
-msgid "Only .csv files allowed"
-msgstr "Seuls les fichiers .csv sont acceptés"
+msgid "Only .xls files allowed"
+msgstr "Seuls les fichiers .xls sont acceptés"
 
 msgid "Ciqual file : invalid header field"
 msgstr "Fichier Ciqual : champ d'entête invalide"
@@ -771,6 +775,23 @@ msgstr "Fichier Ciqual : champ d'entête invalide"
 msgid "instead of"
 msgstr "au lieu de"
 
+msgid "Warning : getOnlyAlimentMoyen mode !"
+msgstr "Atention : mode getOnlyAlimentMoyen !"
+
+msgid "Init xls file doesn't exist"
+msgstr "Le fichier d'init xls n'existe pas"
+
+msgid "Database %s initialized."
+msgstr "La base de données %s a été initialisée."
+
+msgid "%d products read."
+msgstr "%d aliments lus."
+
+msgid "%d constituants available."
+msgstr "%d constituants disponibles."
+
+msgid "Ciqual_Reader : Sheet {sheetName} not found in workbook {workbook}"
+msgstr "Ciqual_Reader : feuille {sheetName} non trouvée dans le classeur {workbook}"
 
 ########################
 # USDA_28_Reader

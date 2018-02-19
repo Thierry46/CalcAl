@@ -1,6 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>
 
+
+
   
   <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>CalcAl Maintenance</title>
   
@@ -24,7 +26,7 @@ maintenance<br>
 
   <li><a href="#Prerequis">Prérequis</a></li>
   <li><a href="#Execution">Exécution du code dans un terminal</a></li>
-  <li><a href="#Config_ini">Fichier de paramétrage</a></li>
+  <li><a href="#Config_ini">Fichiers de paramétrage</a></li>
   <li><a href="#Version_du_code">Version du code</a><br>
   </li>
   <li><a href="#Messages_et_internationalisation_">Messages et
@@ -102,14 +104,14 @@ commande et les
 messages de l'application (log) sont disponibles sous votre Home sous
 CalcAl_data/log/messages.<br>
 
-<h2><a name="Config_ini"></a>Fichier de paramétrage</h2>
+<h2><a name="Config_ini"></a>Fichiers de paramétrage</h2>
 
 Le paramétrage de l'application est basé sur le package python3
 standard <b>configparser</b>.<br>
 
 Une des premières actions de l'application dans son programme principal
 <i><b>CalcAl.py</b></i> est de charger le fichier de paramètre
-CalcAl.ini situé à la racine du répertoire d'installation de
+<i><b>CalcAl.ini</b></i> situé à la racine du répertoire d'installation de
 l'application.<br>
 
 Ce fichier contient des clés et leurs valeurs réparties en sections
@@ -119,6 +121,8 @@ CalcAl récupère ces clés dans les fichiers sources python par des
 instructions du genre :<br>
 
 <i><b>configApp.get('Section', 'Cle')<br>
+<br>
+</b></i>Depuis la version 0.53, le système de logging pour l'enregistrement des messages est paramétré dans le fichier <i><b>logging_config.ini </b></i>: des commentaires vous indiqueront comment définir la gestion des messages.<i><b><br>
 </b></i>
 <h2><a name="Version_du_code"></a>Version du code</h2>
 
@@ -200,23 +204,8 @@ base ciqual2016.db</i><br>
 <br>
 
 Le paramétrage de ce système est réalisé dans la section [<b>log</b>]
-de <b>CalcAl.ini</b>.<br>
-
-<br>
-
-Le niveau de détail filtré est défini par l'appel à logger.setLevel()
-dans <b>CalcAl.py/initLogging()</b> et dans g<b>ui/CalcAlGUIMenu.py/setLogLevel()</b>.<br>
-
-<br>
-
-L'utilisateur peut choisir de passer en mode info ou debug depuis l'IHM.<br>
-
-<img alt="Log level selection" src="../images/loglevelSelect.png" height="93" width="220"><br>
-
-Vous pouvez forcer le mode debug au démarrage de l'application en
-passant au programme les options de ligne de commande <b>-d</b> ou<b>--debug</b>.<br>
-
-<h2><a name="Tests_unitaires"></a>Tests unitaires</h2>
+de <b>CalcAl.ini</b> et depuis la version 0.53, dans le fichier <i><b>logging_config.ini</b></i><i><b> <br>
+</b></i><h2>Tests unitaires</h2>
 
 L'application possède une batterie partielle de test unitaires
 utilisées pour vérifier la non-régression du code.<br>
@@ -272,8 +261,8 @@ le logiciel CalcAl.<br>
 C'est à l'utilisateur de télécharger leurs fichiers d'initialisation
 depuis Internet puis de les importer dans CalcAl.<br>
 
-Une base de demo est cependant incluse mais n'offre que les éléments
-moyens de la Ciqual 2013.<br>
+Une base de demo est cependant incluse mais n'offre que les aliments
+moyens issus de la Ciqual 2017.<br>
 
 <br>
 
@@ -372,7 +361,7 @@ fonctionne sur toutes les plateformes. <br>
   <li><a href="https://fr.wikipedia.org/wiki/Hypertext_Markup_Language" target="_blank">HTML</a> est un format de données adapté à la
 documentation et lisible par de nombreux navigateurs.</li>
   <li>Le <a href="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur" target="_blank">patron de conception Modèle-Vue</a>
-permet de découpler les données de leur affichage dand l'IHM. Permet
+permet de découpler les données de leur affichage dand l'IHM. Il permet
 d'améliorer les performances par une gestion des données par le modèle
 qui décide si les données de l'IHM doivent être raffraichie.<br>
   </li>
@@ -387,9 +376,9 @@ qui décide si les données de l'IHM doivent être raffraichie.<br>
   <li>Sur Mac OS X version X.12 ou moins, la version de Tk est obsolète
 : 8.5. Cette version ne supporte pas certains caractères accentué comme
 l'accent circonflexe dans les zones de saisie. Un crash violent de
-l'application ce produit. La version Active TCL Tk 8.5.18 corrige ce
+l'application se produit. La version Active TCL Tk 8.5.18 corrige ce
 problème, mais les bulles d'aide n'apparaissent plus.</li>
-  <li>Problème de certification des exe et .app non traitée
+  <li>Problème de certification des exe et .app non traités
 actuellement.<br>
   </li>
 </ol>
@@ -404,7 +393,7 @@ suivant : <a href="CalcAl_versions.html">Versions</a><br>
 
 <hr size="2" width="100%"><br>
 
-Copyleft (c) 2017 - <a href="http://perrine.maillard.free.fr/" target="_blank">Perrine</a><a href="http://perrine.maillard.free.fr/" target="_blank"> </a>et <a href="http://thierry.maillard.pagesperso-orange.fr/" target="_blank">Thierry</a>
+Copyleft (c) 2018 - <a href="http://perrine.maillard.free.fr/" target="_blank">Perrine</a><a href="http://perrine.maillard.free.fr/" target="_blank"> </a>et <a href="http://thierry.maillard.pagesperso-orange.fr/" target="_blank">Thierry</a>
 Maillard<br>
 
 Vous avez la permission de copier, distribuer ou modifier ce document

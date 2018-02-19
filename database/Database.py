@@ -6,6 +6,24 @@ Author : Thierry Maillard (TMD)
 Date  : 23/3/2016 - 1/2/2017
 
 Role : Define a database and method to create, consult and save it.
+
+Licence : GPLv3
+Copyright (c) 2016 - Thierry Maillard
+
+This file is part of CalcAl project.
+
+CalcAl project is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+CalcAl project is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with CalcAl project.  If not, see <http://www.gnu.org/licenses/>.
 ************************************************************************************
 """
 import logging
@@ -1002,8 +1020,7 @@ class Database():
         if len(listCorrectedEnergies) == 0:
             self.logger.debug("Database/correctEnergyKcal() : All energies are OK")
         else:
-            self.logger.warning("Database/correctEnergyKcal() : Energies kcal modification for " +
-                                str(nbProducts) + " products !")
+            self.logger.warning(_("Energies kcal modification for %d products !"), nbProducts)
 
         # Create all missing enegy in kcal components in constituantsValues table
         cursor.executemany("""

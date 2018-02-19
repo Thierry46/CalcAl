@@ -4,13 +4,12 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2016 - 4/12/2016
+Date : 7/5/2016 - 18/2/2018
 
 Role : GUI for CalcAl Food Calculator project.
 
 Licence : GPLv3
 Copyright (c) 2016 - Thierry Maillard
-
 
 This file is part of CalcAl project.
 
@@ -129,7 +128,6 @@ class CalcAlGUI(tkinter.Tk):
         # Create Status frame at the bottom of the sceen
         statusFrame = tkinter.Frame(self)
         self.statusLabel = tkinter.Label(statusFrame, text=_('Ready'))
-        self.statusLabel.pack(side=tkinter.LEFT)
         self.statusLabel.pack(side=tkinter.TOP)
         statusFrame.pack(side=tkinter.TOP)
 
@@ -289,8 +287,8 @@ class CalcAlGUI(tkinter.Tk):
         emails = self.configApp.get('Version', 'EmailSupport1')  + ", " +\
                  self.configApp.get('Version', 'EmailSupport2')
         tkinter.Label(window, text=emails).pack(side=tkinter.TOP)
-        tkinter.Label(window, text=_(self.configApp.get('Ciqual',
-                                                        'CiqualNote'))).pack(side=tkinter.TOP)
+        tkinter.Label(window,
+                      text=_("Based on Nutrial components database Ciqual 2017")).pack(side=tkinter.TOP)
 
         versionPython = "Python : " + platform.python_version() + ", Tk : " + str(tkinter.TkVersion)
         tkinter.Label(window, text=versionPython).pack(side=tkinter.TOP)
