@@ -3,6 +3,10 @@
 
 
 
+
+
+
+
   
   <meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>CalcAl Maintenance</title>
   
@@ -44,6 +48,9 @@ documentation du projet</a></li>
 réseau</a> </li>
   <li><a href="#Techniques">Techniques utilisées</a></li>
   <li><a href="#Justification_des_choix_">Justification des choix</a></li>
+  <li><a href="#Qualite_logicielle">Qualité logicielle</a><br>
+  </li>
+
   <li><a href="#Problemes">Problèmes connus</a></li>
 </ul>
 
@@ -59,17 +66,20 @@ Pour modifier CalcAl, vous devez disposer :<br>
 
   <li>De l'arborescence des fichiers sources de la dernière
 version du logiciel compressée dans une archive au format zip :
-CalcAl_v0.50.zip que vous décompacterez dans un de vos répertoires<br>
+CalcAl_v0.55.zip que vous décompacterez dans un de vos répertoires<br>
   </li>
   <li>D'un éditeur de texte de préférence adapté à Python.</li>
-  <li>De la dernière version de python 3 disponible sous : <a target="_blank" href="https://www.python.org">https://www.python.org</a></li>
+  <li>De la dernière version de python 3.7 ou + disponible sous : <a target="_blank" href="https://www.python.org">https://www.python.org</a></li>
+  <li>Du package xlrd installé : pip3.7 install xlrd<br>
+  </li>
+
   <li>D'un compilateur de message pour l'internationalisation de
 logiciels : <a target="_blank" href="https://www.gnu.org/software/gettext">https://www.gnu.org/software/gettext</a><br>
   </li>
   <li>D'un logiciel d'affichage de bases de donnée Sqlite : <a target="_blank" href="http://sqlitebrowser.org">http://sqlitebrowser.org</a></li>
   <li>Du package python de test unitaire pytest : <a target="_blank" href="http://docs.pytest.org/en/latest">http://docs.pytest.org/en/latest</a></li>
   <li>Du logiciel py2exe sous Windows : <a target="_blank" href="http://py2exe.org">http://py2exe.org</a></li>
-  <li>Du logiciel py2app sous Windows : <a target="_blank" href="https://py2app.readthedocs.io/en/latest">https://py2app.readthedocs.io/en/latest</a></li>
+  <li>Du logiciel py2app sous Mac : <a target="_blank" href="https://py2app.readthedocs.io/en/latest">https://py2app.readthedocs.io/en/latest</a></li>
   <li>D'un éditeur HTML pour modifier la documentation du projet : <a href="http://www.kompozer.net" target="_blank">http://www.kompozer.net</a><br>
   </li>
 </ul>
@@ -121,14 +131,13 @@ CalcAl récupère ces clés dans les fichiers sources python par des
 instructions du genre :<br>
 
 <i><b>configApp.get('Section', 'Cle')<br>
-<br>
-</b></i>Depuis la version 0.53, le système de logging pour l'enregistrement des messages est paramétré dans le fichier <i><b>logging_config.ini </b></i>: des commentaires vous indiqueront comment définir la gestion des messages.<i><b><br>
+</b></i><i><b><br>
 </b></i>
 <h2><a name="Version_du_code"></a>Version du code</h2>
 
 La version courante du code est définie dans&nbsp; la section [<b>Version</b>]
 de <b>CalcAl.ini</b> par les clés <b>Date</b> et <b>Number</b>. Le
-numéro de version est utilisé dans les script qui fabriquent les
+numéro de version est utilisé dans les scripts qui fabriquent les
 packages Mac et Windows.<br>
 
 <br>
@@ -192,7 +201,7 @@ pour
 contrôler l'enregistrement de tous les évennement de l'application :
 journal. Ce système est mis en place dans <b>CalcAl.py/initLogging()</b>.<br>
 
-Les messages sont enregistrés dans deux fichiers journaux situé dans le
+Les messages sont enregistrés dans deux fichiers journaux situés dans le
 répertoire utilisateur <b>CalcAl_data/log</b>. par des appels à une
 méthode d'une instance de <i>logging.getLogger()</i> : <i>logger.debug(),
 logger.warning(), logger.info()</i>. Ces messages sont
@@ -204,15 +213,16 @@ base ciqual2016.db</i><br>
 <br>
 
 Le paramétrage de ce système est réalisé dans la section [<b>log</b>]
-de <b>CalcAl.ini</b> et depuis la version 0.53, dans le fichier <i><b>logging_config.ini</b></i><i><b> <br>
+de <b>CalcAl.ini</b>.<i><b><br>
 </b></i><h2>Tests unitaires</h2>
 
-L'application possède une batterie partielle de test unitaires
-utilisées pour vérifier la non-régression du code.<br>
+L'application possède une batterie partielle de tests unitaires
+utilisés pour vérifier la non-régression du code.<br>
 
 Répertoire : unittest<br>
 
 Script de lancement : unittest.sh<br>
+Voir les commentaires du script pour l'installation du programme pytest.<br>
 
 <br>
 
@@ -348,8 +358,8 @@ le package <b>database</b>. Chaque base est composée de 10 tables
 
 <ul>
 
-  <li>Le langage de programmation choisit est <a href="https://www.python.org/" target="_blank">python,</a>
-pour des raisons de portabilité sur les système Windows, Mac OS X et
+  <li>Le langage de programmation choisi est <a href="https://www.python.org/" target="_blank">python,</a>
+pour des raisons de portabilité sur les systèmes Windows, Mac OS X et
 Linux. Ce langage interprété possède une grande richesse fonctionnelle.
 La version 3 offre un support étendu des jeux de caractères et facilite
 l'internationnalisation.<br>
@@ -363,11 +373,16 @@ documentation et lisible par de nombreux navigateurs.</li>
   <li>Le <a href="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-contr%C3%B4leur" target="_blank">patron de conception Modèle-Vue</a>
 permet de découpler les données de leur affichage dand l'IHM. Il permet
 d'améliorer les performances par une gestion des données par le modèle
-qui décide si les données de l'IHM doivent être raffraichie.<br>
+qui décide si les données de l'IHM doivent être raffraichies.<br>
   </li>
 </ul>
 
-<br>
+<h2><a name="Qualite_logicielle"></a>Qualité logicielle</h2>
+Ref : http://www.pylint.org<br>
+Install : python3 -m pip install pylint<br>
+Usage : python3 -m pylint xxx.py<br>
+Désactiver un message : invalid-name (C0103) et tout analyser :<br>
+python3.7 -m pylint --disable=invalid-name --additional-builtins=_ *.py */*.py &gt; ../qualite/resu_pylint.txt<br>Your code has been rated at 9.06 / 10.<br>
 
 <h2><a name="Problemes"></a>Problèmes connus</h2>
 
@@ -377,8 +392,11 @@ qui décide si les données de l'IHM doivent être raffraichie.<br>
 : 8.5. Cette version ne supporte pas certains caractères accentué comme
 l'accent circonflexe dans les zones de saisie. Un crash violent de
 l'application se produit. La version Active TCL Tk 8.5.18 corrige ce
-problème, mais les bulles d'aide n'apparaissent plus.</li>
-  <li>Problème de certification des exe et .app non traités
+problème, mais les bulles d'aide n'apparaissent plus.<br>
+La version Python 3.7 embarque maintenant Tk version 8.6 et corrige les
+plantage par les accents, mais les bulles d'aide n'apparaissent
+toujours plus.</li>
+  <li>Problèmes de certification des exe et .app non traités
 actuellement.<br>
   </li>
 </ol>
