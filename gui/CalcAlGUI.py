@@ -4,7 +4,7 @@
 *********************************************************
 Class : CalcAlGUI
 Auteur : Thierry Maillard (TM)
-Date : 7/5/2016 - 18/2/2018
+Date : 7/5/2016 - 21/7/2018
 
 Role : GUI for CalcAl Food Calculator project.
 
@@ -188,12 +188,15 @@ class CalcAlGUI(tkinter.Tk):
 
     def tabChangedEvent(self, event):
         """ Callback called when user changes tab """
-        newTab = event.widget.tab(event.widget.index("current"), "text")
-        if newTab != self.currentTab:
-            self.currentTab = newTab
-            self.logger.info(_("Tab") + " " + self.currentTab + " " + _("selected") + ".")
-            self.menuCalcAl.enableDatabaseMenu(event.widget.index("current") == 0)
-            self.menuCalcAl.enableSelectionMenu(event.widget.index("current") == 1)
+        # 21/7/2018 : TMD : Bug correction _tkinter.TclError: expected integer but got ""
+        currentTabInt = event.widget.index("current")
+        if isinstance(currentTabInt, int):
+            newTab = event.widget.tab(currentTabInt, "text")
+            if newTab != self.currentTab:
+                self.currentTab = newTab
+                self.logger.info(_("Tab") + " " + self.currentTab + " " + _("selected") + ".")
+                self.menuCalcAl.enableDatabaseMenu(event.widget.index("current") == 0)
+                self.menuCalcAl.enableSelectionMenu(event.widget.index("current") == 1)
 
     def closeDatabase(self):
         """ Close database """
