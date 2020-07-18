@@ -143,6 +143,7 @@ class Ciqual_Reader():
         dictConstituantsPosition = self.analyseHeaderCiqual(cursor, headerSplitted)
 
         # Parse products lines
+        linenum = 0
         for linenum in range(1, sheetCiqual.nrows):
             lineSplitted = sheetCiqual.row_values(linenum)
             self.analyseProductCiqual(cursor, lineSplitted, dictConstituantsPosition)
@@ -198,7 +199,8 @@ class Ciqual_Reader():
             fieldPosname = self.configApp.get('Ciqual', fieldProp).split(";")
             readField = headerSplitted[int(fieldPosname[0])-1]
             if fieldPosname[1] != readField:
-                raise ValueError(_("Ciqual file : invalid header field") + " " +  fieldNum +
+                raise ValueError(_("Ciqual file : invalid header field") + " " +
+                                 fieldPosname[0] +
                                  " : " + readField + " " + _("instead of") +
                                  " " + fieldPosname[1])
 
@@ -217,7 +219,7 @@ class Ciqual_Reader():
                                            r' \((?P<unitConstituant>[µmk]?[Jgc][a]?[l]?)/100g\)$')
         constituants = []
         dictConstituantsPosition = dict()
-        numField = self.configApp.getint('Ciqual', 'firstComponentField') - 1       
+        numField = self.configApp.getint('Ciqual', 'firstComponentField') - 1
         for constituantDescription in headerSplitted[numField:]:
             match = regexpConstituant.search(constituantDescription)
             nameConstituant = match.group('nameConstituant')
@@ -225,7 +227,7 @@ class Ciqual_Reader():
             if match:
                 try:
                     code = dicoCompCodes[constituantDescription]
-                except KeyError as exc:
+                except KeyError:
                     raise ValueError(_("Ciqual file : invalid header field") + " " +
                                  str(numField+1) +
                                  " : " + constituantDescription)
@@ -270,7 +272,7 @@ class Ciqual_Reader():
         if self.configApp.getboolean('Ciqual', 'getOnlyAlimentMoyen') and \
            "(aliment moyen)" not in productName:
             return
-        
+
         # Create a record for this product
         cursor.execute("""
                        INSERT INTO products(familyName, code, name, source, dateSource, urlSource)

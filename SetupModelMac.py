@@ -22,12 +22,12 @@ cd /Users/thierry/Documents/informatique/logiciels/python/python3
 python3 get-pip.py
 
 Install p2app :
-sudo python3 -m pip install py2app
+pip3.7 install py2app
 
-Date : 8/10/2016 - 5/3/2017
+Date : 8/10/2016 - 21/7/2017
 
 Usage : python3 setup.py py2app
-Used by package_mac.sh
+! Must be used by script package_mac.sh !
 """
 
 from setuptools import setup
