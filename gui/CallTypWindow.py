@@ -75,8 +75,8 @@ class ToolTip(object):
             except tkinter.TclError:
                 pass
             label = tkinter.Label(self.tipwindow, text=self.text, justify=tkinter.LEFT,
-                                  background="#ffffe0", relief=tkinter.SOLID, borderwidth=1,
-                                  font=("tahoma", "12", "normal"))
+                                  background="#ffffe0", relief=tkinter.SOLID, borderwidth=3,
+                                  font=("comic Sans MS", "12", "normal"))
             label.pack(ipadx=1)
             self.widget.after(self.delayms, self.hidetip)
         except TypeError:
